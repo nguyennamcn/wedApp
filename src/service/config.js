@@ -1,4 +1,5 @@
 import axios from "axios";
+import { localUserService } from "./localService";
 
 
 
@@ -8,7 +9,7 @@ const TokenApi   = "";
 export const configHeader = ()  =>{
     return{
         TokenApi: TokenApi,
-        Authorization: "bearer" + localUserServ.get()?.accessToken,
+        Authorization: "bearer" + localUserService.get()?.accessToken,
     }
 }
 

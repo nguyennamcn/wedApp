@@ -1,0 +1,43 @@
+.img-login-bg{
+  background-image: url('');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.login-animate{
+  position: relative;
+  color: white;
+  width: 200px;
+  font-size: 28px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.ard {
+  position: relative;
+}
+
+.ard::before {
+  position: absolute;
+  background-color: white;
+  content: '';
+  top: 0;
+  left: 0;
+  height: 100px; /* Chiều cao ban đầu là 0 */
+  width: 100%;
+  border-top-left-radius: 60px;
+  border-bottom-left-radius: 60px;
+  transition: all 1s ease; /* Hiệu ứng mượt mà khi thay đổi chiều cao */
+}
+
+.ard.register-active::before {
+  top: 90px; /* Thay đổi chiều cao khi đăng ký */
+}
+
+.active{
+  color: black;
+}
