@@ -7,24 +7,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [repass, setRePass] = useState("");
-  const [time ,setTime] = useState(false);
-
-  useEffect(() => {
-    // Kiểm tra xem đã reload chưa
-    const hasReloaded = sessionStorage.getItem("hasReloaded");
   
-    if (!hasReloaded) {
-      // Nếu chưa reload, đặt cờ và reload trang
-      sessionStorage.setItem("hasReloaded", "true");
-  
-      const timer = setTimeout(() => {
-        window.location.reload();
-        setTime(false);
-      }, 2000);
-  
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   
   const handleLogin = () =>{
