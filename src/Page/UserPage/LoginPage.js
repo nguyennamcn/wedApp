@@ -1,4 +1,4 @@
-import React, { use, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import '../../css/UserPages/login.css';
 import { Button, Checkbox, Form, Input } from 'antd';
 
@@ -7,10 +7,29 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [repass, setRePass] = useState("");
-  
+  const [time ,setTime] = useState(false);
 
+  useEffect(() => {
+    // Kiểm tra xem đã reload chưa
+    const hasReloaded = sessionStorage.getItem("hasReloaded");
+  
+    if (!hasReloaded) {
+      // Nếu chưa reload, đặt cờ và reload trang
+      sessionStorage.setItem("hasReloaded", "true");
+  
+      const timer = setTimeout(() => {
+        window.location.reload();
+        setTime(false);
+      }, 2000);
+  
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  
   const handleLogin = () =>{
     console.log({email,pass})
+    
   }
 
   const handleSignUp = () =>{
@@ -129,7 +148,6 @@ const LoginPage = () => {
             >Đăng Nhập</button>
           </div>
           {/* end login */}
-
           {/* signup */}
           <div>
             <div
