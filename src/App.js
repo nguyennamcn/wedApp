@@ -5,6 +5,9 @@ import LoginPage from './Page/UserPage/LoginPage';
 import SignUpPage from './Page/UserPage/SignUpPage';
 import ErrorPage from './Page/ErrolPage/ErrorPage';
 import LoadingPage from './Components/Spinner/LoadingPage'; // Import LoadingPage
+import AdminPage from './Page/AdminPage/AdminPage';
+import LoginPageTest from './Page/AdminPage/LoginPageTest';
+import RegisterSell from './Page/SellerPage/RegisterSell';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -13,7 +16,7 @@ function App() {
     // Giả lập thời gian tải (2 giây)
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -28,6 +31,9 @@ function App() {
             <Route path='/' element={<HomePage />} />
             <Route path='/login' element={<LoginPage />} />
             <Route path='/signup' element={<SignUpPage />} />
+            <Route path='/test' element={<AdminPage />} />
+            <Route path='/test2' element={<LoginPageTest />} />
+            <Route path='/regis/sell' element={<RegisterSell />} />
             <Route path='*' element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>

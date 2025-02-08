@@ -10,9 +10,8 @@ const SearchFunction = () => {
       borderRadius: '20px', 
       display: 'flex',
       alignItems: 'center',
-      width: '300px' ,// Điều chỉnh kích thước theo ý bạn
       borderRadius: '30px',
-      padding : '0 20px',
+      padding : '0 5px',
       width: '65%'
     }}>
       <Input

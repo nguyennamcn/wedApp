@@ -4,6 +4,7 @@ import HeaderPage from '../../Components/Header/HeaderPage'
 import ListIntro from '../ListIntroProduct/ListIntro'
 import DailyDeals from '../ListIntroProduct/DailyDeal'
 import SearchCarousel from '../ListIntroProduct/SearchCarousel'
+import ProductHot from '../ListIntroProduct/ProductHot'
 
 export default function HomePage() {
 
@@ -103,6 +104,15 @@ export default function HomePage() {
 
         <div>
           <SearchCarousel />
+        </div>
+        <div
+          style={{
+            margin: '40px 0',
+            textAlign: 'center'
+          }}
+        >
+          <p style={{fontSize: '32px', fontWeight: '700'}}>Sản phẩm bán chạy</p>
+          <ProductHot />
         </div>
       </div>
 
