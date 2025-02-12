@@ -14,15 +14,20 @@ export default function RegisterSell() {
     const [isModalOpen, setIsModalOpen] = useState(false);  // Trạng thái mở modal
     const [isOtpInputDis, setIsOtpInputDis] = useState(true);
     const [isSendButtonDis, setIsSendButtonDis] = useState(false);
-    const [countDown, setCountDown]= useState(0);
+    const [countDown, setCountDown] = useState(0);
     const navigate = useNavigate();
-    const [isModalAdd , setIsModalAdd] = useState(false);
+    const [isModalAdd, setIsModalAdd] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState(null);
 
+    const handleSaveAddress = (address) => {
+        setSelectedAddress(address);  // Lưu địa chỉ vào state
+        console.log(selectedAddress)
+    };
 
-    const openAddressModal = () =>{
+    const openAddressModal = () => {
         setIsModalAdd(true);
     }
-    const closeAddressModal = () =>{
+    const closeAddressModal = () => {
         setIsModalAdd(false);
     }
 
@@ -30,16 +35,16 @@ export default function RegisterSell() {
         console.log('otp');
 
         setIsOtpInputDis(false);
-        setTimeout(() =>{
+        setTimeout(() => {
             setIsOtpInputDis(false);
         }, 2000);
 
         setIsSendButtonDis(true);
         setCountDown(30);
 
-        const countDowInterval = setInterval(() =>{
+        const countDowInterval = setInterval(() => {
             setCountDown(prev => {
-                if(prev <= 1){
+                if (prev <= 1) {
                     clearInterval(countDowInterval);
                     setIsSendButtonDis(false);
                     return 0;
@@ -55,12 +60,12 @@ export default function RegisterSell() {
         var email = document.getElementById('emailSell').value;
         var sdt = document.getElementById('sdtSell').value;
         var otp = document.getElementById('otp').value;
-    
+
         const nameValidation = validateName(nameShop);
         const emailValidation = validateEmail(email);  // Thêm kiểm tra email
         const phoneValidation = validatePhone(sdt);
         const otpValidation = validateOtp(otp);
-    
+
         if (!nameValidation.isValid) {
             setErrMessage(nameValidation.message);
         } else if (!emailValidation.isValid) {
@@ -69,13 +74,13 @@ export default function RegisterSell() {
             setErrMessage(phoneValidation.message);
         } else if (!otpValidation.isValid) {
             setErrMessage(otpValidation.message);
-        }else {
+        } else {
             setErrMessage('');
             console.log(nameShop, email, sdt, otp);
             setIsModalOpen(true);  // Mở modal khi đăng ký thành công
         }
     };
-    
+
 
     const handleCloseModal = () => {
         setIsModalOpen(false);  // Đóng modal
@@ -83,12 +88,12 @@ export default function RegisterSell() {
     };
 
     return (
-        <div 
+        <div
             style={{
                 background: '#FF9513',
                 height: '100vh',
                 display: 'flex',
-                padding: '2% 0'
+                padding: '1% 0'
             }}
         >
             <div style={{ width: '40%' }}></div>
@@ -98,19 +103,19 @@ export default function RegisterSell() {
                     background: 'white',
                     borderTopLeftRadius: '5%',
                     borderBottomLeftRadius: '5%',
-                    padding: '2% 4%'
+                    padding: '1% 4%'
                 }}
             >
-                <p style={{ fontSize: '50px', fontWeight: '700'}}>
+                <p style={{ fontSize: '50px', fontWeight: '700' }}>
                     Đăng ký bán hàng với LOGO
                 </p>
 
                 {/* Hiển thị thông báo lỗi nếu có */}
                 {errMessage && (
-                    <p style={{ color: 'red', fontSize: '20px' , position: 'absolute'}}>{errMessage}</p>
+                    <p style={{ color: 'red', fontSize: '20px', position: 'absolute' }}>{errMessage}</p>
                 )}
 
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10%' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5%' }}>
                     <div className='regisSell' style={{ textAlign: 'end', fontSize: '32px', width: '30%' }}>
                         <p>Tên shop</p>
                         <p>Địa chỉ lấy hàng</p>
@@ -124,28 +129,43 @@ export default function RegisterSell() {
                         </div>
                         <button
                             onClick={openAddressModal}
-                            style={{ padding: '0 40px', fontSize: '28px', background: 'white', borderRadius: '10px', marginBottom: '7%' }}>
-                            + Thêm
+                            style={{
+                                padding: '0 1%',
+                                fontSize: '28px',
+                                background: 'white',
+                                borderRadius: '10px',
+                                marginBottom: '7%',
+                                maxWidth: '100%',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                            }}
+                        >
+                            {selectedAddress
+                                ? `${selectedAddress.detailAddress}, ${selectedAddress.address.ward}, ${selectedAddress.address.district}, ${selectedAddress.address.city}`.length > 50
+                                    ? `${`${selectedAddress.detailAddress}, ${selectedAddress.address.ward}, ${selectedAddress.address.district}, ${selectedAddress.address.city}`.slice(0, 50)}...`
+                                    : `${selectedAddress.detailAddress}, ${selectedAddress.address.ward}, ${selectedAddress.address.district}, ${selectedAddress.address.city}`
+                                : '+ Thêm'}
                         </button>
-                        <AddAddressModal isOpen={isModalAdd} onClose={closeAddressModal} />
+                        <AddAddressModal isOpen={isModalAdd} onClose={closeAddressModal} onSaveAddress={handleSaveAddress} />
                         <div>
                             <input id='emailSell' type="text" placeholder="Nhập email" />
                         </div>
-                        <div style={{ position:'relative' }}>
-                            <input id='sdtSell' style={{ padding: '0 15%' }} type="text" placeholder='Nhập số điện thoại'/>
+                        <div style={{ position: 'relative' }}>
+                            <input id='sdtSell' style={{ padding: '0 15%' }} type="text" placeholder='Nhập số điện thoại' />
                             <p style={{ position: 'absolute', fontSize: '28px', left: '10px', top: '0' }}>+84 |</p>
                         </div>
                         <div>
-                            <input 
-                                id='otp' 
-                                placeholder='Nhập mã xác minh' 
-                                style={{ width: '50%', marginRight: '5%', paddingLeft: '6%' }} 
-                                type="text" 
-                                disabled = {isOtpInputDis}
+                            <input
+                                id='otp'
+                                placeholder='Nhập mã xác minh'
+                                style={{ width: '50%', marginRight: '5%', paddingLeft: '3%' }}
+                                type="text"
+                                disabled={isOtpInputDis}
                             />
-                            <button 
-                                className='sentBtn' 
-                                style={{ fontSize: '28px', width: '15%' }} 
+                            <button
+                                className='sentBtn'
+                                style={{ fontSize: '28px', width: '15%' }}
                                 onClick={sentOtp}
                                 disabled={isSendButtonDis}
                             >
@@ -155,7 +175,7 @@ export default function RegisterSell() {
                     </div>
                 </div>
 
-                <div style={{ textAlign: 'end', marginTop: '5%' }}>
+                <div style={{ textAlign: 'end', marginTop: '3%' }}>
                     <button className='btnNext' style={{ fontSize: '32px', width: '22%' }} onClick={handleRegis}>
                         Đăng Ký
                     </button>

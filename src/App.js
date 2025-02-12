@@ -8,6 +8,7 @@ import LoadingPage from './Components/Spinner/LoadingPage'; // Import LoadingPag
 import AdminPage from './Page/AdminPage/AdminPage';
 import LoginPageTest from './Page/AdminPage/LoginPageTest';
 import RegisterSell from './Page/SellerPage/RegisterSell';
+import OtpSent from './Components/OtpSent/OtpSent';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,7 @@ function App() {
             <Route path='/login' element={<LoginPage />} />
             <Route path='/signup' element={<SignUpPage />} />
             <Route path='/test' element={<AdminPage />} />
+            <Route path='/Otp' element={<OtpSent />} />
             <Route path='/test2' element={<LoginPageTest />} />
             <Route path='/regis/sell' element={<RegisterSell />} />
             <Route path='*' element={<ErrorPage />} />
