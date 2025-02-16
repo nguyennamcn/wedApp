@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, Space, Badge } from 'antd';
-import { UserOutlined, ShoppingCartOutlined, SettingOutlined, QuestionCircleOutlined, LogoutOutlined, FileTextOutlined } from '@ant-design/icons';
-import { NavLink } from 'react-router-dom';
+import { Button, Dropdown } from 'antd';
+import { UserOutlined, SettingOutlined, QuestionCircleOutlined, LogoutOutlined, FileTextOutlined } from '@ant-design/icons';
+import ModalUser from '../Modal/ModalUser';
 
-const userMenuItems = [
+const UserDropSign = () => {
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
+  const openModal = () => setIsOpenModal(true);
+  const closeModal = () => setIsOpenModal(false);
+
+  const userMenuItems = [
     {
       key: '0',
       label: (
         <div style={{ textAlign: 'center', padding: '10px 0' }}>
-          <NavLink to={'/login'} type="primary" style={{ width: '90%', backgroundColor: '#76B041', fontSize: '32px', padding  : '10px 100px', borderRadius: '50px', color: "white" }}>
-            Đăng nhập
-          </NavLink>
-          <div style={{ color: 'gray', fontSize: '20px', marginTop: '5px' }}><NavLink style={{color:'gray'}} to={"/login"}>Đăng ký</NavLink></div>
+          <button
+            onClick={openModal} // Gọi hàm mở modal
+            style={{
+              fontSize: '24px',
+              background: '#6EB566',
+              padding: '10px 90px',
+              borderRadius: '10px',
+              color: 'white',
+            }}
+          >
+            Đăng nhập/Đăng ký
+          </button>
         </div>
       ),
-      disabled: false,
     },
-    { key: 'divider1', type: 'divider' }, // Đường kẻ ngang
-  
+    { key: 'divider1', type: 'divider' },
     {
       key: '1',
-      label: (
-        <div style={{fontSize: '20px', background: '#ECECEC', padding : '0'}}>Quản lý đơn hàng</div>
-      ), 
+      label: <div style={{ fontSize: '20px', background: '#ECECEC' }}>Quản lý đơn hàng</div>,
       disabled: true,
     },
     {
@@ -34,13 +44,9 @@ const userMenuItems = [
       label: <a href="/sales"><FileTextOutlined /> Đơn bán</a>,
     },
     { key: 'divider2', type: 'divider' },
-  
     {
       key: '4',
-      label:
-      (
-        <div style={{fontSize: '20px', background: '#ECECEC'}}>Ưu đãi, khuyến mãi</div>
-      ), 
+      label: <div style={{ fontSize: '20px', background: '#ECECEC' }}>Ưu đãi, khuyến mãi</div>,
       disabled: true,
     },
     {
@@ -48,12 +54,9 @@ const userMenuItems = [
       label: <a href="/offers">Ưu đãi của tôi</a>,
     },
     { key: 'divider3', type: 'divider' },
-  
     {
       key: '6',
-      label: (
-        <div style={{fontSize: '20px', background: '#ECECEC',}}>Khác</div>
-      ),
+      label: <div style={{ fontSize: '20px', background: '#ECECEC' }}>Khác</div>,
       disabled: true,
     },
     {
@@ -70,17 +73,14 @@ const userMenuItems = [
     },
   ];
 
-const UserDropSign = () => {
-    return (
-        <div style={{ marginTop: '20px', marginRight: '60px' , display :'flex', justifyContent: 'space-between', width: '100%'}}>
-            {/* User Dropdown */}
-            <div>
-                <Dropdown menu={{ items: userMenuItems }} placement="bottom" arrow >
-                    <Button type="text" icon={<UserOutlined style={{ fontSize: '48px', color: 'white' }} />} />
-                </Dropdown>
-            </div>
-        </div>
-    );
+  return (
+    <div style={{ marginTop: '20px', marginRight: '60px', display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+      <Dropdown menu={{ items: userMenuItems }} placement="bottom" arrow>
+        <Button type="text" icon={<UserOutlined style={{ fontSize: '48px', color: 'white' }} />} />
+      </Dropdown>
+      <ModalUser isOpen={isOpenModal} onClose={closeModal} />
+    </div>
+  );
 };
 
 export default UserDropSign;

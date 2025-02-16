@@ -1,7 +1,7 @@
 import { message } from "antd";
 
 export function validatePhone(phone){
-    const phoneRegex = /^[0-9]{10}$/;
+    const phoneRegex = /^((0|84|\+84)(3|5|7|8|9)[0-9]{7})$/;
     if(!phone){
         return{
             isValid : false,
