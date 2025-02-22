@@ -4,7 +4,7 @@ import { Card, Button } from 'antd';
 const { Meta } = Card;
 
 const ProductHot = () => {
-    const [visibleItems, setVisibleItems] = useState(16);
+    const [visibleItems, setVisibleItems] = useState(8);
     const totalItems = 20;
 
     const handleShowMore = () => {

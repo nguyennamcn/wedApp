@@ -13,22 +13,34 @@ export default function HeaderPage() {
       <div
         style={{
           width: '100%',
-          background: '#636F0433',
+          background: '#258A1A',
           display: 'flex',
-          justifyContent: 'end',
-          fontSize: '28px',
-          color: 'white'
+          justifyContent: 'space-evenly',
+          fontSize: '20px',
+          color: 'white',
+          padding: '7px 15%'
         }}
       >
-        <NavLink style={{ color: 'white' }}>
-          <span> Đóng góp ý kiến</span>
-        </NavLink>
         <span
           style={{
-            margin: '0 10% 0 5%',
             cursor: 'pointer'
           }}
-        > Thay đồi ngôn ngữ</span>
+        > Kênh người bán</span>
+        <span
+          style={{
+            cursor: 'pointer'
+          }}
+        > Đóng góp ý kiến</span>
+        <span
+          style={{
+            cursor: 'pointer'
+          }}
+        > Đóng góp ý kiến</span>
+        <span
+          style={{
+            cursor: 'pointer'
+          }}
+        > Thay đổi ngôn ngữ</span>
       </div>
       <div
         style={{
@@ -39,14 +51,15 @@ export default function HeaderPage() {
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            padding: '0 7%'
+            padding: '1% 7%'
           }}
         >
 
           <NavLink
             style={{
               fontSize: '48px',
-              width: '10%'
+              width: '10%',
+              color: 'white'
             }}
             to="/">
             <span>LOGO</span>
@@ -64,9 +77,7 @@ export default function HeaderPage() {
             <CartEven />
           </div>
         </div>
-        <div>
-          <MenuAll />
-        </div>
+        
       </div>
 
     </div>

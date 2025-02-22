@@ -67,10 +67,6 @@ const UserDropSign = () => {
       key: '8',
       label: <a href="/help"><QuestionCircleOutlined /> Trợ giúp</a>,
     },
-    {
-      key: '9',
-      label: <a href="/logout"><LogoutOutlined /> Đăng xuất</a>,
-    },
   ];
 
   return (

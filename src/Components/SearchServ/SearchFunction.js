@@ -1,19 +1,26 @@
 import React from 'react';
 import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import { SlArrowDown } from "react-icons/sl";
 
 const SearchFunction = () => {
   return (
     <div style={{ 
       backgroundColor: '#FFFFFF', 
       marginTop: '5px',
-      borderRadius: '20px', 
       display: 'flex',
       alignItems: 'center',
+      padding : '0 10px',
+      width: '65%',
       borderRadius: '30px',
-      padding : '0 5px',
-      width: '65%'
     }}>
+      <span style={{
+        fontSize: '32px',
+        padding: ' 0 5%',
+        marginBottom: '10px'
+      }}>
+        Danh mục <SlArrowDown size={18} /> <span style={{ marginLeft: '10px', fontSize: '40px'}}>|</span>
+      </span>
       <Input
         placeholder="Tìm..."
         bordered={false}

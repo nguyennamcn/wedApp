@@ -3,17 +3,21 @@ import { localUserService } from "./localService";
 
 
 
-export const BASE_URL = "";
-const TokenApi   = "";
+export const BASE_URL = "https://12ea-171-243-48-112.ngrok-free.app";
 
 export const configHeader = ()  =>{
+    const accessToken = localUserService.getAccessToken();
     return{
-        TokenApi: TokenApi,
-        Authorization: "bearer" + localUserService.get()?.accessToken,
+        Authorization: accessToken ? `Bearer ${accessToken}` : "",
+        "Content-Type": "application/json"
     }
 }
 
 export const https = axios.create({
     baseURL: BASE_URL,
-    headers: configHeader(),
 })
+
+// https.interceptors.request.use((config) => {
+//     config.headers = configHeader();
+//     return config;
+// });

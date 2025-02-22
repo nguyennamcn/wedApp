@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { localUserService } from '../../service/localService';
-import { NavLink } from 'react-router-dom';
 import UserDrop from './UserDrop';
 import UserDropSign from './UserDropSign';
 
@@ -10,11 +9,7 @@ export default function UserMenu() {
     return state.userReducer.userInfo;
   })
   console.log(userInfo);
-  let handleLogout = () => {
-    localUserService.remove();
-    window.location.reload();
-    window.location.href="/login";
-  }
+  
   let renderContent = () =>{
     if(userInfo){
       return(
@@ -22,17 +17,10 @@ export default function UserMenu() {
         
         <UserDrop 
         user={userInfo}
-        logoutBtn={
-          <button
-        onClick={handleLogout}
-        >Đăng xuất</button>
-        }
+        
         
         />
-        
-        {/* <button
-        onClick={handleLogout}
-        >Đăng xuất</button> */}
+
       </>
       )
     }else{

@@ -1,6 +1,4 @@
 import React from 'react'
-import UserDrop from '../../Components/Header/UserDrop'
-import HeaderPage from '../../Components/Header/HeaderPage'
 import ListIntro from '../ListIntroProduct/ListIntro'
 import DailyDeals from '../ListIntroProduct/DailyDeal'
 import SearchCarousel from '../ListIntroProduct/SearchCarousel'
@@ -10,7 +8,6 @@ export default function HomePage() {
 
   return (
     <>
-      <HeaderPage />
       <div
         style={{
           padding: '0 140px'

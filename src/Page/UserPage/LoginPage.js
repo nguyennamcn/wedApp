@@ -1,19 +1,20 @@
-import React, { use, useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import '../../css/UserPages/login.css';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { userService } from '../../service/userService';
+import { message } from 'antd';
+import { localUserService } from '../../service/localService';
+import { setLoginAction } from '../../redux/action/userAction';
+import { useDispatch } from 'react-redux';
 
 const LoginPage = () => {
   const [isRegisterActive, setIsRegisterActive] = useState(false);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [repass, setRePass] = useState("");
-  
+  const dispatch = useDispatch();
 
   
-  const handleLogin = () =>{
-    console.log({email,pass})
-    
-  }
+  
 
   const handleSignUp = () =>{
     console.log({email,pass,repass})
@@ -23,6 +24,14 @@ const LoginPage = () => {
 
   const onFinish = (values) => {
     console.log('Success:', values);
+    userService.postLogin(values)
+      .then((res) => {
+        message.success("đăng nhập thành công !");
+        localUserService.set(res.data.metadata); 
+        dispatch(setLoginAction(res.data.metadata));
+      }).catch((err) => {
+        console.log(err)
+      });
   };
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
@@ -126,7 +135,6 @@ const LoginPage = () => {
               cursor: 'pointer'
             }}>Quên mật khẩu ?</p>
             <button 
-            onClick={handleLogin}
             className={`disable ${!isRegisterActive ? 'btn-login avaiable' : ''}`}
             >Đăng Nhập</button>
           </div>

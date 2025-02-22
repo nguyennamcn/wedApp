@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from "./Page/HomePage/HomePage";
-import LoginPage from './Page/UserPage/LoginPage';
-import SignUpPage from './Page/UserPage/SignUpPage';
 import ErrorPage from './Page/ErrolPage/ErrorPage';
 import LoadingPage from './Components/Spinner/LoadingPage'; // Import LoadingPage
-import AdminPage from './Page/AdminPage/AdminPage';
-import LoginPageTest from './Page/AdminPage/LoginPageTest';
 import RegisterSell from './Page/SellerPage/RegisterSell';
-import OtpSent from './Components/OtpSent/OtpSent';
+import Layout from './Layout/Layout';
+import DetailPage from './Page/DetailPage/DetailPage';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -29,12 +26,8 @@ function App() {
       ) : (
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/login' element={<LoginPage />} />
-            <Route path='/signup' element={<SignUpPage />} />
-            <Route path='/test' element={<AdminPage />} />
-            <Route path='/Otp' element={<OtpSent />} />
-            <Route path='/test2' element={<LoginPageTest />} />
+            <Route path='/' element={<Layout Component={HomePage} />} />
+            <Route path='/detail' element={<Layout Component={DetailPage} />} />
             <Route path='/regis/sell' element={<RegisterSell />} />
             <Route path='*' element={<ErrorPage />} />
           </Routes>

@@ -1,6 +1,6 @@
 import React from 'react'
 import FooterPage from '../Components/Footer/FooterPage'
-import HeaderPage from '../Components/Footer/HeaderPage'
+import HeaderPage from '../Components/Header/HeaderPage'
 
 export default function ({Component}) {
   return (
