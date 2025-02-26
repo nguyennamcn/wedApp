@@ -12,5 +12,8 @@ export const appService = {
         console.log(formData)
         return https.post("/user-service/api/v1/account/confirm-otp", formData);
     },
-    
+    resendOtp: (data) =>{
+        console.log(data)
+        return https.post("/user-service/api/v1/account/resend-otp",  data);
+    },
 }

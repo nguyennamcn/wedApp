@@ -5,21 +5,20 @@ import { SlArrowDown } from "react-icons/sl";
 
 const SearchFunction = () => {
   return (
-    <div style={{ 
+    <div style={{width: '60%'}}>
+      <div style={{ 
       backgroundColor: '#FFFFFF', 
-      marginTop: '5px',
       display: 'flex',
       alignItems: 'center',
       padding : '0 10px',
-      width: '65%',
+      width: '100%',
       borderRadius: '30px',
-    }}>
+    }}> 
       <span style={{
-        fontSize: '32px',
+        fontSize: '20px',
         padding: ' 0 5%',
-        marginBottom: '10px'
       }}>
-        Danh mục <SlArrowDown size={18} /> <span style={{ marginLeft: '10px', fontSize: '40px'}}>|</span>
+        Danh mục <SlArrowDown size={18} /> <span style={{ marginLeft: '10px', fontSize: '20px'}}>|</span>
       </span>
       <Input
         placeholder="Tìm..."
@@ -28,10 +27,11 @@ const SearchFunction = () => {
           flex: 1, 
           background : 'transparent',
           color: 'black',
-          fontSize: '24px',
+          fontSize: '18px',
         }}
       />
-      <SearchOutlined style={{ color: 'white', fontSize: '18px', padding: '5px 30px', background : '#6EB566' , fontSize : '48px', borderRadius: '40px'}} />
+      <SearchOutlined style={{ color: 'white', fontSize: '18px', padding: '5px 15px', background : '#6EB566' , fontSize : '20px', borderRadius: '40px'}} />
+    </div>
     </div>
   );
 };

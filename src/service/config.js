@@ -3,21 +3,27 @@ import { localUserService } from "./localService";
 
 
 
-export const BASE_URL = "https://12ea-171-243-48-112.ngrok-free.app";
+export const BASE_URL = "http://183.81.109.218:8081";
 
-export const configHeader = ()  =>{
+export const configHeader = () => {
     const accessToken = localUserService.getAccessToken();
-    return{
+    console.log("Access Token:", accessToken); // In ra Access Token
+    return {
         Authorization: accessToken ? `Bearer ${accessToken}` : "",
-        "Content-Type": "application/json"
-    }
-}
+        "Content-Type": "application/json",
+    };
+};
 
 export const https = axios.create({
     baseURL: BASE_URL,
 })
 
-// https.interceptors.request.use((config) => {
-//     config.headers = configHeader();
-//     return config;
-// });
+https.interceptors.request.use(
+    (config) => {
+        config.headers = { ...config.headers, ...configHeader() };
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);

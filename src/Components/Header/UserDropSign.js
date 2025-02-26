@@ -13,13 +13,12 @@ const UserDropSign = () => {
     {
       key: '0',
       label: (
-        <div style={{ textAlign: 'center', padding: '10px 0' }}>
+        <div style={{ textAlign: 'center'}}>
           <button
             onClick={openModal} // Gọi hàm mở modal
             style={{
               fontSize: '24px',
               background: '#6EB566',
-              padding: '10px 90px',
               borderRadius: '10px',
               color: 'white',
             }}
@@ -70,9 +69,9 @@ const UserDropSign = () => {
   ];
 
   return (
-    <div style={{ marginTop: '20px', marginRight: '60px', display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
       <Dropdown menu={{ items: userMenuItems }} placement="bottom" arrow>
-        <Button type="text" icon={<UserOutlined style={{ fontSize: '48px', color: 'white' }} />} />
+        <Button type="text" icon={<UserOutlined style={{ fontSize: '32px', color: 'white' }} />} />
       </Dropdown>
       <ModalUser isOpen={isOpenModal} onClose={closeModal} />
     </div>

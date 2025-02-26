@@ -11,7 +11,7 @@ export const userService = {
     },
 
     postSignUp: (signUpForm) => {
-        return axios.post(`${BASE_URL}/signup`, signUpForm, {
+        return axios.post(`${BASE_URL}/user-service/api/v1/account/signup`, signUpForm, {
             headers: {
                 "Content-Type": "application/json"
             }

@@ -32,7 +32,7 @@ export default function UserMenu() {
     }
   }
   return (
-    <div className='space-x-5 flex items-center'>
+    <div >
       {renderContent()}
     </div>
   )
