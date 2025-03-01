@@ -19,6 +19,8 @@ import { validateEmail } from "../../Validation/CheckEmail/CheckMail";
 import { appService } from "../../service/appService";
 import { Button, notification, Space } from "antd";
 import { validatePass } from "../../Validation/checkPass/CheckPass";
+import { Alert, Flex, Spin } from 'antd';
+
 
 export default function ModalUser({ isOpen, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,6 +45,7 @@ export default function ModalUser({ isOpen, onClose }) {
   const dispatch = useDispatch();
   const [isNewPass, setIsNewPass] = useState(false);
   const [isXT, setIsXT] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
 
@@ -185,27 +188,21 @@ export default function ModalUser({ isOpen, onClose }) {
         const res = await userService.postLogin(loginData);
         console.log("API response:", res.data);
         
-        
+        setLoading(true);
         if (res.data.status ===  true && res.data.metadata) {
           localUserService.set(res.data);
-          dispatch(setLoginAction(res.data));
-          console.log(res.data.status)
-          handleOnclose();
-          openNotification(
-            "success",
-            "Thành công",
-            "Đăng nhập thành công!"
-          );
-        }
-        else {
-          console.log('e')
-          setIsXT(true)
-          handleRePass();
-          openNotification(
-            "warning",
-            "Tài khoản chưa hoạt động",
-            "Cần xác thực tài khoản để đăng nhập thành công!"
-          );
+          
+          setTimeout(() => {
+            openNotification(
+              "success",
+              "Thành công",
+              "Đăng nhập thành công!"
+            );
+          }, 1000);
+          setTimeout(() => {
+            dispatch(setLoginAction(res.data));
+            setLoading(false);
+          }, 1500);
         }
       } catch (err) {
         console.error("Lỗi đăng nhập:", err);
@@ -244,13 +241,13 @@ export default function ModalUser({ isOpen, onClose }) {
       };
       console.log(signupForm)
       const res = await userService.postSignUp(signupForm);
+      setLoading(true);
       console.log("API response:", res.data);
-      openNotification(
-        "success",
-        "Thành công",
-        "Đăng ký thành công!"
-      );
-      handleOnclose();
+      setTimeout(() => {
+        setIsXT(true);
+        setLoading(false);
+      }, 700);
+      handleRePass();
     } catch (err) {
       console.error("Lỗi đăng Ký:", err);
       openNotification(
@@ -312,6 +309,8 @@ export default function ModalUser({ isOpen, onClose }) {
       );
     }
   };
+
+
   const handleXTOtp = async () => {
     const formData = {
       email: email,
@@ -321,12 +320,18 @@ export default function ModalUser({ isOpen, onClose }) {
     console.log(formData);
     try {
       await appService.conformOtp(formData);
-      openNotification(
-        "success",
-        "Thành công",
-        "Tài khoản xác thực thành công!"
-      );
-      handleOnclose()
+      setLoading(true)
+      setTimeout(() => {
+        openNotification(
+          "success",
+          "Thành công",
+          "Tài khoản xác thực thành công!"
+        );
+      }, 700);
+      setTimeout(() => {
+        setLoading(false)
+        handleOnclose()
+      }, 1500);
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu xác thực:", err);
       openNotification(
@@ -337,10 +342,33 @@ export default function ModalUser({ isOpen, onClose }) {
     }
   };
 
+  const contentStyle: React.CSSProperties = {
+    marginTop: '20%'
+  };
+  
+  const content = <div style={contentStyle} />;
+
+
+
   if (!isOpen) return null;
 
   return (
     <div className="modal-overlay">
+      {loading && (
+        <div
+        style={{
+         width: '100%',
+         position: 'fixed',
+         height: '100vh',
+         zIndex: '1001',
+         padding: '20px',
+         background: 'rgba(0, 0, 0, 0.5)'
+       }}>
+         <Spin tip="Loading" size="large">
+           {content}
+         </Spin>
+       </div>
+      )}
       {contextHolder}
       {/* login */}
       {!isRP && !isSms && !isOtp && !isDK && !isXT &&(
@@ -435,7 +463,7 @@ export default function ModalUser({ isOpen, onClose }) {
       )}
 
       {/* dang ky */}
-      {!isRP && !isSms && !isOtp && isDK && (
+      {!isRP && !isSms && !isOtp && isDK && !isXT && (
         <div className="modal-container">
           {/* Nút đóng */}
           <button

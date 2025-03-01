@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Afacad:wght@400;700&display=swap');
 
 .header{
     position: sticky;
@@ -10,4 +11,8 @@
 a:hover{
     text-decoration: none;
     color: gray;
+}
+.font-xmark{
+    font-family: 'Afacad', sans-serif;
+    letter-spacing: 3px;
 }

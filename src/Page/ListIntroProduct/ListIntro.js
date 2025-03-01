@@ -41,7 +41,7 @@ const ListIntro = () => {
         <div>
           <div
             style={{
-              height: "60vh",
+              height: "90vh",
               background: "#ddd",
               display: "flex",
               alignItems: "center",

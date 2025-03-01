@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 import '../../css/Header/headerDrop.css';
 import SearchFunction from '../SearchServ/SearchFunction';
 import CartEven from '../CartEvent/CartEvent';
+import logo from '../../img/xmark-high-resolution-logo.png'
+
 
 export default function HeaderPage() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,7 +36,7 @@ export default function HeaderPage() {
         style={{
           width: '100%',
           background: '#258A1A',
-          display: 'flex',
+          display: isScrolled ? 'none' : 'flex',
           justifyContent: 'space-evenly',
           fontSize: '12px',
           color: 'white',
@@ -51,7 +53,7 @@ export default function HeaderPage() {
       {/* Header chính */}
       <div
         style={{
-          background: '#6EB566',
+          background: isScrolled ? 'none': '#6EB566',
           position: 'fixed',
           top: isScrolled ? '0px' : '30px',
           left: 0,
@@ -67,7 +69,6 @@ export default function HeaderPage() {
           style={{
             display: 'flex',
             alignItems: 'center',
-            textAlign: 'center',
           }}
         >
           <NavLink
@@ -80,7 +81,8 @@ export default function HeaderPage() {
             }}
             to="/"
           >
-            <span>LOGO</span>
+            {/* <img style={{width: '50%'}} src={logo} alt="logo" /> */}
+            <p className='font-xmark'>xmark</p>
           </NavLink>
 
           <SearchFunction />

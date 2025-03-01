@@ -12,12 +12,13 @@
   }
   
   .modal-container {
-    background: #ECF2D8;
+    background: #fff;
     padding: 40px 12%;
     border-radius: 20px;
     width: 50%;
     position: relative;
     text-align: center;
+    transform: scale(0.7);
   }
   
   .close-button {
@@ -129,13 +130,13 @@
   }
   
   .google {
-    background: white;
-    color: black;
+    background: #6EB566;
+    color: #fff;
   }
   
   .facebook {
-    background: white;
-    color: #1877f2;
+    background: #6EB566;
+    color: #fff;
   }
   
   .otp-input{

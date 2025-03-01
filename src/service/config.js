@@ -3,7 +3,7 @@ import { localUserService } from "./localService";
 
 
 
-export const BASE_URL = "http://183.81.109.218:8081";
+export const BASE_URL = "http://113.22.66.128:8081";
 
 export const configHeader = () => {
     const accessToken = localUserService.getAccessToken();
@@ -18,12 +18,12 @@ export const https = axios.create({
     baseURL: BASE_URL,
 })
 
-https.interceptors.request.use(
-    (config) => {
-        config.headers = { ...config.headers, ...configHeader() };
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+// https.interceptors.request.use(
+//     (config) => {
+//         config.headers = { ...config.headers, ...configHeader() };
+//         return config;
+//     },
+//     (error) => {
+//         return Promise.reject(error);
+//     }
+// );
