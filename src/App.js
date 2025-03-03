@@ -6,6 +6,10 @@ import LoadingPage from './Components/Spinner/LoadingPage'; // Import LoadingPag
 import RegisterSell from './Page/SellerPage/RegisterSell';
 import Layout from './Layout/Layout';
 import DetailPage from './Page/DetailPage/DetailPage';
+import SettingPage from './Page/UserPage/SettingPage';
+import LayoutUser from './Layout/LayoutUser';
+import ProtectedRoute from './Components/Protectedroute/ProtectedRoute';
+import IntroPage from './Page/IntroPage/IntroPage';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -26,10 +30,12 @@ function App() {
       ) : (
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Layout Component={HomePage} />} />
+            <Route path='/home' element={<Layout Component={HomePage} />} />
+            <Route path='/settings' element={<ProtectedRoute><LayoutUser Component={SettingPage} /></ProtectedRoute>} />
             <Route path='/detail' element={<Layout Component={DetailPage} />} />
             <Route path='/regis/sell' element={<RegisterSell />} />
             <Route path='*' element={<ErrorPage />} />
+            <Route path='/' element={<IntroPage />} />
           </Routes>
         </BrowserRouter>
       )}

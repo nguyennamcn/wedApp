@@ -1,9 +1,7 @@
 import axios from "axios";
 import { localUserService } from "./localService";
-
-
-
 export const BASE_URL = "http://113.22.66.128:8081";
+
 
 export const configHeader = () => {
     const accessToken = localUserService.getAccessToken();
@@ -14,16 +12,33 @@ export const configHeader = () => {
     };
 };
 
+
+// Tạo Axios instance
 export const https = axios.create({
     baseURL: BASE_URL,
-})
+});
 
-// https.interceptors.request.use(
-//     (config) => {
-//         config.headers = { ...config.headers, ...configHeader() };
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
+console.log(https)
+
+// Kích hoạt interceptor
+https.interceptors.request.use(
+    (config) => {
+        // Không thêm Authorization vào các API đăng ký & đăng nhập
+        const authExcludedUrls = [
+            "/register",
+            "/login",
+            "/oauth2/authorization",
+            "/user-service/api/v1/account/confirm-otp", // Thêm đường dẫn này
+        ];
+        const isExcluded = authExcludedUrls.some((url) => config.url.includes(url));
+
+        if (!isExcluded) {
+            config.headers = { ...config.headers, ...configHeader() };
+        }
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);

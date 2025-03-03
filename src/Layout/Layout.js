@@ -7,7 +7,7 @@ export default function ({Component}) {
   return (
     <div>
         <HeaderPage />
-        <div className='img-bg'>
+        <div style={{marginTop: '6%'}}>
         <Component />
         </div>
         <FooterPage />

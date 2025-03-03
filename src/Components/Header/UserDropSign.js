@@ -69,7 +69,7 @@ const UserDropSign = () => {
   ];
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', }}>
       <Dropdown menu={{ items: userMenuItems }} placement="bottom" arrow>
         <Button type="text" icon={<UserOutlined style={{ fontSize: '32px', color: 'white' }} />} />
       </Dropdown>

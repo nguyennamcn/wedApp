@@ -6,3 +6,11 @@
     background-size: cover;
     padding: 8% 0;
 }
+
+p{
+    cursor: pointer;
+}
+
+.active{
+    color: blue;
+}

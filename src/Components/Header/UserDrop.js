@@ -12,11 +12,12 @@ import { localUserService } from "../../service/localService";
 
 const UserDrop = ({ user, logoutBtn }) => {
   const navigate = useNavigate();
-  const userName = user.metadata?.email;
+  const userName = user.email;
   const status = user.status;
-  console.log(userName);
+  console.log(user);
   let handleLogout = () => {
     localUserService.remove();
+    localStorage.removeItem("token", "your_jwt_token");
     window.location.reload();
   };
 
@@ -113,104 +114,6 @@ const UserDrop = ({ user, logoutBtn }) => {
     },
   ];
 
-  const userMenuItemsDis = [
-    {
-      key: "0",
-      label: (
-        <div
-          style={{
-            textAlign: "center",
-            padding: "10px 60px",
-            fontSize: "18px",
-          }}
-        >
-          Bạn cần xác thực để sử dụng tài khoản !
-          <p style={{ fontSize: '14px'}}>Xác thực tài khoản tại đây !</p>
-        </div>
-      ),
-      disabled: false,
-    },
-    { key: "divider1", type: "divider" }, // Đường kẻ ngang
-
-    {
-      key: "1",
-      label: (
-        <div style={{ fontSize: "20px", background: "#ECECEC", padding: "0" }}>
-          Quản lý đơn hàng
-        </div>
-      ),
-      disabled: true,
-    },
-    {
-      key: "2",
-      label: (
-        <a href="/orders">
-          <FileTextOutlined /> Đơn mua
-        </a>
-      ),
-      disabled: true,
-    },
-    {
-      key: "3",
-      label: (
-        <a href="/sales">
-          <FileTextOutlined /> Đơn bán
-        </a>
-      ),
-      disabled: true,
-    },
-    { key: "divider2", type: "divider" },
-
-    {
-      key: "4",
-      label: (
-        <div style={{ fontSize: "20px", background: "#ECECEC" }}>
-          Ưu đãi, khuyến mãi
-        </div>
-      ),
-      disabled: true,
-    },
-    {
-      key: "5",
-      label: <a href="/offers">Ưu đãi của tôi</a>,
-      disabled: true,
-    },
-    { key: "divider3", type: "divider" },
-
-    {
-      key: "6",
-      label: (
-        <div style={{ fontSize: "20px", background: "#ECECEC" }}>Khác</div>
-      ),
-      disabled: true,
-    },
-    {
-      key: "7",
-      label: (
-        <a href="/settings">
-          <SettingOutlined /> Cài đặt tài khoản
-        </a>
-      ),
-      disabled: true,
-    },
-    {
-      key: "8",
-      label: (
-        <a href="/help">
-          <QuestionCircleOutlined /> Trợ giúp
-        </a>
-      ),
-    },
-    {
-      key: "9",
-      label: (
-        <p onClick={handleLogout}>
-          <LogoutOutlined /> Đăng Xuất
-        </p>
-      ),
-    },
-  ];
-
   const menuStyle = {
     background: "white",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
@@ -236,14 +139,13 @@ const UserDrop = ({ user, logoutBtn }) => {
       style={{
         display: "flex",
         justifyContent: "space-between",
-        width: "100%",
       }}
     >
       {/* User Dropdown */}
       <div>
-        <Dropdown menu={{ items: status ? userMenuItems  : userMenuItemsDis}} placement="bottom" arrow>
+        <Dropdown menu={{ items: status ? userMenuItems  : userMenuItems}} placement="bottom" arrow>
           <img
-            src={user?.metadata?.avatar || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"}
+            src={user.avatar || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"}
             alt="User Avatar"
             style={{
               width: "32px",

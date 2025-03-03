@@ -15,13 +15,13 @@ const CartEven = () => {
         : [{ key: '0', label: 'Giỏ hàng trống' }];
 
     return (
-        <div style={{ display :'flex', justifyContent: 'space-between', width: '100%'}}>
+        <div style={{ display :'flex', justifyContent: 'space-between',marginLeft: '10%'}}>
             {/* Giỏ hàng với số lượng sản phẩm */}
             <div>
                 <Dropdown menu={{ items: cartMenuItems }} placement="bottomRight" arrow>
                     <span> 
                         <Badge count={cartItems.length} showZero color="white">
-                            <Button type="text" icon={<ShoppingCartOutlined style={{ fontSize: '26px', color: 'white' }} />} />
+                            <Button type="text" icon={<ShoppingCartOutlined style={{ fontSize: '32px', color: 'white' }} />} />
                         </Badge>
                     </span>
                 </Dropdown>

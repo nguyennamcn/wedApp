@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import '../../css/Header/headerDrop.css';
 import SearchFunction from '../SearchServ/SearchFunction';
 import CartEven from '../CartEvent/CartEvent';
-import logo from '../../img/xmark-high-resolution-logo.png'
+
 
 
 export default function HeaderPage() {
@@ -81,13 +81,12 @@ export default function HeaderPage() {
             }}
             to="/"
           >
-            {/* <img style={{width: '50%'}} src={logo} alt="logo" /> */}
             <p className='font-xmark'>xmark</p>
           </NavLink>
 
           <SearchFunction />
 
-          <div style={{ display: 'flex', alignItems: 'center', width: '20%', marginLeft: '5%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', width: '20%',justifyContent: 'end'}}>
             <UserMenu />
             <CartEven />
           </div>

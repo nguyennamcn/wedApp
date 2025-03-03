@@ -20,7 +20,7 @@ const SearchFunction = () => {
     }, []);
     
   return (
-    <div style={{width: '50%',}}>
+    <div style={{width: '60%',}}>
       <div style={{ 
       backgroundColor: '#FFFFFF', 
       display: 'flex',
@@ -32,12 +32,6 @@ const SearchFunction = () => {
       transform: 'translateX(-50%)',
       transition: 'all 0.5s'
     }}> 
-      {/* <span style={{
-        fontSize: '20px',
-        padding: ' 0 5%',
-      }}>
-        Danh mục <SlArrowDown size={18} /> <span style={{ marginLeft: '10px', fontSize: '20px'}}>|</span>
-      </span> */}
       <Input
         placeholder="Tìm..."
         bordered={false}
@@ -51,8 +45,8 @@ const SearchFunction = () => {
       <SearchOutlined 
       style={{ 
         color: 'white', 
-        fontSize: isScrolled ? '20px' : '26px', 
-        padding: isScrolled ? '3px 10px' : '5px 15px', 
+        fontSize: isScrolled ? '14px' : '20px', 
+        padding: '3px 10px', 
         background : '#6EB566' , 
         borderRadius: '40px',
         transition: 'all 0.5s'

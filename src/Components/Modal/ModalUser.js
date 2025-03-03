@@ -188,10 +188,12 @@ export default function ModalUser({ isOpen, onClose }) {
         const res = await userService.postLogin(loginData);
         console.log("API response:", res.data);
         
-        setLoading(true);
+        
         if (res.data.status ===  true && res.data.metadata) {
+          setLoading(true);
           localUserService.set(res.data);
-          
+          console.log(res)
+          localStorage.setItem("token", "your_jwt_token");
           setTimeout(() => {
             openNotification(
               "success",
@@ -446,7 +448,7 @@ export default function ModalUser({ isOpen, onClose }) {
               <FaFacebook style={{ marginRight: "2%" }} /> Facebook
             </button>
             <p style={{ textAlign: "left", marginTop: "5%", fontSize: "16px" }}>
-              Bạn mới biết đến GreenShop lần đầu?{" "}
+              Bạn mới biết đến xmark lần đầu?{" "}
               <span
                 onClick={() => setIsDK(true)}
                 style={{
@@ -551,6 +553,19 @@ export default function ModalUser({ isOpen, onClose }) {
             <button className="social-login facebook">
               <FaFacebook style={{ marginRight: "2%" }} /> Facebook
             </button>
+            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "16px" }}>
+              Bạn đã có tài khoản ?{" "}
+              <span
+                onClick={() => setIsDK(false)}
+                style={{
+                  color: "#1A81FF",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                }}
+              >
+                Đăng Nhập
+              </span>
+            </p>
           </div>
         </div>
       )}
