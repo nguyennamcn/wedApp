@@ -185,12 +185,11 @@ export default function ModalUser({ isOpen, onClose }) {
           email: email,
           password: pass,
         };
+        setLoading(true);
         const res = await userService.postLogin(loginData);
         console.log("API response:", res.data);
         
-        
         if (res.data.status ===  true && res.data.metadata) {
-          setLoading(true);
           localUserService.set(res.data);
           console.log(res)
           localStorage.setItem("token", "your_jwt_token");
@@ -208,17 +207,24 @@ export default function ModalUser({ isOpen, onClose }) {
         }
       } catch (err) {
         console.error("Lỗi đăng nhập:", err);
-        openNotification(
-          "error",
-          "Lỗi",
-          err.response.data.metadata.message
-        );
+        setTimeout(() => {
+          openNotification(
+            "error",
+            "Lỗi",
+            err.response.data.metadata.message
+          );
+          setLoading(false);
+        }, 1500);
+        
       }
     }
     
   };
 
   const handleSignUp = async () => {
+    const valiPass = validatePass(pass);
+    const valiEmail = validateEmail(email);
+    console.log(valiPass)
     if (!email || !pass || !pass2 ||!phoneNumber) {
       openNotification(
         "error",
@@ -233,6 +239,23 @@ export default function ModalUser({ isOpen, onClose }) {
         "Lỗi",
         "Mật khẩu và nhập lại mật khẩu không giống nhau !"
       );
+      return;
+    }
+    if(!valiPass.isValid){
+      openNotification(
+        "error",
+        "Lỗi",
+        "Mật khẩu xác nhận phải đúng định dạng yêu cầu ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt!"
+      );
+      return;
+    }
+    if(!valiEmail.isValid){
+      openNotification(
+        "error",
+        "Lỗi",
+        "Email không đúng định dạng!"
+      );
+      return;
     }
     try {
       const signupForm = {
@@ -255,7 +278,7 @@ export default function ModalUser({ isOpen, onClose }) {
       openNotification(
         "error",
         "Lỗi",
-        err.response?.data?.message || "Đăng ký thất bại!"
+        err.response.data.metadata.message
       );
     }
   };

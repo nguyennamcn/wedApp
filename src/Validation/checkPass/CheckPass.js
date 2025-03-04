@@ -1,7 +1,7 @@
 import { message } from "antd";
 
 export function validatePass(pass){
-    const passRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_])(?=.{8,})/;
     if(!pass){
         return{
             isValid : false,
