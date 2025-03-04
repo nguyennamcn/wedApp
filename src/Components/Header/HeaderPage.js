@@ -71,7 +71,7 @@ export default function HeaderPage() {
             alignItems: 'center',
           }}
         >
-          <NavLink
+          <a
             style={{
               fontSize: isScrolled ? '24px' : '32px', // Logo nhỏ lại khi cuộn
               width: '20%',
@@ -79,10 +79,10 @@ export default function HeaderPage() {
               fontWeight: 'bold',
               transition: 'font-size 0.3s ease-in-out',
             }}
-            to="/"
+            href='#'
           >
             <p className='font-xmark'>xmark</p>
-          </NavLink>
+          </a>
 
           <SearchFunction />
 

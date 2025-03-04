@@ -355,7 +355,8 @@ export default function ModalUser({ isOpen, onClose }) {
       }, 700);
       setTimeout(() => {
         setLoading(false)
-        handleOnclose()
+        setIsXT(false)
+        setIsDK(false)
       }, 1500);
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu xác thực:", err);
