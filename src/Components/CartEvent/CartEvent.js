@@ -15,7 +15,7 @@ const CartEven = () => {
         : [{ key: '0', label: 'Giỏ hàng trống' }];
 
     return (
-        <div style={{ display :'flex', justifyContent: 'space-between',marginLeft: '10%'}}>
+        <div style={{ display :'flex', justifyContent: 'space-between',marginLeft: '30%'}}>
             {/* Giỏ hàng với số lượng sản phẩm */}
             <div>
                 <Dropdown menu={{ items: cartMenuItems }} placement="bottomRight" arrow>

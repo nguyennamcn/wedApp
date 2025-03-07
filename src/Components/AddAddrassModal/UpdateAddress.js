@@ -3,13 +3,16 @@ import axios from "axios";
 import "./AddAddressModal.css"; // Import file CSS
 import { FaTimes } from "react-icons/fa";
 import { appService } from "../../service/appService";
+import LoadingPage from "../Spinner/LoadingPage";
 
-export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
+export default function UpdateAddress({ isOpen, onClose, address }) {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [addressType, setAddressType] = useState("");
 
+
+  console.log(address)
   const handleSelectAddressType = (type) => {
     setAddressType(type);
   };
@@ -17,15 +20,33 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
-    city: "",
+    province: "",
     cityCode: "",
     district: "",
     districtCode: "",
     ward: "",
     wardCode: "",
-    detailAddress: "",
+    detail: "",
   });
 
+
+  useEffect(() => {
+    if (address) {
+      setFormData({
+        name: address.fullName || "",
+        phone: address.phone || "",
+        province: address.province || "",
+        cityCode: "", // Cần map lại code nếu có
+        district: address.district || "",
+        districtCode: "1",
+        ward: address.ward || "",
+        wardCode: "",
+        detail: address.detail || "1",
+      });
+      setAddressType(address.addressType || "Nhà riêng");
+    }
+  }, [address]);
+  
 
   useEffect(() => {
     axios
@@ -104,13 +125,13 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
     setFormData({
       name: "",
       phone: "",
-      city: "",
+      province: "",
       cityCode: "",
       district: "",
       districtCode: "",
       ward: "",
       wardCode: "",
-      detailAddress: "",
+      detail: "",
     });
   };
 
@@ -135,29 +156,28 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
       !formData.city ||
       !formData.district ||
       !formData.ward ||
-      !formData.detailAddress
+      !formData.detail
     ) {
       return;
     }
 
     const addressUser = {
+      id: address.id,
       fullName: formData.name,
       phone: formData.phone,
       province: formData.city || "",
       district: formData.district || "",
       ward: formData.ward || "",
-      detail: formData.detailAddress || "",
+      detail: formData.detail || "",
       addressType: addressType || "Nhà riêng", // Mặc định là "Nhà riêng"
     };
-
     console.log("Saving Address:", addressUser); // Debugging
     try {
-        appService.postAddress(addressUser)
+        appService.updateAddress(addressUser)
             .then((res) => {
-                console.log(res)
-                onSaveAddress(addressUser);
-                handleOnclose(); // Reset & đóng modal sau khi lưu
-                window.location.reload()
+                console.log(res);
+                handleOnclose(); 
+                window.location.reload();
             }).catch((err) => {
                 console.log(err)
             });
@@ -218,7 +238,7 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
               value={formData.cityCode}
               onChange={handleChangeC}
             >
-              <option value="">Chọn Tỉnh/Thành phố</option>
+              <option value="">{address?.province}</option>
               {provinces.map((province) => (
                 <option
                   key={province.code}
@@ -239,7 +259,7 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
               onChange={handleChangeD}
               disabled={!formData.cityCode}
             >
-              <option value="">Chọn Quận/Huyện</option>
+              <option value="">{address?.district}</option>
               {districts.map((district) => (
                 <option
                   key={district.code}
@@ -260,7 +280,7 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
               onChange={handleChangeW}
               disabled={!formData.districtCode}
             >
-              <option value="">Chọn Phường/Xã</option>
+              <option value="">{address?.ward}</option>
               {wards.map((ward) => (
                 <option key={ward.code} value={ward.code} data-name={ward.name}>
                   {ward.name}
@@ -270,10 +290,10 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
           </div>
 
           <input
-            name="detailAddress"
+            name="detail"
             type="text"
             placeholder="Địa chỉ chi tiết"
-            value={formData.detailAddress}
+            value={formData.detail}
             onChange={handleChange}
           />
 

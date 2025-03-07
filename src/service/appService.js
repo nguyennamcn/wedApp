@@ -23,5 +23,16 @@ export const appService = {
         console.log(data)
         return https.put("/user-service/api/v1/users", data);
     },
-    
+    postAddress: (data) =>{
+        console.log(data)
+        return https.post("/user-service/api/v1/users/address/create", data);
+    },
+    updateAddress: (data) =>{
+        console.log(data)
+        return https.put("/user-service/api/v1/users/address/update", data);
+    },
+    deleteAddress: (id) =>{
+        console.log(id)
+        return https.delete(`/user-service/api/v1/users/address/delete/${id}`);
+    },
 }

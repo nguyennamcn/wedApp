@@ -139,3 +139,7 @@ body {
 .footer-intro .social-icons svg:hover {
   color: #64b964;
 }
+
+.footer-right p{
+  color: black ;
+}

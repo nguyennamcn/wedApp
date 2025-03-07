@@ -7,7 +7,7 @@ export default function ({Component}) {
   return (
     <div>
         <HeaderPage />
-        <div style={{marginTop: '6%'}}>
+        <div style={{marginTop: '8%'}}>
         <Component />
         </div>
         <FooterPage />

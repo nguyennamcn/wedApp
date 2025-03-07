@@ -1,5 +1,5 @@
 import { Button, Dropdown, Space } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   UserOutlined,
@@ -9,12 +9,26 @@ import {
   FileTextOutlined,
 } from "@ant-design/icons";
 import { localUserService } from "../../service/localService";
+import { appService } from "../../service/appService";
 
 const UserDrop = ({ user, logoutBtn }) => {
+  const [data, setData] = useState('');
   const navigate = useNavigate();
   const userName = user.email;
   const status = user.status;
-  console.log(user);
+  useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          const res = await appService.getProfile();
+           setData(res.data.metadata);
+           console.log(data)
+        } catch (error) {
+          console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+        }
+      };
+  
+      fetchProfile();
+    }, []);
   let handleLogout = () => {
     localUserService.remove();
     localStorage.removeItem("token", "your_jwt_token");
@@ -145,7 +159,7 @@ const UserDrop = ({ user, logoutBtn }) => {
       <div>
         <Dropdown menu={{ items: status ? userMenuItems  : userMenuItems}} placement="bottom" arrow>
           <img
-            src={user.avatar || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"}
+            src={data.avatar || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"}
             alt="User Avatar"
             style={{
               width: "32px",

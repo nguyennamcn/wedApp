@@ -7,10 +7,11 @@
     padding: 8% 0;
 }
 
-p{
+
+.layoutuser p{
     cursor: pointer;
+    color: black;
+    font-weight: normal;
+    font-size: 14px;
 }
 
-.active{
-    color: blue;
-}

@@ -15,9 +15,11 @@ export default function SettingPage() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [api, contextHolder] = notification.useNotification();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
+    setLoading(true)
     const fetchProfile = async () => {
       try {
         const res = await appService.getProfile();
@@ -28,6 +30,7 @@ export default function SettingPage() {
             ? dayjs(res.data.metadata.dateOfBirth)
             : null,
         });
+        setLoading(false)
       } catch (error) {
         console.error("Lỗi khi lấy dữ liệu người dùng:", error);
         message.error("Không thể lấy dữ liệu người dùng.");
@@ -132,8 +135,11 @@ export default function SettingPage() {
   };
 
   return (
-    <div style={{ padding: "2%" }}>
+    <div style={{ padding: "2%" , background: 'white'}}>
       {contextHolder}
+      {loading && (
+        <LoadingPage />
+      )}
       <p style={{ fontSize: "30px" }}>Hồ sơ của tôi</p>
       <hr style={{ marginBottom: "5%" }} />
       <div style={{ display: "flex" }}>

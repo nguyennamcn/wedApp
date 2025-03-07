@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import HeaderPage from "../Components/Header/HeaderPage";
 import "./layout.css";
 import { useNavigate } from "react-router-dom";
+import FooterPage from "../Components/Footer/FooterPage"
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function ({ Component }) {
@@ -21,14 +22,13 @@ export default function ({ Component }) {
   const [a13, setA13] = useState(false);
   const navigate = useNavigate();
   return (
-    <div>
+    <div className="layoutuser">
       <HeaderPage />
       <div
         style={{
           background: "#F2ECEC",
           width: "100%",
-          height: "100vh",
-          padding: "8% 0 0 0",
+          padding: "8% 0 1% 0",
         }}
       >
         <div
@@ -41,10 +41,10 @@ export default function ({ Component }) {
         >
           <div
             style={{
-              width: "15%",
+              width: "20%",
               background: "white",
               marginRight: "1%",
-              padding: "3% 2%",
+              padding: "3% 3%",
               lineHeight: "80%",
             }}
           >
@@ -53,7 +53,7 @@ export default function ({ Component }) {
               <p
                 className={a1 ? "active" : ""}
                 onClick={() => {
-                //   navigate('/order');
+                  navigate('/settings');
                   setA1(true);
                   setA2(false);
                   setA3(false);
@@ -89,7 +89,7 @@ export default function ({ Component }) {
               <p
                 className={a3 ? "active" : ""}
                 onClick={() => {
-                //   navigate('/order');
+                  navigate('/settings/address');
                   setA1(false);
                   setA3(true);
                   setA2(false);
@@ -108,7 +108,7 @@ export default function ({ Component }) {
               <p
                 className={a4 ? "active" : ""}
                 onClick={() => {
-                //   navigate('/order');
+                  
                   setA1(false);
                   setA4(true);
                   setA2(false);
@@ -265,7 +265,6 @@ export default function ({ Component }) {
           </div>
           <div
             style={{
-              background: "white",
               width: "100%",
             }}
           >
@@ -273,6 +272,7 @@ export default function ({ Component }) {
           </div>
         </div>
       </div>
+      <FooterPage />
     </div>
   );
 }

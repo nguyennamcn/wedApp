@@ -35,7 +35,7 @@ export default function HeaderPage() {
       <div
         style={{
           width: '100%',
-          background: '#258A1A',
+          background: '#6EB566',
           display: isScrolled ? 'none' : 'flex',
           justifyContent: 'space-evenly',
           fontSize: '12px',
@@ -61,8 +61,7 @@ export default function HeaderPage() {
           zIndex: 1000,
           boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
           transition: 'all 0.3s ease-in-out',
-          height: isScrolled ? '50px' : '70px', // Thu nhỏ khi cuộn
-          padding: isScrolled ? '5px 10%' : '10px 10%',
+          padding: isScrolled ? '0px 10%' : '0px 15%',
         }}
       >
         <div
@@ -73,20 +72,20 @@ export default function HeaderPage() {
         >
           <a
             style={{
-              fontSize: isScrolled ? '24px' : '32px', // Logo nhỏ lại khi cuộn
-              width: '20%',
+              fontSize: isScrolled ? '24px' : '50px', // Logo nhỏ lại khi cuộn
+              width: '30%',
               color: 'white',
-              fontWeight: 'bold',
+              fontWeight: '500',
               transition: 'font-size 0.3s ease-in-out',
             }}
-            href='#'
+            href='/home'
           >
-            <p className='font-xmark'>xmark</p>
+            <span className='font-xmark'>xmark</span>
           </a>
 
           <SearchFunction />
 
-          <div style={{ display: 'flex', alignItems: 'center', width: '20%',justifyContent: 'end'}}>
+          <div style={{ display: 'flex', alignItems: 'center', width: '30%',justifyContent: 'end'}}>
             <UserMenu />
             <CartEven />
           </div>

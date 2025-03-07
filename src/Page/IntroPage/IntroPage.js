@@ -9,6 +9,7 @@ import { FaFacebookF, FaInstagram, FaLink } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useNavigate } from "react-router-dom";
+import CarousellFeedBack from "./CarousellFeedBack";
 
 export default function IntroPage() {
   const nagivate = useNavigate();
@@ -182,10 +183,21 @@ export default function IntroPage() {
       {/* Guest */}
       <div
         className="guest-intro"
-        style={{ padding: "4% 5%" }}
+        style={{ padding: "4% 5%"}}
         data-aos="fade-in"
       >
-        <h1 style={{ fontSize: "73px", height: "95vh" }}>Khách hàng</h1>
+        <h1 style={{ fontSize: "73px" , textAlign: 'center'}}>Khách hàng</h1>
+        <div>
+          <hr style={{
+            border: '1px solid black',
+            width: '2%'
+          }} />
+          
+        </div>
+        <p style={{textAlign: 'center', color: 'black', marginTop: '3%'}}>This is your Team section. Briefly introduce the team then add their bios below.</p>
+        <div>
+          <CarousellFeedBack />
+        </div>
       </div>
 
       {/* Footer */}
