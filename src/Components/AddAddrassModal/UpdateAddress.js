@@ -4,15 +4,26 @@ import "./AddAddressModal.css"; // Import file CSS
 import { FaTimes } from "react-icons/fa";
 import { appService } from "../../service/appService";
 import LoadingPage from "../Spinner/LoadingPage";
+import { notification } from "antd";
 
 export default function UpdateAddress({ isOpen, onClose, address }) {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [addressType, setAddressType] = useState("");
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (type, message, description) => {
+    api[type]({
+      message: message,
+      description: description,
+    });
+  };
 
 
-  console.log(address)
+
+
+
   const handleSelectAddressType = (type) => {
     setAddressType(type);
   };
@@ -163,21 +174,30 @@ export default function UpdateAddress({ isOpen, onClose, address }) {
 
     const addressUser = {
       id: address.id,
-      fullName: formData.name,
+      name: formData.name,
       phone: formData.phone,
       province: formData.city || "",
       district: formData.district || "",
       ward: formData.ward || "",
       detail: formData.detail || "",
-      addressType: addressType || "Nhà riêng", // Mặc định là "Nhà riêng"
+      addressType: addressType || "HOME", // Mặc định là "Nhà riêng"
     };
     console.log("Saving Address:", addressUser); // Debugging
     try {
         appService.updateAddress(addressUser)
             .then((res) => {
                 console.log(res);
-                handleOnclose(); 
-                window.location.reload();
+                setTimeout(() => {
+                  openNotification(
+                    "success",
+                    "Thành công",
+                    "Cập nhật đia chỉ thành công!"
+                  );
+                }, 300);
+                setTimeout(() => {
+                  window.location.reload();
+                  handleOnclose();
+                }, 600);
             }).catch((err) => {
                 console.log(err)
             });
@@ -191,6 +211,7 @@ export default function UpdateAddress({ isOpen, onClose, address }) {
 
   return (
     <div className="modal-overlay">
+      {contextHolder}
       <div className="modal-content">
         <h2 style={{ borderBottom: "1px solid black", paddingBottom: "10px" }}>
           Địa chỉ giao hàng
@@ -302,15 +323,15 @@ export default function UpdateAddress({ isOpen, onClose, address }) {
           <div className="address-type">
             <button
               type="button"
-              className={addressType === "Nhà riêng" ? "selected" : ""}
-              onClick={() => handleSelectAddressType("Nhà riêng")}
+              className={addressType === "HOME" ? "selected" : ""}
+              onClick={() => handleSelectAddressType("HOME")}
             >
               Nhà riêng
             </button>
             <button
               type="button"
-              className={addressType === "Văn phòng" ? "selected" : ""}
-              onClick={() => handleSelectAddressType("Văn phòng")}
+              className={addressType === "OFFICE" ? "selected" : ""}
+              onClick={() => handleSelectAddressType("OFFICE")}
             >
               Văn phòng
             </button>

@@ -25,8 +25,8 @@ const SearchFunction = () => {
       backgroundColor: '#FFFFFF', 
       display: 'flex',
       alignItems: 'center',
-      padding : isScrolled ? '0px 10px' : '0px 10px',
-      width: isScrolled ? '80%':'100%',
+      padding : '0px 10px',
+      width: '100%',
       borderRadius: '30px',
       marginLeft: '50%',
       transform: 'translateX(-50%)',
@@ -45,7 +45,7 @@ const SearchFunction = () => {
       <SearchOutlined 
       style={{ 
         color: 'white', 
-        fontSize: isScrolled ? '14px' : '20px', 
+        fontSize: '20px', 
         padding: '3px 10px', 
         background : '#6EB566' , 
         borderRadius: '40px',

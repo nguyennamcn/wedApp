@@ -21,50 +21,13 @@ const UserDropSign = () => {
               background: '#6EB566',
               borderRadius: '10px',
               color: 'white',
+              outline: 'none'
             }}
           >
             Đăng nhập/Đăng ký
           </button>
         </div>
       ),
-    },
-    { key: 'divider1', type: 'divider' },
-    {
-      key: '1',
-      label: <div style={{ fontSize: '20px', background: '#ECECEC' }}>Quản lý đơn hàng</div>,
-      disabled: true,
-    },
-    {
-      key: '2',
-      label: <a href="/orders"><FileTextOutlined /> Đơn mua</a>,
-    },
-    {
-      key: '3',
-      label: <a href="/sales"><FileTextOutlined /> Đơn bán</a>,
-    },
-    { key: 'divider2', type: 'divider' },
-    {
-      key: '4',
-      label: <div style={{ fontSize: '20px', background: '#ECECEC' }}>Ưu đãi, khuyến mãi</div>,
-      disabled: true,
-    },
-    {
-      key: '5',
-      label: <a href="/offers">Ưu đãi của tôi</a>,
-    },
-    { key: 'divider3', type: 'divider' },
-    {
-      key: '6',
-      label: <div style={{ fontSize: '20px', background: '#ECECEC' }}>Khác</div>,
-      disabled: true,
-    },
-    {
-      key: '7',
-      label: <a href="/settings"><SettingOutlined /> Cài đặt tài khoản</a>,
-    },
-    {
-      key: '8',
-      label: <a href="/help"><QuestionCircleOutlined /> Trợ giúp</a>,
     },
   ];
 

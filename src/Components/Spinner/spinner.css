@@ -7,7 +7,7 @@
   justify-content: center;
   height: 100vh;
   background-color: rgb(104, 206, 131); 
-  z-index: 2000;
+  z-index: 3000 !important;
   top: 0;
   left: 0;
 }

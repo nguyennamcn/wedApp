@@ -1,0 +1,72 @@
+.progress-bar-item{
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 5px solid #D9D9D9;
+  color: #747474;
+
+}
+
+
+.hr-bar{
+  position: absolute;
+  border: 3px solid #D9D9D9;
+  width: 100px;
+  top: 5%;
+  left: 567px;
+}
+
+.hr-bar-2{
+  position: absolute;
+  border: 3px solid #D9D9D9;
+  width: 100px;
+  top: 5%;
+  left: 707px;
+}
+
+.hr-bar-3{
+  position: absolute;
+  border: 3px solid #D9D9D9;
+  width: 100px;
+  top: 5%;
+  left: 847px;
+}
+
+
+.progress-bar-item-last{
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 5px solid #D9D9D9;
+  color: #747474;
+}
+
+.active-bar{
+  border: 5px solid transparent;
+  background: linear-gradient(#6EB566, #6EB566) padding-box,
+              linear-gradient(90deg, #D4FFCF 0%, #A3FF98 69%) border-box;
+  color: white;
+}
+
+.active-hr{
+  border: 3px solid transparent;
+  background: linear-gradient(#6EB566, #6EB566) padding-box,
+              linear-gradient(-90deg, #D9D9D9 35%, #A3FF98 69%) border-box;
+}
+
+.actived-hr{
+  border: 3px solid transparent;
+  background: linear-gradient(#6EB566, #6EB566) padding-box,
+              linear-gradient(-90deg, #A3FF98 35%, #A3FF98 35%) border-box;
+}
+
+.ant-checkbox-inner{
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 10px !important;
+  /* background-color: #6EB566 !important;
+  border-color: #6EB566 !important */
+}
+
+.ant-checkbox-checked .ant-checkbox-inner{
+  background-color: #6EB566 !important;
+  border-color: #6EB566 !important
+}

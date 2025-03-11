@@ -203,7 +203,9 @@ export default function ModalUser({ isOpen, onClose }) {
           setTimeout(() => {
             dispatch(setLoginAction(res.data));
             setLoading(false);
+            window.location.reload()
           }, 1500);
+
         }
       } catch (err) {
         console.error("Lỗi đăng nhập:", err);

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { localUserService } from "./localService";
-export const BASE_URL = "http://113.22.66.128:8081";
+export const BASE_URL = "http://118.68.137.195:8081";
 
 
 export const configHeader = () => {
@@ -28,7 +28,8 @@ https.interceptors.request.use(
             "/register",
             "/login",
             "/oauth2/authorization",
-            "/user-service/api/v1/account/confirm-otp", // Thêm đường dẫn này
+            "/user-service/api/v1/account/confirm-otp",
+            "/user-service/api/v1/account/resend-otp" // Thêm đường dẫn này
         ];
         const isExcluded = authExcludedUrls.some((url) => config.url.includes(url));
 

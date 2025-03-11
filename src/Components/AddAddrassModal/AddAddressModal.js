@@ -3,12 +3,21 @@ import axios from "axios";
 import "./AddAddressModal.css"; // Import file CSS
 import { FaTimes } from "react-icons/fa";
 import { appService } from "../../service/appService";
+import { notification } from "antd";
 
 export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [wards, setWards] = useState([]);
   const [addressType, setAddressType] = useState("");
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (type, message, description) => {
+    api[type]({
+      message: message,
+      description: description,
+    });
+  };
 
   const handleSelectAddressType = (type) => {
     setAddressType(type);
@@ -141,13 +150,13 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
     }
 
     const addressUser = {
-      fullName: formData.name,
+      name: formData.name,
       phone: formData.phone,
       province: formData.city || "",
       district: formData.district || "",
       ward: formData.ward || "",
       detail: formData.detailAddress || "",
-      addressType: addressType || "Nhà riêng", // Mặc định là "Nhà riêng"
+      addressType: addressType || "HOME", // Mặc định là "Nhà riêng"
     };
 
     console.log("Saving Address:", addressUser); // Debugging
@@ -156,8 +165,17 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
             .then((res) => {
                 console.log(res)
                 onSaveAddress(addressUser);
-                handleOnclose(); // Reset & đóng modal sau khi lưu
-                window.location.reload()
+                setTimeout(() => {
+                  openNotification(
+                    "success",
+                    "Thành công",
+                    "Thêm đia chỉ mới thành công!"
+                  );
+                }, 300);
+                setTimeout(() => {
+                  window.location.reload();
+                  handleOnclose();
+                }, 600);
             }).catch((err) => {
                 console.log(err)
             });
@@ -171,6 +189,7 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
 
   return (
     <div className="modal-overlay">
+      {contextHolder}
       <div className="modal-content">
         <h2 style={{ borderBottom: "1px solid black", paddingBottom: "10px" }}>
           Địa chỉ giao hàng
@@ -282,15 +301,15 @@ export default function AddAddressModal({ isOpen, onClose, onSaveAddress }) {
           <div className="address-type">
             <button
               type="button"
-              className={addressType === "Nhà riêng" ? "selected" : ""}
-              onClick={() => handleSelectAddressType("Nhà riêng")}
+              className={addressType === "HOME" ? "selected" : ""}
+              onClick={() => handleSelectAddressType("HOME")}
             >
               Nhà riêng
             </button>
             <button
               type="button"
-              className={addressType === "Văn phòng" ? "selected" : ""}
-              onClick={() => handleSelectAddressType("Văn phòng")}
+              className={addressType === "OFFICE" ? "selected" : ""}
+              onClick={() => handleSelectAddressType("OFFICE")}
             >
               Văn phòng
             </button>

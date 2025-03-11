@@ -10,12 +10,17 @@ import {
 } from "@ant-design/icons";
 import { localUserService } from "../../service/localService";
 import { appService } from "../../service/appService";
+import LoadingPage from "../Spinner/LoadingPage";
 
 const UserDrop = ({ user, logoutBtn }) => {
   const [data, setData] = useState('');
   const navigate = useNavigate();
   const userName = user.email;
   const status = user.status;
+  
+
+
+
   useEffect(() => {
       const fetchProfile = async () => {
         try {
@@ -29,6 +34,7 @@ const UserDrop = ({ user, logoutBtn }) => {
   
       fetchProfile();
     }, []);
+
   let handleLogout = () => {
     localUserService.remove();
     localStorage.removeItem("token", "your_jwt_token");
@@ -121,9 +127,9 @@ const UserDrop = ({ user, logoutBtn }) => {
     {
       key: "9",
       label: (
-        <p onClick={handleLogout}>
+        <span onClick={handleLogout}>
           <LogoutOutlined /> Đăng Xuất
-        </p>
+        </span>
       ),
     },
   ];
