@@ -46,6 +46,9 @@ export default function ModalUser({ isOpen, onClose }) {
   const [isNewPass, setIsNewPass] = useState(false);
   const [isXT, setIsXT] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [np, setNp] = useState("");
+  const [np2, setNp2] = useState("");
+
 
 
 
@@ -187,11 +190,9 @@ export default function ModalUser({ isOpen, onClose }) {
         };
         setLoading(true);
         const res = await userService.postLogin(loginData);
-        console.log("API response:", res.data);
         
         if (res.data.status ===  true && res.data.metadata) {
           localUserService.set(res.data);
-          console.log(res)
           localStorage.setItem("token", "your_jwt_token");
           setTimeout(() => {
             openNotification(
@@ -226,7 +227,6 @@ export default function ModalUser({ isOpen, onClose }) {
   const handleSignUp = async () => {
     const valiPass = validatePass(pass);
     const valiEmail = validateEmail(email);
-    console.log(valiPass)
     if (!email || !pass || !pass2 ||!phoneNumber) {
       openNotification(
         "error",
@@ -266,10 +266,8 @@ export default function ModalUser({ isOpen, onClose }) {
         password: pass,
         confirmPassword: pass2
       };
-      console.log(signupForm)
       const res = await userService.postSignUp(signupForm);
       setLoading(true);
-      console.log("API response:", res.data);
       setTimeout(() => {
         setIsXT(true);
         setLoading(false);
@@ -298,20 +296,52 @@ export default function ModalUser({ isOpen, onClose }) {
         "Thành công",
         "Yêu cầu đặt lại mật khẩu đã được gửi!"
       );
-      console.log(res);
       handleRePass();
     } catch (err) {
       console.error(
         "Lỗi khi gửi yêu cầu đặt lại mật khẩu:",
-        err.response.data.metadata.message
+        err.response
       );
       openNotification(
         "error",
         "Lỗi",
-        err.response.data.metadata.message || "Gửi yêu cầu thất bại"
+        err.response || "Gửi yêu cầu thất bại"
       );
     }
   };
+
+  const handleChangePass = async () =>{
+    if(np !== np2){
+      return console.log('sai mat khau')
+    }
+
+    const data = {
+      email: email,
+      newPassword: np,
+      confirmPassword: np2,
+    }
+    try {
+      const res = await appService.resetPass(data)
+      console.log(res)
+      openNotification(
+        "success",
+        "Thành công",
+        "Cập nhật mật khẩu thành công!"
+      );
+      setTimeout(() => {
+        setLoading(false);
+        window.location.reload()
+      }, 500);
+    } catch (error) {
+      console.log(error)  
+      openNotification(
+        "error",
+        "Lỗi",
+        error.response.data.metadata.message || "Gửi yêu cầu thất bại"
+      );
+    }
+
+  }
 
   const handleCfOtp = async () => {
     const formData = {
@@ -319,14 +349,17 @@ export default function ModalUser({ isOpen, onClose }) {
       otp: saveOtp,
       type: "FORGOT_PASSWORD",
     };
-    console.log(formData);
     try {
-      await appService.conformOtp(formData);
+      const res = await appService.conformOtp(formData);
+      console.log(res)
       openNotification(
         "success",
         "Thành công",
         "Yêu cầu đặt lại mật khẩu đã được gửi!"
       );
+      setIsOtp(false)
+      setIsNewPass(true)
+      
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu đặt lại mật khẩu:", err);
       openNotification(
@@ -344,7 +377,6 @@ export default function ModalUser({ isOpen, onClose }) {
       otp: saveOtp,
       type: "REGISTER",
     };
-    console.log(formData);
     try {
       await appService.conformOtp(formData);
       setLoading(true)
@@ -597,7 +629,7 @@ export default function ModalUser({ isOpen, onClose }) {
       )}
 
       {/* quen mk */}
-      {isRP && !isOtp && !isSms && (
+      {isRP && !isOtp && !isSms && !isNewPass && (
         <div className="modal-container">
           {/* Nút đóng */}
           <button
@@ -760,7 +792,7 @@ export default function ModalUser({ isOpen, onClose }) {
 
           {/* Tiêu đề */}
           <h2 className="modal-title">Mã OTP</h2>
-          <p className="otp-message">
+          <p className="otp-message" style={{color: 'black', fontWeight: '500'}}>
             Mã xác thực đã được gửi đến tài khoản <br />
             <span>email: {email}</span>
           </p>
@@ -829,7 +861,7 @@ export default function ModalUser({ isOpen, onClose }) {
 
           {/* Tiêu đề */}
           <h2 className="modal-title">Mã OTP</h2>
-          <p className="otp-message">
+          <p className="otp-message" style={{color: 'black', fontWeight: '500'}}>
             Mã xác thực đã được gửi đến tài khoản <br />
             <span>email: {email}</span>
           </p>
@@ -888,25 +920,17 @@ export default function ModalUser({ isOpen, onClose }) {
           </button>
 
           {/* Tiêu đề */}
-          <h2 className="modal-title">ĐĂNG NHẬP/ĐĂNG KÝ</h2>
+          <h2 className="modal-title">Đặt lại mật khẩu</h2>
 
           {/* Form nhập thông tin */}
           <div className="modal-body">
-            <label>Tên đăng nhập</label>
-            <input
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              value={phoneNumber}
-              type="text"
-              placeholder="Email/Số điện thoại"
-            />
-
-            <label>Mật khẩu</label>
+          <label>Mật khẩu mới</label>
             <div className="password-container">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Nhập mật khẩu"
-                value={pass}
-                onChange={(e) => setPass(e.target.value)}
+                value={np}
+                onChange={(e) => setNp(e.target.value)}
               />
               <button
                 onClick={() => setShowPassword(!showPassword)}
@@ -916,34 +940,27 @@ export default function ModalUser({ isOpen, onClose }) {
               </button>
             </div>
 
-            <a
-              onClick={() => setIsRP(true)}
-              style={{ cursor: "pointer" }}
-              className="forgot-password"
-            >
-              Quên mật khẩu?
-            </a>
+            <label>Nhập lại mật khẩu</label>
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Nhập mật khẩu"
+                value={np2}
+                onChange={(e) => setNp2(e.target.value)}
+              />
+              <button
+                onClick={() => setShowPassword(!showPassword)}
+                className="toggle-password"
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
 
-            <button onClick={handleLogin} className="login-button">
-              ĐĂNG NHẬP
-            </button>
-            <a
-              onClick={() => setIsSms(true)}
-              style={{ cursor: "pointer" }}
-              className="sms-login"
-            >
-              Đăng nhập bằng SMS
-            </a>
 
-            <div className="divider">Hoặc</div>
-
-            {/* Nút đăng nhập với Google và Facebook */}
-            <button className="social-login google">
-              <FaGoogle style={{ marginRight: "2%" }} /> Google
+            <button onClick={handleChangePass} className="login-button">
+              Thay đổi
             </button>
-            <button className="social-login facebook">
-              <FaFacebook style={{ marginRight: "2%" }} /> Facebook
-            </button>
+            
           </div>
         </div>
       )}

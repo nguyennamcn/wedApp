@@ -39,7 +39,7 @@ export const setSignUpActionService =( value, onCompleted)  =>{
     return(dispatch) =>{
         userService.postSignUp(value)
                 .then((res) =>{
-                    console.log(res);
+                    // console.log(res);
                     dispatch({
                         type: USER_SIGNUP,
                         payload: res.data.content,

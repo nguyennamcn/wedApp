@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Button, Dropdown, Space, Badge } from 'antd';
-import { UserOutlined, ShoppingCartOutlined, SettingOutlined, QuestionCircleOutlined, LogoutOutlined, FileTextOutlined } from '@ant-design/icons';
-
+import { Button, Dropdown, Badge } from 'antd';
+import { ShoppingCartOutlined } from '@ant-design/icons';
+import './cart.css'
 
 
 const CartEven = () => {
@@ -15,13 +15,13 @@ const CartEven = () => {
         : [{ key: '0', label: 'Giỏ hàng trống' }];
 
     return (
-        <div style={{ display :'flex', justifyContent: 'space-between',marginLeft: '20%'}}>
+        <div style={{ display :'flex', justifyContent: 'space-between',marginLeft: '15%'}}>
             {/* Giỏ hàng với số lượng sản phẩm */}
             <div>
                 <Dropdown menu={{ items: cartMenuItems }} placement="bottomRight" arrow>
                     <span> 
-                        <Badge count={cartItems.length} showZero color="white">
-                            <Button type="text" icon={<ShoppingCartOutlined style={{ fontSize: '32px', color: 'white' }} />} />
+                        <Badge count={cartItems.length} color="red">
+                            <Button type="text" icon={<ShoppingCartOutlined style={{ fontSize: '24px', color: 'white' }} />} />
                         </Badge>
                     </span>
                 </Dropdown>

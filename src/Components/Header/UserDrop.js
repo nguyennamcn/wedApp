@@ -26,7 +26,6 @@ const UserDrop = ({ user, logoutBtn }) => {
         try {
           const res = await appService.getProfile();
            setData(res.data.metadata);
-           console.log(data)
         } catch (error) {
           console.error("Lỗi khi lấy dữ liệu người dùng:", error);
         }

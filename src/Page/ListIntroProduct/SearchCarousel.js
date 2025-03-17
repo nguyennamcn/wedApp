@@ -16,9 +16,9 @@ const SearchCarousel = () => {
   ];
 
   return (
-    <div style={{ background: "#f5f5f5", padding: "20px", borderRadius: "10px", position: "relative" }}>
+    <div style={{ background: "#f5f5f5", padding: "20px 0", borderRadius: "10px", position: "relative" }}>
       {/* Tiêu đề */}
-      <h3 style={{ fontWeight: "bold", color: "#ff7f50", marginBottom: "15px" }}>Tìm kiếm hàng đầu</h3>
+      <h3 style={{ fontWeight: "bold", color: "#ff7f50", marginBottom: "15px", color: '#6EB566',fontSize: '20px' , marginLeft: '2%'}}>Hàng mới về</h3>
 
       {/* Nút điều hướng bên trái */}
       <Button
@@ -37,7 +37,7 @@ const SearchCarousel = () => {
       />
 
       {/* Carousel */}
-      <Carousel ref={carouselRef} autoplay dots={false} slidesToShow={5}>
+      <Carousel ref={carouselRef}  dots={false} slidesToShow={6}>
         {products.map((product) => (
           <Card key={product.id} hoverable style={{ width: 150, textAlign: "center", borderRadius: "10px" }}>
             <div style={{ height: "150px", background: "#ddd", display: "flex", alignItems: "center", justifyContent: "center" }}>

@@ -4,18 +4,18 @@ import { Card, Button } from 'antd';
 const { Meta } = Card;
 
 const ProductHot = () => {
-    const [visibleItems, setVisibleItems] = useState(8);
+    const [visibleItems, setVisibleItems] = useState(12);
     const totalItems = 20;
 
     const handleShowMore = () => {
-        setVisibleItems(prev => Math.min(prev + 4, totalItems)); // Limit to 20 items
+        setVisibleItems(prev => Math.min(prev + 6, totalItems)); // Limit to 20 items
     };
 
     return (
         <div className="container">
             <div className="row" style={{ rowGap: "20px" }}>
                 {[...Array(totalItems)].slice(0, visibleItems).map((_, colIndex) => (
-                    <div className="col-3" key={colIndex}>
+                    <div className="col-2" key={colIndex}>
                         <Card
                             hoverable
                             style={{ width: "100%" }}

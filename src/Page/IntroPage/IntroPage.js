@@ -44,12 +44,11 @@ export default function IntroPage() {
       {/* Intro */}
       <div className="intro-page" >
         <div className="container-intro">
-          <h1 style={{ fontSize: "91px" }}>TRENDY STYLES</h1>
+          <h1 className="allura-regular" style={{ fontSize: "91px" }}>Thời trang vượt thời gian</h1>
           <p
-            style={{ letterSpacing: "1px", marginTop: "2%", fontSize: "17px" }}
+            style={{ letterSpacing: "1px", marginTop: "1%", fontSize: "16px",fontWeight: '300' }}
           >
-            Discover the latest in fashion from xmark. Elevate your wardrobe
-            with our <br /> stunning collections.
+            Khám phá xu hướng thời trang mới nhất từ xmark. Nâng tầm tủ đồ của bạn với những bộ <br /> sưu tập ấn tượng của chúng tôi
           </p>
           <div
             style={{
@@ -92,8 +91,8 @@ export default function IntroPage() {
       <div
         className="banner-intro"
         style={{ padding: "6% 5%" }}
-        data-aos="zoom-out-down"
-        data-aos-delay="300"
+        // data-aos="zoom-out-down"
+        // data-aos-delay="300"
       >
         <CarouselIntro />
       </div>
@@ -103,13 +102,12 @@ export default function IntroPage() {
         className="officer-intro"
         style={{
           padding: "5%",
-          background: "rgb(251,245,231)",
           display: "flex",
         }}
         data-aos="zoom-in"
       >
         <img
-          style={{ width: "50%" }}
+          style={{ width: "58%" }}
           src={logo1}
           alt=""
           data-aos="fade-right"
@@ -117,30 +115,30 @@ export default function IntroPage() {
           data-aos-easing="ease-in-sine"
           data-aos-delay="300"
         />
-        <div style={{ padding: "8% 7%" }} data-aos="fade-down-left" data-aos-delay="800">
-          <AiFillSmile style={{ fontSize: 73 }} />
-          <h1 style={{ fontSize: "73px", margin: "15px 0" }}>Special Offers</h1>
-          <p>Limited Time</p>
+        <div style={{ padding: "8% 0%", textAlign:'center', width:'42%', letterSpacing: '3px' }} data-aos="fade-down-left" data-aos-delay="800">
+          <h2 style={{ fontSize: "40px" }}>Chương trình</h2>
+          <h1 style={{ fontSize: "60px" }}>KHUYẾN MÃI</h1>
           <button
             style={{
-              marginTop: "35px",
+              marginTop: "40%",
               padding: "10px 45px",
-              background: "rgb(47 43 38)",
+              background: "#2E7D32",
               border: "none",
               color: "white",
+              borderRadius:'50px',
+              fontSize: '30px'
             }}
           >
-            Shop Now
+            Mua sắm ngay
           </button>
         </div>
       </div>
 
       {/* Tầm nhìn */}
       <div
-        className="officer-intro"
+        className="officer-intro2"
         style={{
           padding: "4% 5%",
-          background: "rgb(251,245,231)",
           display: "flex",
         }}
         data-aos="fade-down"
@@ -148,35 +146,34 @@ export default function IntroPage() {
         data-aos-duration="1000"
       >
         <div
-          style={{ width: "50%" }}
+          style={{ width: "42%",textAlign: 'center', padding:'10% 0', letterSpacing:  '5px' }}
           data-aos="fade-right"
           data-aos-offset="300"
           data-aos-easing="ease-in-sine"
           data-aos-delay="300"
         >
-          <h1 style={{ fontSize: "73px" }}>Tầm nhìn</h1>
-          <p style={{ width: "50%", letterSpacing: "1px", marginTop: "50px" }}>
-            Tại xmark, chúng tôi đam mê kết nối bạn với những báu vật thủ công
-            và đồ cũ độc đáo...
-          </p>
+          <h1 style={{ fontSize: "40px",color:'#1B5E20' }}>Lợi ích của </h1>
+          <h1 style={{ fontSize: "42px",color:'#1B5E20' }}>ĐỒ SECOND HAND </h1>
           <button
             style={{
-              marginTop: "15px",
+              marginTop: "40%",
               padding: "10px 45px",
-              background: "rgb(47 43 38)",
+              background: "#2E7D32",
               border: "none",
               color: "white",
+              borderRadius:'50px',
+              fontSize: '30px'
             }}
           >
-            Tìm hiểu thêm
+            Tìm hiểu ngay
           </button>
         </div>
         <img
-          style={{ width: "50%" }}
+          style={{ width: "58%" }}
           src={logo1}
           alt=""
-          data-aos="zoom-out-left"
-          data-aos-delay="400"
+          // data-aos="zoom-out-left"
+          // data-aos-delay="400"
         />
       </div>
 

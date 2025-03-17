@@ -4,9 +4,10 @@ import { UploadOutlined, UserOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { appService } from "../../service/appService";
 import axios from "axios";
-import type { UploadProps } from 'antd';
 import { BASE_URL } from "../../service/config";
 import LoadingPage from "../../Components/Spinner/LoadingPage";
+import { localUserService } from "../../service/localService";
+
 
 export default function SettingPage() {
   const [form] = Form.useForm();
@@ -70,7 +71,7 @@ export default function SettingPage() {
     formData.append("file", fileList[0]);
 
     try {
-      const accessToken = localStorage.getItem("ACCESS_TOKEN");
+      const accessToken = localUserService.getAccessToken();
       await axios.put(
         `${BASE_URL}/user-service/api/v1/users/update-avatar`,
         formData,

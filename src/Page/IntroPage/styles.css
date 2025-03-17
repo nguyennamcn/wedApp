@@ -1,8 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Afacad:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+  }
+
+  .allura-regular {
+    font-family: "Allura", cursive;
+    font-weight: 400;
+    font-style: normal;
   }
 
   .header-intro {
@@ -142,4 +149,12 @@ body {
 
 .footer-right p{
   color: black ;
+}
+
+.officer-intro{
+  background: linear-gradient(#E7EBDE, #DDE7DE) padding-box,
+              linear-gradient(-90deg, #E7EBDE 43%, #DDE7DE 91%) border-box;
+}
+.officer-intro2{
+  background: linear-gradient(45deg, #FFFFFF 15%, #DFFCDC 70%);
 }

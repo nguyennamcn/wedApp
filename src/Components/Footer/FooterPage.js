@@ -6,7 +6,7 @@ export default function FooterPage() {
   return (
     <footer
       style={{
-        padding: '30px 15%',
+        padding: '30px 20%',
         background: '#6EB566',
         color: 'white',
         width: '100%',

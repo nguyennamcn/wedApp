@@ -7,13 +7,13 @@ const ListIntro = () => {
   const carouselRef = React.useRef();
 
   return (
-    <div style={{ position: "relative", width: "100%", margin: "auto" , padding: '30px 0'}}>
+    <div style={{ position: "relative", width: "100%", margin: "auto" , padding: '1% 0'}}>
       {/* Nút điều hướng bên trái */}
       <button
         style={{
           position: "absolute",
           top: "50%",
-          left: "0px",
+          left: "10px",
           transform: "translateY(-50%)",
           background: "gray",
           border: "none",
@@ -41,7 +41,7 @@ const ListIntro = () => {
         <div>
           <div
             style={{
-              height: "90vh",
+              height: "50vh",
               background: "#ddd",
               display: "flex",
               alignItems: "center",
@@ -60,7 +60,7 @@ const ListIntro = () => {
         style={{
           position: "absolute",
           top: "50%",
-          right: "0px",
+          right: "10px",
           transform: "translateY(-50%)",
           background: "gray",
           border: "none",

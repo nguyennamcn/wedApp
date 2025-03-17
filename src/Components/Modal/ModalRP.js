@@ -26,6 +26,7 @@ const ModalRP = ({ isOpen, onClose, email, onSendOtp }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        borderRadius: '20px'
       }}
     >
       <div
@@ -34,7 +35,7 @@ const ModalRP = ({ isOpen, onClose, email, onSendOtp }) => {
           padding: "2%",
         }}
       >
-        <p style={{ fontSize: "24px", textAlign: "start" }}>
+        <p style={{ fontSize: "24px", textAlign: "start" , color:'black', fontWeight: '500'}}>
           Bạn sẽ nhận được mã xác minh được gửi tới <br />
           <span>email: {email}</span>
         </p>

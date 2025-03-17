@@ -182,11 +182,10 @@ export default function UpdateAddress({ isOpen, onClose, address }) {
       detail: formData.detail || "",
       addressType: addressType || "HOME", // Mặc định là "Nhà riêng"
     };
-    console.log("Saving Address:", addressUser); // Debugging
+
     try {
         appService.updateAddress(addressUser)
             .then((res) => {
-                console.log(res);
                 setTimeout(() => {
                   openNotification(
                     "success",

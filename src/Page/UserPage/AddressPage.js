@@ -36,13 +36,6 @@ export default function AddressPage() {
       description: description,
     });
   };
-
-  console.log(ld);
-  const allName = `${userData?.firstName} ${userData?.lastName}`;
-  const phoneNumber = userData?.phone
-    ?.replace(/^0/, "")
-    .replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3");
-
   const openAddressModal = () => {
     setIsModalAdd(true);
   };
@@ -93,11 +86,9 @@ export default function AddressPage() {
   const cancel: PopconfirmProps["onCancel"] = (e) => {
     console.log(e);
   };
-
-  console.log(userData?.addresses);
   const handleSaveAddress = (address) => {
     setSelectedAddress(address); // Lưu địa chỉ vào state
-    console.log(selectedAddress);
+
   };
   return (
     <div>
