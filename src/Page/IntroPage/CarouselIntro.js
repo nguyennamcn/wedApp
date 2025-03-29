@@ -30,7 +30,7 @@ const CarouselIntro = () => {
 
   return (
     <div style={{ borderRadius: "10px", position: "relative" }}>
-      <h1 style={{ color: "black", marginBottom: "50px", fontSize: "73px" , marginLeft: '15px'}}>Lựa chọn hàng đầu</h1>
+      <h1 style={{ color: "black", marginBottom: "50px", fontSize: "70px" , marginLeft: '15px'}}>Sản phẩm nổi bật</h1>
 
       <LeftOutlined
         onClick={() => carouselRef.current.prev()}
