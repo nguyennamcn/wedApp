@@ -2,14 +2,11 @@ import React, { useState, useRef } from "react";
 import { Carousel, Card } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { FaStar } from "react-icons/fa6";
-import logo1 from "../../img/29.jpg";
-import logo2 from "../../img/27.jpg";
-import logo3 from "../../img/26.jpg";
-import logo4 from "../../img/23.jpg";
-import logo5 from "../../img/21.jpg";
-import logo6 from "../../img/30.jpg";
-import logo7 from "../../img/32.jpg";
-import logo8 from "../../img/7.jpg";
+import logo1 from "../../img/EXE/7.png";
+import logo2 from "../../img/EXE/7.png";
+import logo3 from "../../img/EXE/7.png";
+import logo4 from "../../img/EXE/7.png";
+import logo5 from "../../img/EXE/7.png";
 
 const { Meta } = Card;
 
@@ -77,7 +74,7 @@ const CarousellFeedBack = () => {
 
       <Carousel
         ref={carouselRef}
-        autoplay
+        // autoplay
         dots={false}
         slidesToShow={3}
         arrows={false}
@@ -85,12 +82,12 @@ const CarousellFeedBack = () => {
         {products.map((product, index) => (
           <div
             key={product.id}
-            style={{ padding: "10px", marginRight: "15px" }}
+            style={{ padding: "10px", marginRight: "15px", width: "200px" }}
           >
             <Card
               hoverable
               style={{
-                width: "90%",
+                width: "100%",
                 textAlign: "center",
                 border: "none",
                 boxShadow: "none",

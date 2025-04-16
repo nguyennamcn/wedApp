@@ -8,9 +8,9 @@ import DetailPage from "./Page/DetailPage/DetailPage";
 import SettingPage from "./Page/UserPage/SettingPage";
 import LayoutUser from "./Layout/LayoutUser";
 import ProtectedRoute from "./Components/Protectedroute/ProtectedRoute";
-import IntroPage from "./Page/IntroPage/IntroPage";
 import LoginPageTest from "./Page/AdminPage/LoginPageTest";
 import AddressPage from "./Page/UserPage/AddressPage";
+import InfoUser from "./Page/InfoUser/InfoUser";
 import RegisterSeller from "./Page/SellerPage/RegisterSeller";
 import { notification } from "antd";
 import ChangePass from "./Page/UserPage/ChangePass";
@@ -109,7 +109,7 @@ function App() {
           <Route path="/settings/changepass" element={<ProtectedRoute><LayoutUser Component={ChangePass} /></ProtectedRoute>} />
           <Route path="/detail" element={<Layout Component={DetailPage} />} />
           <Route path="*" element={<ErrorPage />} />
-          <Route path="/" element={<IntroPage />} />
+          <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
           <Route path="/2" element={<LoadingPage />} />
         </Routes>

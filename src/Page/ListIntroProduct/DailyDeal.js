@@ -25,32 +25,33 @@ const DailyDeals = () => {
     ];
 
     return (
-        <div style={{ background: "#f5f5f5", padding: "15px", borderRadius: "10px" }}>
+        <div >
             {/* Tiêu đề */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-                <h3 style={{ fontWeight: "bold", margin: 0 ,color: '#6EB566',fontSize: '20px'}}>Sản phẩm theo trend</h3>
+            <div style={{marginBottom: "10px", textAlign: "center"}}>
+                <h3 style={{ fontWeight: "700", margin: 0 ,color: '#0C4006',fontSize: '32px'}}>Sản Phẩm Theo Trend</h3>
                 
             </div>
 
             {/* Carousel chứa danh sách sản phẩm */}
+            <div style={{ padding: "1%", background: "linear-gradient(45deg, #FFFFFF 0%, #DDE7DE 86%)", boxShadow: "1px 5px 8px rgba(0, 0, 0, 0.1)", borderRadius: "10px" }}>
             <Carousel slidesToShow={6} dots={true}>
                 {products.map((product) => (
-                    <Card key={product.id} hoverable style={{ width: 120, textAlign: "center", borderRadius: "10px" ,}}>
-                        <div style={{ height: "120px", background: "#ddd", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Card key={product.id} hoverable style={{ width: 120, textAlign: "center", boxShadow: "1px 5px 8px rgba(0, 0, 0, 0.1)"}}>
+                        <div style={{ height: "30vh", background: "#ddd", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <img src="https://via.placeholder.com/100" alt="product" />
                         </div>
-                        <Meta title={product.title} />
-                        <div style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            marginTop: '10px'
-                        }}>
-                            <div style={{ color: "red", fontWeight: "bold" }}>{product.price}</div>
-                            <div style={{ color: "gray", fontSize: "10px" }}>Đã bán {product.sold}</div>
+                        <div style={{ padding: "10%" }}>
+                            <Meta  title={product.title} />
+                            <div style={{
+                                marginTop: '10px',
+                            }}>
+                                <div style={{ color: "green", fontWeight: "bold" }}>{product.price}</div>
+                            </div>
                         </div>
                     </Card>
                 ))}
             </Carousel>
+            </div>
         </div>
     );
 };
@@ -59,7 +60,6 @@ const DailyDeals = () => {
 const timerStyle = {
     background: "#ddd",
     padding: "5px 10px",
-    borderRadius: "5px",
     margin: "0 3px",
     fontSize: "18px",
     fontWeight: "bold",

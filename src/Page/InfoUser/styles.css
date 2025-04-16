@@ -2,38 +2,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Allura&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-  }
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
 
-  .allura-regular {
-    font-family: "Allura", cursive;
-    font-weight: 400;
-    font-style: normal;
-  }
+.allura-regular {
+  font-family: "Allura", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
 
-  .header-intro {
-    background-color: rgb(110,181,102);
-    padding: 0 6%;
-  }
+.header-intro {
+  background-color: rgb(110, 181, 102);
+  padding: 0 6%;
+}
 
-  .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-  }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
 
-  .header-intro .font-xmark{
-    font-family: 'Afacad', sans-serif;
-    letter-spacing: 3px;
-    color: white;
-    font-size: 60px;
+.header-intro .font-xmark {
+  font-family: 'Afacad', sans-serif;
+  letter-spacing: 3px;
+  color: white;
+  font-size: 60px;
+}
+@media screen and (max-width: 1024px) {
+  .header-intro .font-xmark {
+    font-size: 50px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .header-intro .font-xmark {
+    font-size: 30px;
+  }
 }
 
 .header-intro .language {
@@ -44,15 +54,18 @@ body {
   font-size: 16px;
 }
 
+
+
 .header-intro .icon {
   font-size: 22px;
   cursor: pointer;
   transition: all 0.3s;
 }
 
-.iconglo:hover{
+.iconglo:hover {
   transform: scale(0.9);
 }
+
 .header-intro .cart {
   background-color: white;
   border-radius: 50%;
@@ -78,25 +91,25 @@ body {
   background-color: #575651;
 }
 
-.intro-page{
+.intro-page {
   background-image: url('../../img/EXE/bg.png');
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: center;
 }
 
-.container-intro{
+.container-intro {
   color: white;
   padding: 10% 5%;
   background: rgba(0, 0, 0, 0.4);
   height: 100%;
 }
 
-.slick-slide{
+.slick-slide {
   padding: 10px;
 }
 
-.banner-intro .ant-card-body{
+.banner-intro .ant-card-body {
   padding: 0;
 }
 
@@ -149,14 +162,22 @@ body {
   color: #64b964;
 }
 
-.footer-right p{
-  color: black ;
+.footer-right p {
+  color: black;
 }
 
-.officer-intro{
-  background: linear-gradient(#E7EBDE, #DDE7DE) padding-box,
-              linear-gradient(-90deg, #E7EBDE 43%, #DDE7DE 91%) border-box;
+.officer-intro {
+  background-image: url('../../img/EXE/8.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
-.officer-intro2{
+
+.officer-intro2 {
   background: linear-gradient(45deg, #FFFFFF 15%, #DFFCDC 70%);
+}
+
+.guest-intro-container{
+  background-image: url('../../img/EXE/8.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
