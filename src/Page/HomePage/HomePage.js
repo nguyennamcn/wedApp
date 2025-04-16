@@ -7,6 +7,7 @@ import img1 from "../../img/EXE/14.png";
 import img2 from "../../img/EXE/15.png";
 import img3 from "../../img/EXE/16.png";
 import img4 from "../../img/EXE/17.png";
+import ChatBox from "../../Components/ChatBox/ChatBox";
 
 export default function HomePage() {
 
@@ -149,6 +150,7 @@ export default function HomePage() {
             <p style={{ color: '#0C4006', fontSize: '12px', padding: '0 10% 0 4%'}}>Blazer và quần jeans - hai món đồ tưởng chừng như đối lập nhưng lại tạo nên một sự kết hợp đầy thanh lịch và cuốn hút. Khi biết cách phối hai item này, bạn có thể dễ dàng tạo dựng một phong cách vừa ...</p>
           </div>
         </div>
+        <ChatBox />
     </>
   );
 }
