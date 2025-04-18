@@ -19,8 +19,9 @@ import { validateEmail } from "../../Validation/CheckEmail/CheckMail";
 import { appService } from "../../service/appService";
 import { Button, notification, Space } from "antd";
 import { validatePass } from "../../Validation/checkPass/CheckPass";
-import { Alert, Flex, Spin } from 'antd';
-
+import { Alert, Flex, Spin } from "antd";
+import rt from "../../img/logo/free_return.png";
+import sb from "../../img/logo/Save_buy.png";
 
 export default function ModalUser({ isOpen, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -48,9 +49,6 @@ export default function ModalUser({ isOpen, onClose }) {
   const [loading, setLoading] = useState(false);
   const [np, setNp] = useState("");
   const [np2, setNp2] = useState("");
-
-
-
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -90,11 +88,7 @@ export default function ModalUser({ isOpen, onClose }) {
     };
     try {
       await appService.resendOtp(data);
-      openNotification(
-        "success",
-        "Thành công",
-        "Yêu cầu đã được gửi!"
-      );
+      openNotification("success", "Thành công", "Yêu cầu đã được gửi!");
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu:", err);
       openNotification(
@@ -106,7 +100,7 @@ export default function ModalUser({ isOpen, onClose }) {
     setCanResend(false);
     setCountDown(12);
   };
-  
+
   const handleOnclose = () => {
     setShowPassword(false);
     setIsSms(false);
@@ -155,34 +149,23 @@ export default function ModalUser({ isOpen, onClose }) {
       setCanResend(true);
     }
   }, [isOtp, countDown]);
-  
 
   const handleLogin = async () => {
-    
     const emailValidation = validateEmail(email);
     const passValidation = validatePass(pass);
     if (!email || !pass) {
-      openNotification(
-        "error",
-        "Lỗi",
-        "vui lòng nhập đầy đủ thông tin"
-      );
+      openNotification("error", "Lỗi", "vui lòng nhập đầy đủ thông tin");
       return;
     }
-    if(!emailValidation.isValid){
-      openNotification(
-        "error",
-        "Lỗi",
-        "email không đúng định dạng"
-      );
-    } else if(!passValidation.isValid){
+    if (!emailValidation.isValid) {
+      openNotification("error", "Lỗi", "email không đúng định dạng");
+    } else if (!passValidation.isValid) {
       openNotification(
         "error",
         "Lỗi",
         "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt"
       );
-    }
-    else{
+    } else {
       try {
         const loginData = {
           email: email,
@@ -190,44 +173,33 @@ export default function ModalUser({ isOpen, onClose }) {
         };
         setLoading(true);
         const res = await userService.postLogin(loginData);
-        
-        if (res.data.status ===  true && res.data.metadata) {
+
+        if (res.data.status === true && res.data.metadata) {
           localUserService.set(res.data);
           localStorage.setItem("token", "your_jwt_token");
           setTimeout(() => {
-            openNotification(
-              "success",
-              "Thành công",
-              "Đăng nhập thành công!"
-            );
+            openNotification("success", "Thành công", "Đăng nhập thành công!");
           }, 1000);
           setTimeout(() => {
             dispatch(setLoginAction(res.data));
             setLoading(false);
-            window.location.reload()
+            window.location.reload();
           }, 1500);
-
         }
       } catch (err) {
         console.error("Lỗi đăng nhập:", err);
         setTimeout(() => {
-          openNotification(
-            "error",
-            "Lỗi",
-            err.response.data.metadata.message
-          );
+          openNotification("error", "Lỗi", err.response.data?.metadata.message);
           setLoading(false);
         }, 1500);
-        
       }
     }
-    
   };
 
   const handleSignUp = async () => {
     const valiPass = validatePass(pass);
     const valiEmail = validateEmail(email);
-    if (!email || !pass || !pass2 ||!phoneNumber) {
+    if (!email || !pass || !pass2 || !phoneNumber) {
       openNotification(
         "error",
         "Lỗi",
@@ -235,7 +207,7 @@ export default function ModalUser({ isOpen, onClose }) {
       );
       return;
     }
-    if(pass !== pass2){
+    if (pass !== pass2) {
       openNotification(
         "error",
         "Lỗi",
@@ -243,7 +215,7 @@ export default function ModalUser({ isOpen, onClose }) {
       );
       return;
     }
-    if(!valiPass.isValid){
+    if (!valiPass.isValid) {
       openNotification(
         "error",
         "Lỗi",
@@ -251,12 +223,8 @@ export default function ModalUser({ isOpen, onClose }) {
       );
       return;
     }
-    if(!valiEmail.isValid){
-      openNotification(
-        "error",
-        "Lỗi",
-        "Email không đúng định dạng!"
-      );
+    if (!valiEmail.isValid) {
+      openNotification("error", "Lỗi", "Email không đúng định dạng!");
       return;
     }
     try {
@@ -264,7 +232,7 @@ export default function ModalUser({ isOpen, onClose }) {
         email: email,
         phone: phoneNumber,
         password: pass,
-        confirmPassword: pass2
+        confirmPassword: pass2,
       };
       const res = await userService.postSignUp(signupForm);
       setLoading(true);
@@ -275,11 +243,7 @@ export default function ModalUser({ isOpen, onClose }) {
       handleRePass();
     } catch (err) {
       console.error("Lỗi đăng Ký:", err);
-      openNotification(
-        "error",
-        "Lỗi",
-        err.response.data.metadata.message
-      );
+      openNotification("error", "Lỗi", err.response.data.metadata.message);
     }
   };
 
@@ -298,31 +262,24 @@ export default function ModalUser({ isOpen, onClose }) {
       );
       handleRePass();
     } catch (err) {
-      console.error(
-        "Lỗi khi gửi yêu cầu đặt lại mật khẩu:",
-        err.response
-      );
-      openNotification(
-        "error",
-        "Lỗi",
-        err.response || "Gửi yêu cầu thất bại"
-      );
+      console.error("Lỗi khi gửi yêu cầu đặt lại mật khẩu:", err.response);
+      openNotification("error", "Lỗi", err.response || "Gửi yêu cầu thất bại");
     }
   };
 
-  const handleChangePass = async () =>{
-    if(np !== np2){
-      return console.log('sai mat khau')
+  const handleChangePass = async () => {
+    if (np !== np2) {
+      return console.log("sai mat khau");
     }
 
     const data = {
       email: email,
       newPassword: np,
       confirmPassword: np2,
-    }
+    };
     try {
-      const res = await appService.resetPass(data)
-      console.log(res)
+      const res = await appService.resetPass(data);
+      console.log(res);
       openNotification(
         "success",
         "Thành công",
@@ -330,18 +287,17 @@ export default function ModalUser({ isOpen, onClose }) {
       );
       setTimeout(() => {
         setLoading(false);
-        window.location.reload()
+        window.location.reload();
       }, 500);
     } catch (error) {
-      console.log(error)  
+      console.log(error);
       openNotification(
         "error",
         "Lỗi",
         error.response.data.metadata.message || "Gửi yêu cầu thất bại"
       );
     }
-
-  }
+  };
 
   const handleCfOtp = async () => {
     const formData = {
@@ -351,15 +307,14 @@ export default function ModalUser({ isOpen, onClose }) {
     };
     try {
       const res = await appService.conformOtp(formData);
-      console.log(res)
+      console.log(res);
       openNotification(
         "success",
         "Thành công",
         "Yêu cầu đặt lại mật khẩu đã được gửi!"
       );
-      setIsOtp(false)
-      setIsNewPass(true)
-      
+      setIsOtp(false);
+      setIsNewPass(true);
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu đặt lại mật khẩu:", err);
       openNotification(
@@ -370,7 +325,6 @@ export default function ModalUser({ isOpen, onClose }) {
     }
   };
 
-
   const handleXTOtp = async () => {
     const formData = {
       email: email,
@@ -379,7 +333,7 @@ export default function ModalUser({ isOpen, onClose }) {
     };
     try {
       await appService.conformOtp(formData);
-      setLoading(true)
+      setLoading(true);
       setTimeout(() => {
         openNotification(
           "success",
@@ -388,9 +342,9 @@ export default function ModalUser({ isOpen, onClose }) {
         );
       }, 700);
       setTimeout(() => {
-        setLoading(false)
-        setIsXT(false)
-        setIsDK(false)
+        setLoading(false);
+        setIsXT(false);
+        setIsDK(false);
       }, 1500);
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu xác thực:", err);
@@ -402,13 +356,11 @@ export default function ModalUser({ isOpen, onClose }) {
     }
   };
 
-  const contentStyle: React.CSSProperties = {
-    marginTop: '20%'
+  const contentStyle = {
+    marginTop: "20%",
   };
-  
+
   const content = <div style={contentStyle} />;
-
-
 
   if (!isOpen) return null;
 
@@ -416,22 +368,23 @@ export default function ModalUser({ isOpen, onClose }) {
     <div className="modal-overlay">
       {loading && (
         <div
-        style={{
-         width: '100%',
-         position: 'fixed',
-         height: '100vh',
-         zIndex: '1001',
-         padding: '20px',
-         background: 'rgba(0, 0, 0, 0.5)'
-       }}>
-         <Spin tip="Loading" size="large">
-           {content}
-         </Spin>
-       </div>
+          style={{
+            width: "100%",
+            position: "fixed",
+            height: "100vh",
+            zIndex: "1001",
+            padding: "20px",
+            background: "rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          <Spin tip="Loading" size="large">
+            {content}
+          </Spin>
+        </div>
       )}
       {contextHolder}
       {/* login */}
-      {!isRP && !isSms && !isOtp && !isDK && !isXT &&(
+      {!isRP && !isSms && !isOtp && !isDK && !isXT && (
         <div className="modal-container">
           {/* Nút đóng */}
           <button
@@ -479,7 +432,7 @@ export default function ModalUser({ isOpen, onClose }) {
 
             <a
               onClick={() => setIsRP(true)}
-              style={{ cursor: "pointer" }}
+              style={{ color: "#1A81FF" }}
               className="forgot-password"
             >
               Quên mật khẩu?
@@ -490,7 +443,7 @@ export default function ModalUser({ isOpen, onClose }) {
             </button>
             <a
               onClick={() => setIsSms(true)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color: "#1A81FF" }}
               className="sms-login"
             >
               Đăng nhập bằng SMS
@@ -499,13 +452,12 @@ export default function ModalUser({ isOpen, onClose }) {
             <div className="divider">Hoặc</div>
 
             {/* Nút đăng nhập với Google và Facebook */}
-            <button className="social-login google">
-              <FaGoogle style={{ marginRight: "2%" }} /> Google
-            </button>
-            <button className="social-login facebook">
-              <FaFacebook style={{ marginRight: "2%" }} /> Facebook
-            </button>
-            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "16px" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
+  
+              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
+            </div>
+            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px", color: "black", fontWeight: '400', textAlign: 'center' }}>
               Bạn mới biết đến xmark lần đầu?{" "}
               <span
                 onClick={() => setIsDK(true)}
@@ -518,6 +470,22 @@ export default function ModalUser({ isOpen, onClose }) {
                 Đăng ký
               </span>
             </p>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div style={{width: '50%'}}>
+                <img src={rt} alt="Google" style={{ width: "50%" }} />
+                <p style={{color: 'black', fontSize: '12px', fontWeight: '400', margin: '0'}}>FREE RETURN </p>
+              </div>
+              <div style={{width: '50%'}}>
+                <img src={sb} alt="Google" style={{ width: "50%" }} />
+                <p style={{color: 'black', fontSize: '12px', fontWeight: '400', margin: '0'}}>SAFE SHOPPING</p>
+              </div>
+            </div>
+            <p style={{
+              color: 'black',
+              fontSize: '12px',
+              fontWeight: '400',
+              margin: '20px 0',
+            }}>By continuing, you agree to our <span style={{textDecoration: 'underline', cursor: 'pointer'}}>Terms of Use</span> and <span style={{textDecoration: 'underline', cursor: 'pointer'}}>Privacy Policy</span>.</p>
           </div>
         </div>
       )}
@@ -591,12 +559,12 @@ export default function ModalUser({ isOpen, onClose }) {
                 {showRePassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
-            <button onClick={handleSignUp} className="login-button">
+            <button onClick={handleSignUp} className="login-button" style={{marginTop:'10px'}}>
               ĐĂNG Ký
             </button>
             <a
               onClick={() => setIsSms(true)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", color: "#1A81FF" }}
               className="sms-login"
             >
               Đăng nhập bằng SMS
@@ -605,13 +573,12 @@ export default function ModalUser({ isOpen, onClose }) {
             <div className="divider">Hoặc</div>
 
             {/* Nút đăng nhập với Google và Facebook */}
-            <button className="social-login google">
-              <FaGoogle style={{ marginRight: "2%" }} /> Google
-            </button>
-            <button className="social-login facebook">
-              <FaFacebook style={{ marginRight: "2%" }} /> Facebook
-            </button>
-            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "16px" }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
+  
+              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
+            </div>
+            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px" , color: "black", fontWeight: '400', textAlign: 'center'}}>
               Bạn đã có tài khoản ?{" "}
               <span
                 onClick={() => setIsDK(false)}
@@ -663,6 +630,7 @@ export default function ModalUser({ isOpen, onClose }) {
               onClick={() => {
                 handleResetPassword();
               }}
+              style={{marginTop:'10px'}}
             >
               TIẾP TỤC
             </button>
@@ -693,12 +661,11 @@ export default function ModalUser({ isOpen, onClose }) {
             <div className="divider">Hoặc</div>
 
             {/* Nút đăng nhập với Google và Facebook */}
-            <button className="social-login google">
-              <FaGoogle style={{ marginRight: "2%" }} /> Google
-            </button>
-            <button className="social-login facebook">
-              <FaFacebook style={{ marginRight: "2%" }} /> Facebook
-            </button>
+            <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
+  
+              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
+            </div>
           </div>
         </div>
       )}
@@ -732,13 +699,13 @@ export default function ModalUser({ isOpen, onClose }) {
               type="text"
               placeholder="Nhập số điện thoại"
             />
-            <button className="login-button" onClick={handleOtp}>
+            <button className="login-button" onClick={handleOtp} style={{marginTop:'10px'}}>
               TIẾP TỤC
             </button>
 
             {errorModal && (
               <div className="error-modal">
-                <p>{errMessage}</p>
+                <p style={{color: 'red'}}>{errMessage}</p>
               </div>
             )}
             <ZaloModal
@@ -762,12 +729,11 @@ export default function ModalUser({ isOpen, onClose }) {
             <div className="divider">Hoặc</div>
 
             {/* Nút đăng nhập với Google và Facebook */}
-            <button className="social-login google">
-              <FaGoogle style={{ marginRight: "2%" }} /> Google
-            </button>
-            <button className="social-login facebook">
-              <FaFacebook style={{ marginRight: "2%" }} /> Facebook
-            </button>
+            <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
+  
+              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
+            </div>
           </div>
         </div>
       )}
@@ -792,7 +758,10 @@ export default function ModalUser({ isOpen, onClose }) {
 
           {/* Tiêu đề */}
           <h2 className="modal-title">Mã OTP</h2>
-          <p className="otp-message" style={{color: 'black', fontWeight: '500'}}>
+          <p
+            className="otp-message"
+            style={{ color: "black", fontWeight: "500" }}
+          >
             Mã xác thực đã được gửi đến tài khoản <br />
             <span>email: {email}</span>
           </p>
@@ -813,7 +782,7 @@ export default function ModalUser({ isOpen, onClose }) {
             ))}
           </div>
 
-          <button onClick={handleCfOtp} className="login-button">
+          <button onClick={handleCfOtp} className="login-button" style={{marginTop:'10px'}}>
             TIẾP TỤC
           </button>
 
@@ -840,7 +809,6 @@ export default function ModalUser({ isOpen, onClose }) {
         </div>
       )}
 
-
       {/* Xác thực tài khoản*/}
       {isXT && (
         <div className="modal-container">
@@ -861,7 +829,10 @@ export default function ModalUser({ isOpen, onClose }) {
 
           {/* Tiêu đề */}
           <h2 className="modal-title">Mã OTP</h2>
-          <p className="otp-message" style={{color: 'black', fontWeight: '500'}}>
+          <p
+            className="otp-message"
+            style={{ color: "black", fontWeight: "500" }}
+          >
             Mã xác thực đã được gửi đến tài khoản <br />
             <span>email: {email}</span>
           </p>
@@ -882,22 +853,20 @@ export default function ModalUser({ isOpen, onClose }) {
             ))}
           </div>
 
-          <button onClick={handleXTOtp} className="login-button">
+          <button onClick={handleXTOtp} className="login-button" style={{marginTop:'10px'}}>
             TIẾP TỤC
           </button>
 
-          
-            <button
-              style={{
-                border: "none",
-                marginTop: "2%",
-                background: "none",
-              }}
-              onClick={handleResendCode}
-            >
-              Gửi lại mã
-            </button>
-          
+          <button
+            style={{
+              border: "none",
+              marginTop: "2%",
+              background: "none",
+            }}
+            onClick={handleResendCode}
+          >
+            Gửi lại mã
+          </button>
         </div>
       )}
 
@@ -924,7 +893,7 @@ export default function ModalUser({ isOpen, onClose }) {
 
           {/* Form nhập thông tin */}
           <div className="modal-body">
-          <label>Mật khẩu mới</label>
+            <label>Mật khẩu mới</label>
             <div className="password-container">
               <input
                 type={showPassword ? "text" : "password"}
@@ -956,11 +925,9 @@ export default function ModalUser({ isOpen, onClose }) {
               </button>
             </div>
 
-
             <button onClick={handleChangePass} className="login-button">
               Thay đổi
             </button>
-            
           </div>
         </div>
       )}

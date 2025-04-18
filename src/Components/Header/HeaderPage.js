@@ -231,7 +231,7 @@ export default function HeaderPage() {
         </div>
       </div>
       {/* Khoảng trống để tránh bị che mất nội dung */}
-      <div style={{ marginTop: '150px' }}></div>
+      <div style={{ marginTop: '10px' }}></div>
     </div>
   );
 }

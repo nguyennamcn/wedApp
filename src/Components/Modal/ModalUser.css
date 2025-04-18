@@ -13,12 +13,12 @@
   
   .modal-container {
     background: #fff;
-    padding: 40px 12%;
-    border-radius: 20px;
-    width: 50%;
+    border-radius: 10px;
     position: relative;
     text-align: center;
-    transform: scale(0.9);
+    padding: 0 4%;
+    width: 35%;
+    /* height: 90vh; */
   }
   
   .close-button {
@@ -32,21 +32,27 @@
   }
   
   .modal-title {
-    font-size: 20px;
+    font-size: 36px;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-top: 15px;
   }
   
+  .modal-body {
+    width: 100%;
+    padding: 0px;
+  }
+
   .modal-body label {
     display: block;
     text-align: left;
     margin: 10px 0 5px;
     font-size: 14px;
+    color: #171717;
   }
   
   .modal-body input {
     width: 100%;
-    padding: 10px;
+    padding: 3%;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
@@ -73,26 +79,26 @@
     text-align: left;
     margin: 5px 0;
     font-size: 12px;
-    color: #007bff;
+    color: #1A81FF;
     text-decoration: none;
+    cursor: pointer;
   }
   
   .login-button {
     width: 100%;
     background: #6EB566;
     color: white;
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 30px;
     border: none;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
-    margin-top: 10px;
     font-weight: 600;
   }
   
   .sms-login {
     display: block;
-    font-size: 14px;
+    font-size: 12px;
     margin: 10px 0;
     color: #007bff;
     text-decoration: none;
@@ -114,6 +120,12 @@
     background: #fff;
     padding: 0 10px;
   }
+
+  .divider::after {
+    content: " ";
+    background: #fff;
+    padding: 0 10px;
+  }
   
   .social-login {
     width: 100%;
@@ -129,15 +141,7 @@
     font-weight: 600;
   }
   
-  .google {
-    background: #6EB566;
-    color: #fff;
-  }
-  
-  .facebook {
-    background: #6EB566;
-    color: #fff;
-  }
+
   
   .otp-input{
     width: 8%;

@@ -14,6 +14,7 @@ import InfoUser from "./Page/InfoUser/InfoUser";
 import RegisterSeller from "./Page/SellerPage/RegisterSeller";
 import { notification } from "antd";
 import ChangePass from "./Page/UserPage/ChangePass";
+import DetailProduct from "./Page/DetailProduct/DetailProduct";
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -107,7 +108,7 @@ function App() {
           <Route path="/settings" element={<ProtectedRoute><LayoutUser Component={SettingPage} /></ProtectedRoute>} />
           <Route path="/settings/address" element={<ProtectedRoute><LayoutUser Component={AddressPage} /></ProtectedRoute>} />
           <Route path="/settings/changepass" element={<ProtectedRoute><LayoutUser Component={ChangePass} /></ProtectedRoute>} />
-          <Route path="/detail" element={<Layout Component={DetailPage} />} />
+          <Route path="/detail" element={<Layout Component={DetailProduct} />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
