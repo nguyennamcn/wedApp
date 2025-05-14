@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./Page/HomePage/HomePage";
 import ErrorPage from "./Page/ErrolPage/ErrorPage";
-import LoadingPage from "./Components/Spinner/LoadingPage"; 
 import Layout from "./Layout/Layout";
-import DetailPage from "./Page/DetailPage/DetailPage";
 import SettingPage from "./Page/UserPage/SettingPage";
 import LayoutUser from "./Layout/LayoutUser";
 import ProtectedRoute from "./Components/Protectedroute/ProtectedRoute";
@@ -15,6 +13,12 @@ import RegisterSeller from "./Page/SellerPage/RegisterSeller";
 import { notification } from "antd";
 import ChangePass from "./Page/UserPage/ChangePass";
 import DetailProduct from "./Page/DetailProduct/DetailProduct";
+import BlogPage from "./Page/BlogPage/BlogPage";
+import LayoutAdmin from "./Layout/LayoutAdmin";
+import AdminPage from "./Page/AdminPage/AdminPage";
+import NavBarAdminWrapper from "./Page/AdminPage/NavBarAdminWrapper";
+import SellerPage from "./Page/SellerPage/SellerPage";
+import Payment from "./Page/Payment/Payment";
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -109,10 +113,15 @@ function App() {
           <Route path="/settings/address" element={<ProtectedRoute><LayoutUser Component={AddressPage} /></ProtectedRoute>} />
           <Route path="/settings/changepass" element={<ProtectedRoute><LayoutUser Component={ChangePass} /></ProtectedRoute>} />
           <Route path="/detail" element={<Layout Component={DetailProduct} />} />
+          <Route path="/blog/blog1" element={<Layout Component={BlogPage} />} />
+          <Route path="/payment" element={<Layout Component={Payment} />} />
+          <Route path="/admin-login" element={<LayoutAdmin Component={AdminPage} />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
-          <Route path="/2" element={<LoadingPage />} />
+          <Route path="/seller" element={<Layout Component={SellerPage} />} />
+          <Route path="/admin-page" element={<Navigate to="/admin-page/dashboard" replace />} />
+          <Route path="/admin-page/:section" element={<NavBarAdminWrapper />} />
         </Routes>
       </BrowserRouter>
     </div>

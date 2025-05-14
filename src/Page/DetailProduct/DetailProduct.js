@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./DetailProduct.css";
 import img from "../../img/01.jpg";
 import img2 from "../../img/02.jpg";
@@ -6,8 +6,15 @@ import img3 from "../../img/03.jpg";
 import img4 from "../../img/04.jpg";
 import OrtherProductShop from "./OrtherProductShop";
 import ProductLike from "./ProductLike";
+import { RiArrowDropLeftFill } from "react-icons/ri";
 
 export default function DetailProduct() {
+  const [selectedImage, setSelectedImage] = useState(img);
+  const [showPopup, setShowPopup] = useState(false);
+  const [zoom, setZoom] = useState(1); // mặc định không zoom
+
+  const handleZoomIn = () => setZoom(prev => prev + 0.1);
+  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.1, 0.1));
   return (
     <div style={{ padding: "2% 5%", backgroundColor: "#F6F6F6" }}>
       {/* Breadcrumb */}
@@ -16,10 +23,10 @@ export default function DetailProduct() {
           marginBottom: "20px",
           boxShadow: "0 0 10px rgba(0,0,0,0.3)",
           padding: "10px",
-          fontSize: "14px",
+          fontSize: "13px",
         }}
       >
-        <span>xmark</span> - <span>Thời trang nam</span>
+        <span>xmark</span> <RiArrowDropLeftFill style={{fontSize: '32px'}} /> <span>Thời trang nam</span>
       </div>
 
       <div
@@ -33,19 +40,39 @@ export default function DetailProduct() {
           <div className="image-section">
             <div className="thumbnail-grid">
               <div>
-                <img src={img} className="thumb" />
+                <img
+                  src={img}
+                  className="thumb"
+                  alt="Thumbnail 1"
+                  onClick={() => setSelectedImage(img)}
+                />
               </div>
               <div>
-                <img src={img2} className="thumb" />
+                <img
+                  src={img2}
+                  className="thumb"
+                  alt="Thumbnail 2"
+                  onClick={() => setSelectedImage(img2)}
+                />
               </div>
               <div>
-                <img src={img3} className="thumb" />
+                <img
+                  src={img3}
+                  className="thumb"
+                  alt="Thumbnail 3"
+                  onClick={() => setSelectedImage(img3)}
+                />
               </div>
               <div>
-                <img src={img4} className="thumb" />
+                <img
+                  src={img4}
+                  className="thumb"
+                  alt="Thumbnail 4"
+                  onClick={() => setSelectedImage(img4)}
+                />
               </div>
             </div>
-            <img src={img} alt="Main" className="main-image" />
+            <img src={selectedImage} alt="Main" className="main-image" />
           </div>
 
           {/* Product Info */}
@@ -128,7 +155,7 @@ export default function DetailProduct() {
           style={{ display: "flex", justifyContent: "center", marginTop: "5%" }}
         >
           <div className="seller-info">
-            <img src={img} className="avatar" />
+            <img src={img} className="avatar" alt="Thumbnail 1" />
             <div>
               <p
                 style={{

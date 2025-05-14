@@ -62,6 +62,9 @@ export default function ChatBox() {
     setVisible(true);
   };
 
+  const topParam = position.top - 350;
+  const leftParam = position.left - 570;
+
   return (
     <>
       {/* Nút mở chat */}
@@ -98,8 +101,8 @@ export default function ChatBox() {
           onMouseDown={onMouseDown}
           style={{
             position: "fixed",
-            left: `${position.left}px`,
-            top: `${position.top}px`,
+            left: `${leftParam}px`,
+            top: `${topParam}px`,
             width: "40%",
             height: "400px",
             backgroundColor: "#6EB566",

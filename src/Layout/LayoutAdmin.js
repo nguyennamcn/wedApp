@@ -1,13 +1,13 @@
 import React from 'react'
 import FooterPage from '../Components/Footer/FooterPage'
-import HeaderPage from '../Components/Header/HeaderPage'
 import './layout.css'
+import HeaderAdmin from '../Components/Header/HeaderAdmin'
 
-function Layout({Component}) {
+function LayoutAdmin({Component}) {
   return (
     <div>
-        <HeaderPage />
-        <div style={{marginTop: '20vh'}}>
+        <HeaderAdmin />
+        <div style={{marginTop: '8%'}}>
         <Component />
         </div>
         <FooterPage />
@@ -15,4 +15,4 @@ function Layout({Component}) {
   )
 }
 
-export default Layout;
+export default LayoutAdmin;

@@ -165,7 +165,10 @@ export default function HeaderPage() {
           padding: '7px 5%',
         }}
       >
-        <span style={{ cursor: 'pointer' }}> Kênh người bán</span>
+        
+        <NavLink style={{color: 'white'}} to="/seller">
+          <span style={{ cursor: 'pointer' }}> Kênh người bán</span>
+        </NavLink>
         <span style={{ cursor: 'pointer' }}> Đóng góp ý kiến</span>
         <span style={{ cursor: 'pointer' }}> Hỗ trợ</span>
         <span style={{ cursor: 'pointer' }}> Thay đổi ngôn ngữ</span>

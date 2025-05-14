@@ -4,8 +4,7 @@ import { localUserService } from "./localService";
 export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const configHeader = () => {
-    const accessToken = localUserService.getAccessToken(); // Lấy token đã giải mã
-    // console.log("Access Token (Decrypted):", accessToken); // Debug kiểm tra token
+    const accessToken = localUserService.getAccessToken();
     return {
         Authorization: accessToken ? `Bearer ${accessToken}` : "",
         "Content-Type": "application/json",
@@ -17,6 +16,7 @@ export const https = axios.create({
     baseURL: BASE_URL,
 });
 
+
 // Kích hoạt interceptor
 https.interceptors.request.use(
     (config) => {
@@ -27,7 +27,7 @@ https.interceptors.request.use(
             "/user-service/api/v1/account/confirm-otp",
             "/user-service/api/v1/account/resend-otp",
             "/user-service/api/v1/account/forgot-password",
-            "/user-service/api/v1/account/reset-password"
+            "/user-service/api/v1/account/reset-password",
         ];
         const isExcluded = authExcludedUrls.some((url) => config.url.includes(url));
 

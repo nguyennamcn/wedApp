@@ -362,6 +362,11 @@ export default function ModalUser({ isOpen, onClose }) {
 
   const content = <div style={contentStyle} />;
 
+  const handleGoogleLogin = () => {
+    window.location.href = "http://1.53.148.102:8081/user-service/api/v1/account/login/google";
+  };
+
+
   if (!isOpen) return null;
 
   return (
@@ -454,7 +459,7 @@ export default function ModalUser({ isOpen, onClose }) {
             {/* Nút đăng nhập với Google và Facebook */}
             <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
   
-              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}} onClick={handleGoogleLogin}/>
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
             <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px", color: "black", fontWeight: '400', textAlign: 'center' }}>
@@ -575,7 +580,10 @@ export default function ModalUser({ isOpen, onClose }) {
             {/* Nút đăng nhập với Google và Facebook */}
             <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
   
-              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              <FaGoogle
+                style={{ fontSize: '32px', cursor: 'pointer' }}
+                onClick={handleGoogleLogin}
+              />
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
             <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px" , color: "black", fontWeight: '400', textAlign: 'center'}}>
@@ -726,12 +734,27 @@ export default function ModalUser({ isOpen, onClose }) {
               Đăng nhập mật khẩu?
             </a>
 
-            <div className="divider">Hoặc</div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+            <div className="divider">
+            </div>
+            <div style={{ display: 'block', margin: '0 5%'}}>
+              Hoặc
+            </div>
+            <div className="divider">
+            </div>
+            </div>
+            
 
             {/* Nút đăng nhập với Google và Facebook */}
             <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
-  
-              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+
+                <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
           </div>

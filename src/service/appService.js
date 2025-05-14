@@ -39,9 +39,7 @@ export const appService = {
         // console.log(id)
         return https.delete(`/user-service/api/v1/users/address/delete/${id}`);
     },
-//store service
-    postStore: (data) =>{
-        // console.log(data)
-        return https.post("/store-service/api/v1/stores/register", data);
+    getAllCate: () =>{
+        return https.get("/product-service/api/v1/categories");
     },
 }
