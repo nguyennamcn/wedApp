@@ -39,6 +39,13 @@ export const appService = {
         // console.log(id)
         return https.delete(`/user-service/api/v1/users/address/delete/${id}`);
     },
+    changePw: (data) =>{
+        // console.log(data)
+        return https.put("/user-service/api/v1/account/change-password", data);
+    },
+
+
+
     getAllCate: () =>{
         return https.get("/product-service/api/v1/categories");
     },

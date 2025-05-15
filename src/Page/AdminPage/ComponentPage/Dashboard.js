@@ -397,7 +397,7 @@ export default function Dashboard() {
             padding: "5%",
             marginTop: '10px'
           }}>
-            <div className="summary-row">
+            <div className="summary-row-db">
               <p style={{
                 color: "#383838",
                 fontSize: "14px",
@@ -430,7 +430,7 @@ export default function Dashboard() {
                 />
               </Flex>
             </div>
-            <div className="summary-row">
+            <div className="summary-row-db">
               <p style={{
                 color: "#383838",
                 fontSize: "14px",

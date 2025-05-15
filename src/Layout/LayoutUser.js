@@ -28,7 +28,7 @@ export default function ({ Component }) {
         style={{
           background: "#F2ECEC",
           width: "100%",
-          padding: "8% 0 1% 0",
+          padding: "9% 0 1% 0",
         }}
       >
         <div
@@ -108,7 +108,7 @@ export default function ({ Component }) {
               <p
                 className={a4 ? "active" : ""}
                 onClick={() => {
-                  
+                  navigate('/settings/changepass');
                   setA1(false);
                   setA4(true);
                   setA2(false);
@@ -127,7 +127,7 @@ export default function ({ Component }) {
               <p
                 className={a5 ? "active" : ""}
                 onClick={() => {
-                //   navigate('/order');
+                  
                   setA1(false);
                   setA5(true);
                   setA2(false);
@@ -149,7 +149,7 @@ export default function ({ Component }) {
               <p
                 className={a6 ? "active" : ""}
                 onClick={() => {
-                //   navigate('/order');
+                  navigate('/settings/buylist');
                   setA1(false);
                   setA6(true);
                   setA2(false);

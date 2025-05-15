@@ -47,7 +47,7 @@ const UserDrop = ({ user, logoutBtn }) => {
         <div
           style={{
             textAlign: "center",
-            padding: "10px 120px",
+            padding: "10px 100px",
             fontSize: "18px",
           }}
         >
