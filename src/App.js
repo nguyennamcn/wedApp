@@ -20,6 +20,7 @@ import NavBarAdminWrapper from "./Page/AdminPage/NavBarAdminWrapper";
 import SellerPage from "./Page/SellerPage/SellerPage";
 import Payment from "./Page/Payment/Payment";
 import InvationBuy from "./Page/UserPage/InvationBuy";
+import PaymentTest from "./Page/Payment/PaymentTest";
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -117,6 +118,7 @@ function App() {
           <Route path="/detail" element={<Layout Component={DetailProduct} />} />
           <Route path="/blog/blog1" element={<Layout Component={BlogPage} />} />
           <Route path="/payment" element={<Layout Component={Payment} />} />
+          <Route path="/payment2" element={<Layout Component={PaymentTest} />} />
           <Route path="/admin-login" element={<LayoutAdmin Component={AdminPage} />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />

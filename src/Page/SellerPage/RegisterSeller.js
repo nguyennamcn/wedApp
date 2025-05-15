@@ -102,6 +102,40 @@ export default function RegisterSeller() {
       setLoading(false);
     }
   };
+  const handleUpload2 = async () => {
+    const accessToken = localUserService.getAccessToken();
+    if (!frontFile || !backFile) {
+      alert("Vui lòng chọn đủ 2 mặt CCCD trước khi gửi.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("frontIdentity", frontFile);
+    formData.append("backIdentity", backFile);
+
+    try {
+      setLoading(true);
+      await axios.post(
+        `${BASE_URL}/store-service/api/v1/stores/upload_identity`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      alert("Tải ảnh CCCD thành công!");
+      setEnd(true);
+      setFrontFile(null);
+      setBackFile(null);
+    } catch (err) {
+      console.error(err);
+      alert("Có lỗi xảy ra, vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /** UI hiển thị từng ô upload */
   const UploadBox = ({ file, side }) => (
@@ -180,8 +214,8 @@ export default function RegisterSeller() {
   };
 
   const handleFinish = async (values) => {
-    await handleUpload(); // Đợi upload xong (nếu cần)
-    handleStep3(values); // Gửi dữ liệu Form sau đó
+    await handleStep3(values);
+    handleUpload(); // Đợi upload xong (nếu cần)
   };
 
   // Gọi API để lấy danh sách category
@@ -250,7 +284,7 @@ export default function RegisterSeller() {
 
     if (step < 5) {
       setStep(4);
-      setEnd(true);
+      // setEnd(true);
     }
   };
 
@@ -1037,7 +1071,7 @@ export default function RegisterSeller() {
                 name="wrap"
                 labelCol={{ flex: "110px" }}
                 labelAlign="left"
-                onFinish={handleUpload}
+                onFinish={handleUpload2}
                 labelWrap
                 wrapperCol={{ flex: 1 }}
                 colon={false}
