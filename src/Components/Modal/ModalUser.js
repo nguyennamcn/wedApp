@@ -263,7 +263,7 @@ export default function ModalUser({ isOpen, onClose }) {
       handleRePass();
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu đặt lại mật khẩu:", err.response);
-      openNotification("error", "Lỗi", err.response || "Gửi yêu cầu thất bại");
+      openNotification("error", "Lỗi", err.response.data.metadata.message || "Gửi yêu cầu thất bại");
     }
   };
 
@@ -290,12 +290,20 @@ export default function ModalUser({ isOpen, onClose }) {
         window.location.reload();
       }, 500);
     } catch (error) {
-      console.log(error);
-      openNotification(
-        "error",
-        "Lỗi",
-        error.response.data.metadata.message || "Gửi yêu cầu thất bại"
-      );
+      console.log(error.response.data.metadata);
+      const errorMeta = error.response?.data?.metadata;
+        let errorMessage = '';
+        if (Array.isArray(errorMeta)) {
+          errorMessage = errorMeta.map((item) => item.message).join("\n");
+        } else if (typeof errorMeta === "object" && errorMeta?.message) {
+          errorMessage = errorMeta.message;
+        } else if (typeof errorMeta === "string") {
+          errorMessage = errorMeta;
+        } else {
+          errorMessage = "Đã xảy ra lỗi không xác định";
+        }
+
+        openNotification("error", "Thất bại", errorMessage);
     }
   };
 
@@ -948,7 +956,10 @@ export default function ModalUser({ isOpen, onClose }) {
               </button>
             </div>
 
-            <button onClick={handleChangePass} className="login-button">
+            <button style={{
+              marginTop: "10%",
+              marginBottom: "10%",
+            }} onClick={handleChangePass} className="login-button">
               Thay đổi
             </button>
           </div>
