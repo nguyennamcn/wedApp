@@ -23,6 +23,7 @@ import { Alert, Flex, Spin } from "antd";
 import { IoIosArrowRoundBack } from "react-icons/io";
 import rt from "../../img/logo/free_return.png";
 import sb from "../../img/logo/Save_buy.png";
+import gg from "../../img/Google-removebg-preview.png";
 
 export default function ModalUser({ isOpen, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -118,15 +119,25 @@ export default function ModalUser({ isOpen, onClose }) {
 
   const handleOtp = () => {
     const phoneValidation = validatePhone(phoneNumber);
-    if (!phoneValidation.isValid) {
+    const mailValidation = validateEmail(phoneNumber);
+    if (phoneValidation.isValid) {
+      setErrMessage("phone");
+      setErrorModal(true); // Hiển thị modal lỗi
+      setTimeout(() => setErrorModal(false), 3000); // Tự động đóng sau 3 giây
+      // setZaloModal(true);
+    }else if(mailValidation.isValid){
+      setErrMessage("mail");
+      setErrorModal(true); // Hiển thị modal lỗi
+      setTimeout(() => setErrorModal(false), 3000); // Tự động đóng sau 3 giây
+      // setZaloModal(true);
+    } else {
       setErrMessage(phoneValidation.message);
       setErrorModal(true); // Hiển thị modal lỗi
       setTimeout(() => setErrorModal(false), 3000); // Tự động đóng sau 3 giây
-    } else {
-      setErrMessage("");
-      setZaloModal(true);
     }
   };
+
+
 
   const handleRePass = () => {
     const emailValidation = validateEmail(email);
@@ -489,12 +500,25 @@ export default function ModalUser({ isOpen, onClose }) {
               Đăng nhập bằng OTP
             </a>
 
-            <div className="divider">Hoặc</div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+            <div className="divider">
+            </div>
+            <div style={{ display: 'block', margin: '0 5%'}}>
+              Hoặc
+            </div>
+            <div className="divider">
+            </div>
+            </div>
 
             {/* Nút đăng nhập với Google và Facebook */}
             <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
   
-              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}} onClick={handleGoogleLogin}/>
+              <img src={gg} alt="Google" style={{ width: "32px", cursor: 'pointer' }} onClick={handleGoogleLogin}/>
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
             <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px", color: "black", fontWeight: '400', textAlign: 'center' }}>
@@ -603,17 +627,42 @@ export default function ModalUser({ isOpen, onClose }) {
               ĐĂNG Ký
             </button>
 
-            <div className="divider">Hoặc</div>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+            <div className="divider">
+            </div>
+            <div style={{ display: 'block', margin: '0 5%'}}>
+              Hoặc
+            </div>
+            <div className="divider">
+            </div>
+            </div>
 
             {/* Nút đăng nhập với Google và Facebook */}
             <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
   
-              <FaGoogle
-                style={{ fontSize: '32px', cursor: 'pointer' }}
-                onClick={handleGoogleLogin}
-              />
+              <img src={gg} alt="Google" style={{ width: "32px", cursor: 'pointer' }} onClick={handleGoogleLogin}/>
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
+            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px", color: "black", fontWeight: '400', textAlign: 'center' }}>
+              Bạn đã có tài khoản?{" "}
+              <span
+                onClick={() => {
+                  setIsDK(false);
+                }}
+                style={{
+                  color: "#1A81FF",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                }}
+              >
+                Đăng nhập
+              </span>
+            </p>
             
             <p style={{
               color: 'black',
@@ -787,14 +836,16 @@ export default function ModalUser({ isOpen, onClose }) {
             {/* Nút đăng nhập với Google và Facebook */}
             <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
 
-                <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
+              <img src={gg} alt="Google" style={{ width: "32px", cursor: 'pointer' }} onClick={handleGoogleLogin}/>
               
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
             <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px", color: "black", fontWeight: '400', textAlign: 'center' }}>
               Bạn mới biết đến xmark lần đầu?{" "}
               <span
-                onClick={() => setIsDK(true)}
+                onClick={() => {setIsDK(true)
+                setIsSms(false);
+                }}
                 style={{
                   color: "#1A81FF",
                   fontWeight: "700",
