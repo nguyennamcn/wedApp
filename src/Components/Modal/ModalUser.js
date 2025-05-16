@@ -20,6 +20,7 @@ import { appService } from "../../service/appService";
 import { Button, notification, Space } from "antd";
 import { validatePass } from "../../Validation/checkPass/CheckPass";
 import { Alert, Flex, Spin } from "antd";
+import { IoIosArrowRoundBack } from "react-icons/io";
 import rt from "../../img/logo/free_return.png";
 import sb from "../../img/logo/Save_buy.png";
 
@@ -252,7 +253,8 @@ export default function ModalUser({ isOpen, onClose }) {
       message.error("Vui lòng nhập email!");
       return;
     }
-
+    
+    
     try {
       const res = await appService.resetPassword(email);
       openNotification(
@@ -260,10 +262,23 @@ export default function ModalUser({ isOpen, onClose }) {
         "Thành công",
         "Yêu cầu đặt lại mật khẩu đã được gửi!"
       );
-      handleRePass();
+      setIsOtp(true); // Chuyển sang màn OTP
+      setCanResend(false);
+      setCountDown(12);
     } catch (err) {
-      console.error("Lỗi khi gửi yêu cầu đặt lại mật khẩu:", err.response);
-      openNotification("error", "Lỗi", err?.response?.data?.metadata?.message || "Gửi yêu cầu thất bại");
+      const errorMeta = err.response?.data?.metadata;
+        let errorMessage = '';
+        if (Array.isArray(errorMeta)) {
+          errorMessage = errorMeta.map((item) => item.message).join("\n");
+        } else if (typeof errorMeta === "object" && errorMeta?.message) {
+          errorMessage = errorMeta.message;
+        } else if (typeof errorMeta === "string") {
+          errorMessage = errorMeta;
+        } else {
+          errorMessage = "Đã xảy ra lỗi không xác định";
+        }
+
+        openNotification("error", "Thất bại", errorMessage);
     }
   };
 
@@ -459,7 +474,7 @@ export default function ModalUser({ isOpen, onClose }) {
               style={{ cursor: "pointer", color: "#1A81FF" }}
               className="sms-login"
             >
-              Đăng nhập bằng SMS
+              Đăng nhập bằng OTP
             </a>
 
             <div className="divider">Hoặc</div>
@@ -575,13 +590,6 @@ export default function ModalUser({ isOpen, onClose }) {
             <button onClick={handleSignUp} className="login-button" style={{marginTop:'10px'}}>
               ĐĂNG Ký
             </button>
-            <a
-              onClick={() => setIsSms(true)}
-              style={{ cursor: "pointer", color: "#1A81FF" }}
-              className="sms-login"
-            >
-              Đăng nhập bằng SMS
-            </a>
 
             <div className="divider">Hoặc</div>
 
@@ -594,19 +602,13 @@ export default function ModalUser({ isOpen, onClose }) {
               />
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
-            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px" , color: "black", fontWeight: '400', textAlign: 'center'}}>
-              Bạn đã có tài khoản ?{" "}
-              <span
-                onClick={() => setIsDK(false)}
-                style={{
-                  color: "#1A81FF",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                }}
-              >
-                Đăng Nhập
-              </span>
-            </p>
+            
+            <p style={{
+              color: 'black',
+              fontSize: '12px',
+              fontWeight: '400',
+              margin: '20px 0',
+            }}>By continuing, you agree to our <span style={{textDecoration: 'underline', cursor: 'pointer'}}>Terms of Use</span> and <span style={{textDecoration: 'underline', cursor: 'pointer'}}>Privacy Policy</span>.</p>
           </div>
         </div>
       )}
@@ -676,10 +678,18 @@ export default function ModalUser({ isOpen, onClose }) {
             />
             <a
               onClick={() => setIsRP(false)}
-              style={{ cursor: "pointer" }}
+              style={{ 
+                cursor: "pointer",
+                position: "absolute",
+                top: "-100%",
+                left: "0",
+              }}
               className="forgot-password"
             >
-              Đăng nhập mật khẩu?
+              <IoIosArrowRoundBack style={{
+                fontSize: "25px",
+                color: "#1A81FF",
+              }}/>
             </a>
           </div>
         </div>
@@ -687,7 +697,9 @@ export default function ModalUser({ isOpen, onClose }) {
 
       {/* Màn hình nhập số điện thoại (SMS) */}
       {isSms && !isOtp && (
-        <div className="modal-container">
+        <div style={{
+          padding: "3%",
+        }} className="modal-container">
           {/* Nút đóng */}
           <button
             style={{
@@ -697,6 +709,7 @@ export default function ModalUser({ isOpen, onClose }) {
               border: "none",
               background: "none",
               fontSize: "25px",
+              
             }}
             onClick={handleOnclose}
           >
@@ -704,15 +717,15 @@ export default function ModalUser({ isOpen, onClose }) {
           </button>
 
           {/* Tiêu đề */}
-          <h2 className="modal-title">ĐĂNG NHẬP/ĐĂNG KÝ</h2>
+          <h2 className="modal-title">ĐĂNG NHẬP</h2>
 
           {/* Form nhập thông tin */}
           <div className="modal-body">
-            <label>Số điện thoại</label>
+            <label>Tên đăng nhập</label>
             <input
               onChange={(e) => setPhoneNumber(e.target.value)}
               type="text"
-              placeholder="Nhập số điện thoại"
+              placeholder="Email hoặc số điện thoại"
             />
             <button className="login-button" onClick={handleOtp} style={{marginTop:'10px'}}>
               TIẾP TỤC
@@ -735,10 +748,12 @@ export default function ModalUser({ isOpen, onClose }) {
             />
             <a
               onClick={() => setIsSms(false)}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer",
+                color: "#1A81FF",
+               }}
               className="forgot-password"
             >
-              Đăng nhập mật khẩu?
+              Đăng nhập bằng mật khẩu
             </a>
 
             <div
@@ -764,6 +779,35 @@ export default function ModalUser({ isOpen, onClose }) {
               
               <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
             </div>
+            <p style={{ textAlign: "left", marginTop: "5%", fontSize: "12px", color: "black", fontWeight: '400', textAlign: 'center' }}>
+              Bạn mới biết đến xmark lần đầu?{" "}
+              <span
+                onClick={() => setIsDK(true)}
+                style={{
+                  color: "#1A81FF",
+                  fontWeight: "700",
+                  cursor: "pointer",
+                }}
+              >
+                Đăng ký
+              </span>
+            </p>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div style={{width: '50%'}}>
+                <img src={rt} alt="Google" style={{ width: "50%" }} />
+                <p style={{color: 'black', fontSize: '12px', fontWeight: '400', margin: '0'}}>FREE RETURN </p>
+              </div>
+              <div style={{width: '50%'}}>
+                <img src={sb} alt="Google" style={{ width: "50%" }} />
+                <p style={{color: 'black', fontSize: '12px', fontWeight: '400', margin: '0'}}>SAFE SHOPPING</p>
+              </div>
+            </div>
+            <p style={{
+              color: 'black',
+              fontSize: '12px',
+              fontWeight: '400',
+              margin: '20px 0',
+            }}>By continuing, you agree to our <span style={{textDecoration: 'underline', cursor: 'pointer'}}>Terms of Use</span> and <span style={{textDecoration: 'underline', cursor: 'pointer'}}>Privacy Policy</span>.</p>
           </div>
         </div>
       )}
