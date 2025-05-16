@@ -244,7 +244,19 @@ export default function ModalUser({ isOpen, onClose }) {
       handleRePass();
     } catch (err) {
       console.error("Lỗi đăng Ký:", err);
-      openNotification("error", "Lỗi", err?.response?.data?.metadata?.message);
+      const errorMeta = err.response?.data?.metadata;
+        let errorMessage = '';
+        if (Array.isArray(errorMeta)) {
+          errorMessage = errorMeta.map((item) => item.message).join("\n");
+        } else if (typeof errorMeta === "object" && errorMeta?.message) {
+          errorMessage = errorMeta.message;
+        } else if (typeof errorMeta === "string") {
+          errorMessage = errorMeta;
+        } else {
+          errorMessage = "Đã xảy ra lỗi không xác định";
+        }
+
+        openNotification("error", "Thất bại", errorMessage);
     }
   };
 
