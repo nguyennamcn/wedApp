@@ -9,7 +9,6 @@ const isTokenExpired = (token) => {
     return Date.now() >= exp * 1000;
 };
 
-// Tạo instance Axios với baseURL
 const https = axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -17,7 +16,6 @@ const https = axios.create({
     },
 });
 
-// Interceptor: Kiểm tra Access Token trước khi gửi request
 https.interceptors.request.use(async (config) => {
     let accessToken = localUserService.getAccessToken();
     console.log("Access Token trước khi gửi request:", accessToken);
@@ -39,7 +37,7 @@ https.interceptors.request.use(async (config) => {
             } catch (error) {
                 console.error("Làm mới token thất bại, đăng xuất...");
                 localUserService.remove();
-                window.location.href = "/"; // Chuyển hướng về trang login
+                window.location.href = "/";
                 return Promise.reject(error);
             }
         }

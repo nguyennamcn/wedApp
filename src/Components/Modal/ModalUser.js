@@ -94,7 +94,7 @@ export default function ModalUser({ isOpen, onClose }) {
       openNotification(
         "error",
         "Lỗi",
-        err.response.data.metadata.message || "Gửi yêu cầu thất bại"
+        err?.response?.data?.metadata?.message || "Gửi yêu cầu thất bại"
       );
     }
     setCanResend(false);
@@ -189,7 +189,7 @@ export default function ModalUser({ isOpen, onClose }) {
       } catch (err) {
         console.error("Lỗi đăng nhập:", err);
         setTimeout(() => {
-          openNotification("error", "Lỗi", err.response.data?.metadata.message);
+          openNotification("error", "Lỗi", err?.response?.data?.metadata?.message);
           setLoading(false);
         }, 1500);
       }
@@ -243,7 +243,7 @@ export default function ModalUser({ isOpen, onClose }) {
       handleRePass();
     } catch (err) {
       console.error("Lỗi đăng Ký:", err);
-      openNotification("error", "Lỗi", err.response.data.metadata.message);
+      openNotification("error", "Lỗi", err?.response?.data?.metadata?.message);
     }
   };
 
@@ -263,7 +263,7 @@ export default function ModalUser({ isOpen, onClose }) {
       handleRePass();
     } catch (err) {
       console.error("Lỗi khi gửi yêu cầu đặt lại mật khẩu:", err.response);
-      openNotification("error", "Lỗi", err.response.data.metadata.message || "Gửi yêu cầu thất bại");
+      openNotification("error", "Lỗi", err?.response?.data?.metadata?.message || "Gửi yêu cầu thất bại");
     }
   };
 
@@ -328,7 +328,7 @@ export default function ModalUser({ isOpen, onClose }) {
       openNotification(
         "error",
         "Lỗi",
-        err.response.data.metadata.message || "Gửi yêu cầu thất bại"
+        err?.response?.data?.metadata?.message || "Gửi yêu cầu thất bại"
       );
     }
   };
@@ -359,7 +359,7 @@ export default function ModalUser({ isOpen, onClose }) {
       openNotification(
         "error",
         "Lỗi",
-        err.response.data.metadata.message || "Gửi yêu cầu thất bại"
+        err?.response?.data?.metadata?.message || "Gửi yêu cầu thất bại"
       );
     }
   };
@@ -613,7 +613,9 @@ export default function ModalUser({ isOpen, onClose }) {
 
       {/* quen mk */}
       {isRP && !isOtp && !isSms && !isNewPass && (
-        <div className="modal-container">
+        <div style={{
+          padding: '3%',
+        }} className="modal-container">
           {/* Nút đóng */}
           <button
             style={{
@@ -630,16 +632,22 @@ export default function ModalUser({ isOpen, onClose }) {
           </button>
 
           {/* Tiêu đề */}
-          <h2 className="modal-title">QUÊN MẬT KHẨU</h2>
+          <h2 style={{
+            fontSize: "34px",
+            fontWeight: "400",
+            marginBottom: "5%",
+          }} className="modal-title">Đặt lại mật khẩu</h2>
 
           {/* Form nhập thông tin */}
           <div className="modal-body">
-            <label>Tài khoản / email</label>
             <input
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               type="text"
               placeholder="Nhập tài khoản / email"
+              style={{
+                marginBottom: "5%",
+              }}
             />
             <button
               className="login-button"
@@ -673,15 +681,6 @@ export default function ModalUser({ isOpen, onClose }) {
             >
               Đăng nhập mật khẩu?
             </a>
-
-            <div className="divider">Hoặc</div>
-
-            {/* Nút đăng nhập với Google và Facebook */}
-            <div style={{ display: "flex", justifyContent: "center", gap: "10%", marginBottom: '10px' }}>
-  
-              <FaGoogle style={{fontSize: '32px', cursor: 'pointer'}}/>
-              <FaFacebook style={{fontSize: '32px', color: '#0866ff', cursor: 'pointer'}}/>
-            </div>
           </div>
         </div>
       )}
@@ -771,7 +770,11 @@ export default function ModalUser({ isOpen, onClose }) {
 
       {/* Màn hình nhập OTP */}
       {isOtp && (
-        <div className="modal-container">
+        <div style={
+          {
+            padding: "3%",
+          }
+        } className="modal-container">
           {/* Nút đóng */}
           <button
             style={{
@@ -788,13 +791,14 @@ export default function ModalUser({ isOpen, onClose }) {
           </button>
 
           {/* Tiêu đề */}
-          <h2 className="modal-title">Mã OTP</h2>
+          <h2 style={{
+            fontSize: "34px",
+          }} className="modal-title">Mã OTP</h2>
           <p
             className="otp-message"
-            style={{ color: "black", fontWeight: "500" }}
+            style={{ color: "black", fontWeight: "500" , fontSize: '12px', padding: '0 5%'}}
           >
-            Mã xác thực đã được gửi đến tài khoản <br />
-            <span>email: {email}</span>
+            Chúng tôi đã gửi mã xác thực OTP đến email của bạn. Vui lòng kiểm tra hộp thư đến (hoặc thư rác) và nhập mã để tiếp tục. <br />
           </p>
 
           {/* Ô nhập mã OTP */}
@@ -813,9 +817,14 @@ export default function ModalUser({ isOpen, onClose }) {
             ))}
           </div>
 
-          <button onClick={handleCfOtp} className="login-button" style={{marginTop:'10px'}}>
-            TIẾP TỤC
+          <button onClick={handleCfOtp} className="login-button" style={{marginTop:'5%',
+            marginBottom: "10%",
+            width: "80%",
+            padding: "10px",
+          }}>
+            Xác nhận
           </button>
+          <br />
 
           {canResend ? (
             <button
@@ -832,6 +841,8 @@ export default function ModalUser({ isOpen, onClose }) {
             <p
               style={{
                 marginTop: "1%",
+                color: "black",
+                fontSize: "14px",
               }}
             >
               Vui lòng đợi {countDown} giây để gửi lại
