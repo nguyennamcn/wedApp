@@ -21,6 +21,7 @@ import SellerPage from "./Page/SellerPage/SellerPage";
 import Payment from "./Page/Payment/Payment";
 import InvationBuy from "./Page/UserPage/InvationBuy";
 import PaymentTest from "./Page/Payment/PaymentTest";
+import ChatTest from "./Components/ChatBox/ChatTest";
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -123,6 +124,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
+          <Route path="/2" element={<ChatTest />} />
           <Route path="/seller" element={<Layout Component={SellerPage} />} />
           <Route path="/admin-page" element={<Navigate to="/admin-page/dashboard" replace />} />
           <Route path="/admin-page/:section" element={<NavBarAdminWrapper />} />
