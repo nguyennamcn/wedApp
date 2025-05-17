@@ -116,7 +116,16 @@ export default function Store() {
                     Ngày tạo: {formatDate(store.createdDate)}
                   </p>
                 </div>
-                <Button type="link">XEM CHI TIẾT</Button>
+                <Button
+                  onClick={() => {
+                    window.location.href = `/admin-page/detail/${store.id}`;
+                  }}
+                  style={{
+                    background: "#4CAF50",
+                    color: "#fff",
+                    border: "none",
+                  }}
+                type="link">XEM CHI TIẾT</Button>
               </div>
             );
           })

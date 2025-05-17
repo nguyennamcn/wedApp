@@ -59,4 +59,19 @@ export const appService = {
       },
     });
   },
+
+  getDetailStore: (id) => {
+    console.log(id);
+    return https.get(`/store-service/api/v1/stores/detail/${id}`);
+  },
+  updateStoreStatus: (id, data) =>{
+    console.log(id, data)
+    return https.put(`/store-service/api/v1/stores/verify-status/${id}`, data, {
+    headers: {
+      API_KEY: "EXE", // Thay thế bằng key thật
+    },
+  })
+  },
+  
+
 };

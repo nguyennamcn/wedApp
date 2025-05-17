@@ -1,12 +1,64 @@
-import React from "react";
-import { Input, Select, Button } from "antd";
+import React, { useEffect, useState } from "react";
+import { Input, Select, Button, message, notification } from "antd";
+import { appService } from "../../../service/appService";
+import { useParams } from "react-router-dom";
 
 const { TextArea } = Input;
 
 export default function DetailShop() {
+  const { id } = useParams();
+  const [stores, setStores] = useState([]);
+  const [reason, setReason] = useState("");
+  const [status, setStatus] = useState("pending");
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (type, message, description) => {
+    api[type]({
+      message: message,
+      description: description,
+    });
+  };
+
+  useEffect(() => {
+    appService.getDetailStore(id)
+      .then((res) => {
+        console.log(res?.data?.metadata);
+        setStores(res?.data?.metadata);
+      })
+      .catch((err) => {
+        console.error("Error fetching stores:", err);
+        setStores([]);
+      });
+  }, [id]);
+
+  const handleSave = async () => {
+    try {
+      await appService.updateStoreStatus(id, {
+        reason: reason || "Không có lời nhắn",
+        verificationStatus: status.toUpperCase(),
+      });
+      openNotification("success", "Thành công", "Đổi trạng thái thành công");
+    } catch (err) {
+      console.log(err.response.data.metadata);
+        const errorMeta = err.response?.data?.metadata;
+        let errorMessage = '';
+        if (Array.isArray(errorMeta)) {
+          errorMessage = errorMeta.map((item) => item.message).join("\n");
+        } else if (typeof errorMeta === "object" && errorMeta?.message) {
+          errorMessage = errorMeta.message;
+        } else if (typeof errorMeta === "string") {
+          errorMessage = errorMeta;
+        } else {
+          errorMessage = "Đã xảy ra lỗi không xác định";
+        }
+
+        openNotification("error", "Thất bại", errorMessage);
+    }
+  };
+
   return (
     <div style={{ padding: "5%", background: "#E8F5E9", minHeight: "100vh" }}>
       {/* Header */}
+      {contextHolder}
       <div style={{ display: "flex", marginBottom: "30px" }}>
         <div
           style={{
@@ -17,35 +69,43 @@ export default function DetailShop() {
             marginRight: "20px",
             background: "#6EB566",
           }}
-        >
+        ></div>
 
-        </div>
-        <div style={{width: '50%'}}>
+        <div style={{ width: "50%" }}>
           <h2 style={{ margin: 0 }}>HTT04</h2>
-           <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Họ & tên: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Số CCCD: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Số điện thoại:  </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Email:  </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Hạng mục sản phẩm: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Mô tả cửa hàng: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Hình chụp của CCCD: </p>
-           </div>
-           <div>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Họ & tên: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Số CCCD: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Số điện thoại:  </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Email:  </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Hạng mục sản phẩm: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Mô tả cửa hàng: </p>
-            <p style={{ margin: 0, color: "black", fontWeight: '400' , marginTop: '5%', fontSize: '16px'}}>Hình chụp của CCCD: </p>
-           </div>
-           </div>
+              <p>Họ & tên:</p>
+              <p>Số CCCD:</p>
+              <p>Số điện thoại:</p>
+              <p>Email:</p>
+              <p>Hạng mục sản phẩm:</p>
+              <p>Mô tả cửa hàng:</p>
+              <p>Hình chụp của CCCD:</p>
+            </div>
+            <div>
+              <p>{stores?.nameOwner}</p>
+              <p>{stores?.identityNumber}</p>
+              <p>{stores?.phone}</p>
+              <p>{stores?.email}</p>
+              <p>{stores?.category || "chưa có"}</p>
+              <p>{stores?.description || "chưa có"}</p>
+              <p>
+                <img
+                  src={stores?.frontIdentityNumber}
+                  alt="front"
+                  style={{ width: "100px", height: "100px", borderRadius: "10px" }}
+                />
+                <img
+                  src={stores?.backIdentityNumber}
+                  alt="back"
+                  style={{ width: "100px", height: "100px", borderRadius: "10px", marginLeft: "10px" }}
+                />
+              </p>
+            </div>
+          </div>
         </div>
-        
       </div>
-
 
       {/* Message & Actions */}
       <div>
@@ -53,20 +113,27 @@ export default function DetailShop() {
           rows={4}
           placeholder="Lời nhắn..."
           style={{ marginBottom: "20px" }}
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
         />
         <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
           <Select
-            defaultValue="Chờ xét duyệt"
+            value={status}
+            onChange={(value) => setStatus(value)}
             options={[
-              { value: "pending", label: "Chờ xét duyệt" },
-              { value: "active", label: "Đang hoạt động" },
-              { value: "rejected", label: "Từ chối" },
-              { value: "locked", label: "Tạm khóa" },
-              { value: "need_info", label: "Cần thêm thông tin" },
+              { value: "PENDING", label: "Chờ xét duyệt" },
+              { value: "VERIFIED", label: "Xác thực" },
+              { value: "REJECTED", label: "Từ chối" },
+              { value: "SUSPENDED", label: "Cấm" },
+              { value: "NEED_MORE_INFO", label: "Cần thêm thông tin" },
             ]}
             style={{ width: 180 }}
           />
-          <Button type="primary" style={{ background: "#6EB566", borderColor: "#6EB566" }}>
+          <Button
+            type="primary"
+            style={{ background: "#6EB566", borderColor: "#6EB566" }}
+            onClick={handleSave}
+          >
             Lưu
           </Button>
         </div>
