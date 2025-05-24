@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./layout.css";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import HeaderAdmin from "../Components/Header/HeaderAdmin";
 import {
   ShopOutlined,
@@ -14,6 +14,7 @@ import {
   SettingOutlined,
   DashboardOutlined,
 } from "@ant-design/icons";
+import { localUserService } from "../service/localService";
 
 export default function NavBarAdmin({ Component }) {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function NavBarAdmin({ Component }) {
   const pathKey = location.pathname.split("/")[2]; // ví dụ: /admin/posts => posts
 
   const [activeKey, setActiveKey] = useState(pathKey || "dashboard");
+  
 
   // Update khi path thay đổi
   useEffect(() => {
@@ -31,6 +33,11 @@ export default function NavBarAdmin({ Component }) {
     setActiveKey(key);
     navigate(`/admin-page/${key}`); // chuyển hướng route
   };
+
+  const userInfo = localUserService.get();
+  if (!userInfo) {
+    return <Navigate to="/admin-login" />;
+  }
 
   return (
     <div className="layoutuser">

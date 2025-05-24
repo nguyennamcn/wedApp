@@ -80,6 +80,7 @@ export default function HeaderSeller() {
           height: '10vh',
           position: "fixed",
           top: "0",
+          zIndex: "1003",
         }}
       >
         <div

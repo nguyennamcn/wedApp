@@ -48,7 +48,7 @@ const UserDrop = ({ user, logoutBtn }) => {
           style={{
             textAlign: "center",
             padding: "10px 100px",
-            fontSize: "18px",
+            fontSize: "14px",
           }}
         >
           {userName}
@@ -164,7 +164,7 @@ const UserDrop = ({ user, logoutBtn }) => {
       <div>
         <Dropdown menu={{ items: status ? userMenuItems  : userMenuItems}} placement="bottom" arrow>
           <img
-            src={data.avatar || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"}
+            src={data?.avatar || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"}
             alt="User Avatar"
             style={{
               width: "32px",

@@ -22,7 +22,7 @@ export default function NavbarSeller({ Component }) {
   const location = useLocation();
   const pathKey = location.pathname.split("/")[2]; // ví dụ: /admin/posts => posts
 
-  const [activeKey, setActiveKey] = useState(pathKey || "dashboard");
+  const [activeKey, setActiveKey] = useState(pathKey || ""); // mặc định là "home"
 
   // Update khi path thay đổi
   useEffect(() => {

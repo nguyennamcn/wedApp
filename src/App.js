@@ -128,6 +128,7 @@ function App() {
           <Route path="/2" element={<ChatTest />} />
           <Route path="/seller" element={<Layout Component={SellerPage} />} />
           <Route path="/admin-page" element={<Navigate to="/admin-page/dashboard" replace />} />
+          <Route path="/seller-page" element={<Navigate to="/seller-page/restricted" />} />
           <Route path="/admin-page/:section" element={<NavBarAdminWrapper />} />
           <Route path="/admin-page/:section/:id?" element={<NavBarAdminWrapper />} />
           <Route path="/seller-page/:section" element={<NavbarSellerWrap />} />

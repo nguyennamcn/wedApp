@@ -8,6 +8,8 @@ import { localUserService } from "../../service/localService";
 import { setLoginAction } from "../../redux/action/userAction";
 import { useDispatch } from "react-redux";
 import { userService } from "../../service/userService";
+import { Navigate, useNavigate } from "react-router-dom";
+import { u } from "framer-motion/client";
 
 export default function AdminPage() {
   const [email, setEmail] = useState("");
@@ -16,12 +18,18 @@ export default function AdminPage() {
   const dispatch = useDispatch();
   const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
   const openNotification = (type, message, description) => {
     api[type]({
       message: message,
       description: description,
     });
   };
+  const userInfo = localUserService.get();
+  if (userInfo) {
+    return <Navigate to="/admin-page/dashboard" />;
+  }
   const handleLogin = async () => {
     const emailValidation = validateEmail(email);
     const passValidation = validatePass(pass);
@@ -44,8 +52,9 @@ export default function AdminPage() {
           password: pass,
         };
         setLoading(true);
+        console.log(loginData)
         const res = await userService.postLogin(loginData);
-
+        console.log("Kết quả đăng nhập:", res);
         if (res.data.status === true && res.data.metadata) {
           localUserService.set(res.data);
           localStorage.setItem("token", "your_jwt_token");
@@ -55,13 +64,13 @@ export default function AdminPage() {
           setTimeout(() => {
             dispatch(setLoginAction(res.data));
             setLoading(false);
-            window.location.reload();
+            navigate("/admin-page/dashboard");
           }, 1500);
         }
       } catch (err) {
         console.error("Lỗi đăng nhập:", err);
         setTimeout(() => {
-          openNotification("error", "Lỗi", err.response.data?.metadata.message);
+          openNotification("error", "Lỗi", err.response?.data?.metadata.message);
           setLoading(false);
         }, 1500);
       }

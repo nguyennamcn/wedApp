@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input, Button } from "antd";
 import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
 import { appService } from "../../../service/appService";
+import { localUserService } from "../../../service/localService";
 
 const statusColorMap = {
   PENDING: "#FFA500", // Chờ xét duyệt - cam
@@ -29,6 +30,8 @@ export default function Store() {
     appService
       .getAllStore(currentPage, pageSize)
       .then((res) => {
+        console.log("API response:", localUserService.getAccessToken());
+        console.log(res)
         if (res.data.status && res.data.metadata.status) {
           setStores(res.data.metadata.metadata);
           setMaxPage(res.data.metadata.maxPage || 1);
