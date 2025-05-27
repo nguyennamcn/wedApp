@@ -409,7 +409,7 @@ export default function ModalUser({ isOpen, onClose }) {
   const content = <div style={contentStyle} />;
 
   const handleGoogleLogin = () => {
-    window.location.href = "http://1.53.148.102:8081/user-service/api/v1/account/login/google";
+    window.location.href = "http://thanhnt-tech.id.vn/user-service/api/v1/account/login/google";
   };
 
 
