@@ -3,6 +3,7 @@ import { Input, Button } from "antd";
 import { SearchOutlined, FilterOutlined } from "@ant-design/icons";
 import { appService } from "../../../service/appService";
 import { localUserService } from "../../../service/localService";
+import { useNavigate } from "react-router-dom";
 
 const statusColorMap = {
   PENDING: "#FFA500", // Chờ xét duyệt - cam
@@ -25,13 +26,14 @@ export default function Store() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(6);
   const [maxPage, setMaxPage] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     appService
       .getAllStore(currentPage, pageSize)
       .then((res) => {
         console.log("API response:", localUserService.getAccessToken());
-        console.log(res)
+        console.log(res);
         if (res.data.status && res.data.metadata.status) {
           setStores(res.data.metadata.metadata);
           setMaxPage(res.data.metadata.maxPage || 1);
@@ -93,7 +95,14 @@ export default function Store() {
                     }}
                   >
                     <p style={{ margin: 0, fontWeight: "bold" }}>
-                      Tên cửa hàng: {store.name}
+                      Tên cửa hàng: {store.name} -{" "}
+                      <span style={{ fontWeight: "400", opacity: "0.4" }}>
+                        {store.businessType === "BUSINESS"
+                          ? "Doanh nghiệp"
+                          : store.businessType === "INDIVIDUAL"
+                          ? "Cá nhân"
+                          : store.businessType}
+                      </span>
                     </p>
                     <p
                       style={{
@@ -121,14 +130,17 @@ export default function Store() {
                 </div>
                 <Button
                   onClick={() => {
-                    window.location.href = `/admin-page/detail/${store.id}`;
+                    navigate(`/admin-page/detail/${store.id}`)
                   }}
                   style={{
                     background: "#4CAF50",
                     color: "#fff",
                     border: "none",
                   }}
-                type="link">XEM CHI TIẾT</Button>
+                  type="link"
+                >
+                  XEM CHI TIẾT
+                </Button>
               </div>
             );
           })

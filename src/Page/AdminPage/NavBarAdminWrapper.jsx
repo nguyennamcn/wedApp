@@ -11,6 +11,7 @@ import Members from "./ComponentPage/Members";
 import Settings from "./ComponentPage/Settings";
 import DetailShop from "./ComponentPage/DetailShop";
 import NavBarAdmin from "../../Layout/NavBarAdmin";
+import DetailProduct from "./ComponentPage/DetailProduct";
 
 export default function NavBarAdminWrapper() {
   const { section } = useParams();
@@ -27,6 +28,7 @@ export default function NavBarAdminWrapper() {
     members: Members,
     settings: Settings,
     detail: DetailShop,
+    detailproducts : DetailProduct,
   };
 
   const SelectedComponent = componentMap[section] || Dashboard;
