@@ -29,7 +29,7 @@ export default function Posts() {
 
   const fetchAllProducts = () => {
     appService
-      .getAllProduct(0, 10000) // lấy số lượng lớn, hoặc dùng API getAll nếu có
+      .getAllProductAdmin(0, 1000) // lấy số lượng lớn, hoặc dùng API getAll nếu có
       .then((res) => {
         if (res.data.status && res.data.metadata.status) {
           const all = res.data.metadata.metadata || [];

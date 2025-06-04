@@ -9,6 +9,7 @@ import {
 } from "antd";
 import { appService } from "../../../service/appService";
 import { useParams } from "react-router-dom";
+import { localUserService } from "../../../service/localService";
 
 const { TextArea } = Input;
 
@@ -34,6 +35,8 @@ export default function DetailProduct() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  
+  console.log(localUserService.getAccessToken())
 
   useEffect(() => {
     appService

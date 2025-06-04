@@ -67,11 +67,29 @@ export const appService = {
   },
 
   getAllProduct: (page, pageSize) => {
-    return https.get(`/product-service/api/v1/products?currentPage=${page}&pageSize=${pageSize}`);
+    return https.get(
+      `/product-service/api/v1/products?currentPage=${page}&pageSize=${pageSize}`
+    );
   },
-  
+
+  getAllProductAdmin: (page, pageSize) => {
+    return https.get(
+      `/product-service/api/v1/products/admin?currentPage=${page}&pageSize=${pageSize}`
+    );
+  },
+
   updateProductStatus: (id, data) => {
-    return https.put(`/product-service/api/v1/products/admin/approve/${id}`, data);
+    return https.put(
+      `/product-service/api/v1/products/admin/approve/${id}`,
+      data
+    );
+  },
+
+  updateProductActive: (id, isActive) => {
+    console.log(id, isActive)
+    return https.put(
+      `/product-service/api/v1/products/${id}/update_status?isActive=${isActive}`
+    );
   },
 
   // store
@@ -87,6 +105,11 @@ export const appService = {
   getDetailStore: (id) => {
     return https.get(`/store-service/api/v1/stores/detail/${id}`);
   },
+
+  getDetailStoreUser: () => {
+    return https.get(`/store-service/api/v1/stores/detail`);
+  },
+
   updateStoreStatus: (id, data) => {
     return https.put(`/store-service/api/v1/stores/verify-status/${id}`, data, {
       headers: {
