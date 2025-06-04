@@ -21,6 +21,7 @@ import { localUserService } from "../../../service/localService";
 import { appService } from "../../../service/appService";
 import axios from "axios";
 import { BASE_URL } from "../../../service/config";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -62,6 +63,7 @@ export default function ProductSeller() {
   const [ad2, setAd2] = useState();
   const [ad3, setAd3] = useState();
   const [isUploading, setIsUploading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (key, { fileList }) => {
     const isImage = fileList.every((file) =>
@@ -216,6 +218,7 @@ export default function ProductSeller() {
       );
 
       console.log(response);
+      navigate("/seller-page/product");
     } catch (err) {
       console.error(err);
     } finally {
@@ -503,7 +506,7 @@ export default function ProductSeller() {
                   {/* Các ảnh phụ */}
                   <div
                     style={{
-                      width: "40%",
+                      width: "45%",
                       display: "flex",
                       alignItems: "center",
                     }}
