@@ -30,6 +30,8 @@ export default function RegisterSeller() {
     setStep(1);
   };
 
+  console.log(localUserService.getAccessToken());
+
   const handleStep1 = (values) => {
     setShopName(values.shopName);
     setDescription(values.description);

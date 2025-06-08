@@ -1,20 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./DetailProduct.css";
-import img from "../../img/01.jpg";
-import img2 from "../../img/02.jpg";
-import img3 from "../../img/03.jpg";
-import img4 from "../../img/04.jpg";
+import { useParams } from "react-router-dom";
 import OrtherProductShop from "./OrtherProductShop";
 import ProductLike from "./ProductLike";
 import { RiArrowDropLeftFill } from "react-icons/ri";
+import { appService } from "../../service/appService";
 
 export default function DetailProduct() {
-  const [selectedImage, setSelectedImage] = useState(img);
-  const [showPopup, setShowPopup] = useState(false);
-  const [zoom, setZoom] = useState(1); // mặc định không zoom
+  const { id } = useParams(); // lấy product id từ URL
+  const [product, setProduct] = useState(null);
+  const [selectedImage, setSelectedImage] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const handleZoomIn = () => setZoom(prev => prev + 0.1);
-  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.1, 0.1));
+  const [startIndex, setStartIndex] = useState(0);
+  const maxThumbnails = 5;
+
+  const handlePrev = () => {
+    if (startIndex > 0) {
+      setStartIndex(startIndex - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (
+      product.productImageUrl &&
+      startIndex + maxThumbnails < product.productImageUrl.length
+    ) {
+      setStartIndex(startIndex + 1);
+    }
+  };
+
+  useEffect(() => {
+    appService
+      .getDetailProduct(id)
+      .then((res) => {
+        console.log(res.data.metadata);
+        setProduct(res.data.metadata);
+        if (res.data.images && res.data.images.length > 0) {
+          setSelectedImage(res.data.images[0]); // ảnh đầu tiên là ảnh chính
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Lỗi khi lấy sản phẩm:", err);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) return <p>Đang tải...</p>;
+  if (!product) return <p>Không tìm thấy sản phẩm.</p>;
+
   return (
     <div style={{ padding: "2% 5%", backgroundColor: "#F6F6F6" }}>
       {/* Breadcrumb */}
@@ -26,113 +61,86 @@ export default function DetailProduct() {
           fontSize: "13px",
         }}
       >
-        <span>xmark</span> <RiArrowDropLeftFill style={{fontSize: '32px'}} /> <span>Thời trang nam</span>
+        <span>{product.category || "Danh mục"}</span>{" "}
+        <RiArrowDropLeftFill style={{ fontSize: "32px" }} />{" "}
+        <span>{product.name}</span>
       </div>
 
-      <div
-        style={{
-          boxShadow: "0 0 10px rgba(0,0,0,0.3)",
-          padding: "2% 3%",
-        }}
-      >
+      <div style={{ boxShadow: "0 0 10px rgba(0,0,0,0.3)", padding: "2% 3%" }}>
         <div className="main-content">
           {/* Images */}
           <div className="image-section">
             <div className="thumbnail-grid">
-              <div>
-                <img
-                  src={img}
-                  className="thumb"
-                  alt="Thumbnail 1"
-                  onClick={() => setSelectedImage(img)}
-                />
-              </div>
-              <div>
-                <img
-                  src={img2}
-                  className="thumb"
-                  alt="Thumbnail 2"
-                  onClick={() => setSelectedImage(img2)}
-                />
-              </div>
-              <div>
-                <img
-                  src={img3}
-                  className="thumb"
-                  alt="Thumbnail 3"
-                  onClick={() => setSelectedImage(img3)}
-                />
-              </div>
-              <div>
-                <img
-                  src={img4}
-                  className="thumb"
-                  alt="Thumbnail 4"
-                  onClick={() => setSelectedImage(img4)}
-                />
-              </div>
+              {product.productImageUrl &&
+                product.productImageUrl.length > maxThumbnails && (
+                  <button className="scroll-btn up" onClick={handlePrev}>
+                    ↑
+                  </button>
+                )}
+
+              {(product.productImageUrl || [])
+                .slice(startIndex, startIndex + maxThumbnails)
+                .map((img, idx) => (
+                  <div key={idx}>
+                    <img
+                      src={img}
+                      className="thumb"
+                      alt={`Thumbnail ${startIndex + idx + 1}`}
+                      onClick={() => setSelectedImage(img)}
+                    />
+                  </div>
+                ))}
+
+              {product.productImageUrl &&
+                product.productImageUrl.length > maxThumbnails && (
+                  <button className="scroll-btn down" onClick={handleNext}>
+                    ↓
+                  </button>
+                )}
             </div>
-            <img src={selectedImage} alt="Main" className="main-image" />
+
+            <img
+              style={{ height: "auto" }}
+              src={selectedImage}
+              alt="Main"
+              className="main-image"
+            />
           </div>
 
           {/* Product Info */}
           <div className="info-section">
-            <h1 className="product-title">
-              Quần Short Unisex Basic Thể Thao Mặc Thoáng Mát Phong Cách Hàn
-              Quốc Nam Nữ Mặc Đẹp
-            </h1>
+            <h1 className="product-title">{product.productName}</h1>
             <div className="status">
               <span style={{ fontSize: "14px", fontWeight: "bold" }}>
-                Tình trạng:{" "}
+                Tình trạng:
               </span>
-              <span className="badge">RẤT TỐT</span>
-              <p className="stock">Chỉ có 1 sản phẩm</p>
+              <span className="badge">{product.condition || "Chưa rõ"}</span>
+              <p className="stock">
+                {product.quantity > 0
+                  ? `Còn ${product.quantity} sản phẩm`
+                  : "Hết hàng"}
+              </p>
             </div>
-            <p
-              style={{
-                color: "black",
-                fontSize: "14px",
-                opacity: "0.5",
-                fontWeight: "400",
-                marginLeft: "5%",
-              }}
-            >
-              Giá mua gốc: đ39.000
-            </p>
             <p className="price" style={{ color: "black", marginLeft: "5%" }}>
-              Giá bán lại: <span className="price">đ39.000</span>
+              Giá: <span className="price">đ{product.price}</span>
             </p>
             <p className="detail-text">
-              📍 Phường Nhật Tân, Quận Tây Hồ, Hà Nội
+              📍 {product.location || "Không rõ địa chỉ"}
             </p>
-            <p className="detail-text">📦 Cập nhật 1 ngày trước</p>
-            <p className="detail-text">Size: L — Hướng dẫn chọn size</p>
             <p className="detail-text">
-              Chiều dài ước tính: 44 -55 cm (tính từ cạp quần đến gấu quần)
+              📦 Cập nhật{" "}
+              {product.updatedAt && product.updatedAt.substring
+                ? product.updatedAt.substring(0, 10)
+                : "N/A"}
             </p>
+            <p className="detail-text">Size: {product.size || "Không có"}</p>
 
-            <p
-              style={{
-                color: "black",
-                fontSize: "14px",
-                marginTop: "20px",
-                marginBottom: "0px",
-              }}
-            >
+            <p style={{ color: "black", fontSize: "14px", marginTop: "20px" }}>
               Vận chuyển & Trả hàng:
             </p>
-            <p
-              style={{
-                color: "black",
-                fontSize: "13px",
-                fontWeight: "400",
-                marginTop: "0px",
-                paddingRight: "45%",
-              }}
-            >
+            <p style={{ fontSize: "13px", fontWeight: "400" }}>
               Miễn phí vận chuyển cho đơn hàng từ 89.000 VND trở lên. Đổi/trả
-              hàng trong vòng 14 ngày để được hoàn tiền hoặc nhận tín dụng mua
-              sắm. Có thể áp dụng phí đổi trả.{" "}
+              hàng trong vòng 14 ngày để được hoàn tiền hoặc tín dụng mua sắm.
             </p>
 
             <div className="action-buttons">
@@ -150,31 +158,23 @@ export default function DetailProduct() {
             </div>
           </div>
         </div>
-        {/* Seller Info */}
+
+        {/* Seller Info (có thể sửa tiếp khi có dữ liệu shop) */}
         <div
           style={{ display: "flex", justifyContent: "center", marginTop: "5%" }}
         >
           <div className="seller-info">
-            <img src={img} className="avatar" alt="Thumbnail 1" />
+            <img
+              src={product.productImageUrl[0]}
+              className="avatar"
+              alt="Shop"
+            />
             <div>
-              <p
-                style={{
-                  color: "black",
-                  fontSize: "14px",
-                  margin: "0",
-                }}
-              >
-                Shoppp
+              <p style={{ fontSize: "14px", color: "black" }}>
+                {product.productName || "Shop"}
               </p>
-              <p
-                style={{
-                  color: "black",
-                  fontSize: "12px",
-                  margin: "0",
-                  fontWeight: "400",
-                }}
-              >
-                Online 20 phút trước
+              <p style={{ fontSize: "12px", color: "gray" }}>
+                Online chưa xác định
               </p>
               <div className="seller-actions">
                 <button className="chat-btn">💬 Chat ngay</button>
@@ -182,75 +182,29 @@ export default function DetailProduct() {
               </div>
             </div>
           </div>
-
-          <div style={{ display: "flex", width: "40%" }}>
-            <div style={{ width: "50%" }}>
-              <p style={{ color: "#757575" }}>
-                Đánh giá: <span className="highlight">114,4k</span>
-              </p>
-              <p style={{ color: "#757575" }}>
-                Sản phẩm: <span className="highlight">80</span>
-              </p>
-            </div>
-            <div style={{ width: "50%" }}>
-              <p style={{ color: "#757575" }}>
-                Tỉ lệ phản hồi: <span className="highlight">75%</span>
-              </p>
-              <p style={{ color: "#757575" }}>
-                Người theo dõi: <span className="highlight">24k</span>
-              </p>
-            </div>
-          </div>
         </div>
       </div>
 
       {/* Product Details */}
       <div className="product-details">
-        <h2
-          style={{
-            padding: "2% 5%",
-            fontSize: "16px",
-            backgroundColor: "#F6F6F6",
-            marginBottom: "0",
-          }}
-        >
-          CHI TIẾT SẢN PHẨM
-        </h2>
-        <p
-          style={{
-            color: "black",
-            fontSize: "14px",
-            fontWeight: "400",
-            padding: "1% 5%",
-            margin: "0",
-            background: "white",
-          }}
-        >
-          Size XL. Chất nỉ mềm mại. Trần trám phao dày ấm. Màu xanh navy đẹp. Đồ
-          mới cao. Không lỗi (làm cảm ơn mn)
+        <h2 className="section-title">CHI TIẾT SẢN PHẨM</h2>
+        <p className="section-content">
+          {product.description || "Không có mô tả."}
         </p>
 
-        <h3
-          style={{
-            padding: "2% 5%",
-            fontSize: "16px",
-            backgroundColor: "#F6F6F6",
-            marginBottom: "0",
-          }}
-        >
-          THÔNG SỐ CHI TIẾT
-        </h3>
+        <h3 className="section-title">THÔNG SỐ CHI TIẾT</h3>
         <div className="specs">
           <div className="spec-row">
             <span className="spec-label">Tình trạng:</span>
-            <span>Đã sử dụng</span>
+            <span>{product.condition}</span>
           </div>
           <div className="spec-row">
             <span className="spec-label">Loại sản phẩm:</span>
-            <span>Đồ nam</span>
+            <span>{product.category}</span>
           </div>
         </div>
       </div>
+
       <div>
         <OrtherProductShop />
       </div>
@@ -258,19 +212,7 @@ export default function DetailProduct() {
         <ProductLike />
       </div>
       <div style={{ textAlign: "center" }}>
-        <button
-          style={{
-            border: "none",
-            outline: "none",
-            background: "#6EB566",
-            color: "white",
-            padding: "1% 2%",
-            fontSize: "14px",
-            borderRadius: "50px",
-          }}
-        >
-          Xem thêm
-        </button>
+        <button className="see-more-btn">Xem thêm</button>
       </div>
     </div>
   );
