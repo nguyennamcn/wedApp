@@ -3,77 +3,15 @@ import UserMenu from "./UserMenu";
 import { NavLink, useNavigate } from "react-router-dom";
 import "../../css/Header/headerDrop.css";
 import SearchFunction from "../SearchServ/SearchFunction";
-import CartEven from "../CartEvent/CartEvent";
 import { appService } from "../../service/appService";
 import LoadingPage from "../Spinner/LoadingPage";
 import { notification } from "antd";
+import { FaRegBell } from "react-icons/fa";
 
-export default function HeaderPage() {
+export default function HeaderCart() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [ld, setld] = useState(false);
   const navigate = useNavigate();
-  const data = [
-    {
-      id: 1,
-      name: "Nữ",
-      link: "/product",
-    },
-    {
-      id: 2,
-      name: "Cao cấp",
-      link: "/product",
-    },
-    {
-      id: 3,
-      name: "Thiết kế",
-      link: "/product",
-    },
-    {
-      id: 4,
-      name: "Giày",
-      link: "/product",
-    },
-    {
-      id: 5,
-      name: "Túi xách",
-      link: "/product",
-    },
-    {
-      id: 6,
-      name: "Phụ kiện",
-      link: "/product",
-    },
-    {
-      id: 7,
-      name: "Cỡ lớn",
-      link: "/product",
-    },
-    {
-      id: 8,
-      name: "trẻ em",
-      link: "/product",
-    },
-    {
-      id: 9,
-      name: "Đồ bầu",
-      link: "/product",
-    },
-    {
-      id: 10,
-      name: "Thương hiệu",
-      link: "/product",
-    },
-    {
-      id: 11,
-      name: "Tư vấn phong cách",
-      link: "/product",
-    },
-    {
-      id: 12,
-      name: "Thẻ quà tặng",
-      link: "/product",
-    },
-  ];
 
   const [mb, setMb] = useState(false);
   const [mp, setMp] = useState(false);
@@ -210,7 +148,7 @@ export default function HeaderPage() {
       {/* Header chính */}
       <div
         style={{
-          background: "#6EB566",
+          background: "white",
           position: "fixed",
           top: "30px",
           left: 0,
@@ -230,14 +168,18 @@ export default function HeaderPage() {
           <a
             style={{
               fontSize: "50px", // Logo nhỏ lại khi cuộn
-              width: "25%",
-              color: "white",
+              width: "30%",
+              color: "#6EB566",
               fontWeight: "500",
               transition: "font-size 0.3s ease-in-out",
             }}
             href="/home"
           >
             <span className="font-xmark">xmark</span>
+            <span style={{
+              fontSize: "30px",
+              marginLeft: "10%",
+            }} className="font-xmark">Giỏ Hàng</span>
           </a>
 
           <SearchFunction />
@@ -246,32 +188,21 @@ export default function HeaderPage() {
             style={{
               display: "flex",
               alignItems: "center",
-              width: "20%",
+              width: "25%",
               justifyContent: "end",
-              color: "white",
+              gap: "10%",
+              color: "#6EB566",
             }}
           >
-            <UserMenu />
-            <CartEven />
-          </div>
-        </div>
-        <div>
-          {data.map((item) => (
-            <NavLink
-              key={item.id}
-              to={item.link}
+            <FaRegBell 
               style={{
-                textDecoration: "none",
-                color: "white",
-                fontSize: "16px",
-                fontWeight: "500",
-                marginRight: "3%",
-                fontSize: "14px",
+                fontSize: "25px",
+                color: "#6EB566",
+                cursor: "pointer",
               }}
-            >
-              {item.name}
-            </NavLink>
-          ))}
+            />
+            <UserMenu />
+          </div>
         </div>
       </div>
       {/* Khoảng trống để tránh bị che mất nội dung */}

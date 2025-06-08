@@ -20,7 +20,7 @@ const SearchFunction = () => {
     }, []);
     
   return (
-    <div style={{width: '60%',}}>
+    <div style={{width: '50%',}}>
       <div style={{ 
       backgroundColor: '#FFFFFF', 
       display: 'flex',
@@ -30,7 +30,8 @@ const SearchFunction = () => {
       borderRadius: '30px',
       marginLeft: '50%',
       transform: 'translateX(-50%)',
-      transition: 'all 0.5s'
+      transition: 'all 0.5s',
+      border:  '1px solid #6EB566',
     }}> 
       <Input
         placeholder="Tìm..."

@@ -13,26 +13,24 @@ import { appService } from "../../service/appService";
 import LoadingPage from "../Spinner/LoadingPage";
 
 const UserDrop = ({ user, logoutBtn }) => {
-  const [data, setData] = useState('');
+  const [data, setData] = useState("");
   const navigate = useNavigate();
   const userName = user.email;
   const status = user.status;
-  
-
-
 
   useEffect(() => {
-      const fetchProfile = async () => {
-        try {
-          const res = await appService.getProfile();
-           setData(res.data.metadata);
-        } catch (error) {
-          console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-        }
-      };
-  
-      fetchProfile();
-    }, []);
+    const fetchProfile = async () => {
+      try {
+        const res = await appService.getProfile();
+        setData(res.data.metadata);
+        console.log("Dữ liệu người dùng:", res.data.metadata);
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu người dùng:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   let handleLogout = () => {
     localUserService.remove();
@@ -162,19 +160,36 @@ const UserDrop = ({ user, logoutBtn }) => {
     >
       {/* User Dropdown */}
       <div>
-        <Dropdown menu={{ items: status ? userMenuItems  : userMenuItems}} placement="bottom" arrow>
-          <img
-            src={data?.avatar || "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"}
-            alt="User Avatar"
-            style={{
-              width: "32px",
-              height: "32px",
-              borderRadius: "50%",
+        <Dropdown
+          menu={{ items: status ? userMenuItems : userMenuItems }}
+          placement="bottom"
+          arrow
+        >
+          <div>
+            <img
+              src={
+                data?.avatar ||
+                "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+              }
+              alt="User Avatar"
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "50%",
+                cursor: "pointer",
+                objectFit: "cover",
+                border: "2px solid white",
+              }}
+            />
+            <span style={{
+              fontSize: "16px",
+              marginLeft: "8px",
               cursor: "pointer",
-              objectFit: "cover",
-              border: "2px solid white",
-            }}
-          />
+              textTransform: "capitalize",
+            }}>
+              {data?.firstName} {data?.lastName}
+            </span>
+          </div>
         </Dropdown>
       </div>
     </div>

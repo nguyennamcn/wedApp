@@ -23,6 +23,8 @@ import InvationBuy from "./Page/UserPage/InvationBuy";
 import PaymentTest from "./Page/Payment/PaymentTest";
 import ChatTest from "./Components/ChatBox/ChatTest";
 import NavbarSellerWrap from "./Page/SellerPage/NavbarSeller";
+import LayoutCart from "./Layout/LayoutCart";
+import LayoutPayment from "./Layout/LayoutPayment";
 
 function App() {
   const [api, contextHolder] = notification.useNotification();
@@ -117,10 +119,10 @@ function App() {
           <Route path="/settings/address" element={<ProtectedRoute><LayoutUser Component={AddressPage} /></ProtectedRoute>} />
           <Route path="/settings/changepass" element={<ProtectedRoute><LayoutUser Component={ChangePass} /></ProtectedRoute>} />
           <Route path="/settings/buylist" element={<ProtectedRoute><LayoutUser Component={InvationBuy} /></ProtectedRoute>} />
-          <Route path="/detail" element={<Layout Component={DetailProduct} />} />
+          <Route path="/product/:id" element={<Layout Component={DetailProduct} />} />
           <Route path="/blog/blog1" element={<Layout Component={BlogPage} />} />
-          <Route path="/payment" element={<Layout Component={Payment} />} />
-          <Route path="/payment2" element={<Layout Component={PaymentTest} />} />
+          <Route path="/cart" element={<LayoutCart Component={Payment} />} />
+          <Route path="/payment" element={<LayoutPayment Component={PaymentTest} />} />
           <Route path="/admin-login" element={<LayoutAdmin Component={AdminPage} />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />
