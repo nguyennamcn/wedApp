@@ -5,15 +5,27 @@ import OrtherProductShop from "./OrtherProductShop";
 import ProductLike from "./ProductLike";
 import { RiArrowDropLeftFill } from "react-icons/ri";
 import { appService } from "../../service/appService";
+import { useCart } from "../CartPage/CartContext";
+import { notification } from "antd";
 
 export default function DetailProduct() {
   const { id } = useParams(); // lấy product id từ URL
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
 
   const [startIndex, setStartIndex] = useState(0);
   const maxThumbnails = 5;
+
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (type, message, description) => {
+    api[type]({
+      message: message,
+      description: description,
+    });
+  };
 
   const handlePrev = () => {
     if (startIndex > 0) {
@@ -28,6 +40,25 @@ export default function DetailProduct() {
     ) {
       setStartIndex(startIndex + 1);
     }
+  };
+
+  const handleAddToCart = () => {
+    const variant = product.productVariants[0];
+    const cartProduct = {
+      id: product.id || "unknown",
+      name: product.productName,
+      price: variant.resalePrice,
+      image: product.productImageUrl[0],
+      quantity: 1,
+      size: variant.size,
+      variantId: variant._id,
+      shopId: product.shopId || "unknown",
+    };
+    addToCart(cartProduct);
+    setTimeout(() => {
+      openNotification("success", "Thành công", "Đã thêm vào giỏ hàng!");
+    }, 100);
+    window.dispatchEvent(new Event("cart-updated"));
   };
 
   useEffect(() => {
@@ -53,6 +84,7 @@ export default function DetailProduct() {
   return (
     <div style={{ padding: "2% 5%", backgroundColor: "#F6F6F6" }}>
       {/* Breadcrumb */}
+      {contextHolder}
       <div
         style={{
           marginBottom: "20px",
@@ -114,15 +146,20 @@ export default function DetailProduct() {
               <span style={{ fontSize: "14px", fontWeight: "bold" }}>
                 Tình trạng:
               </span>
-              <span className="badge">{product.condition || "Chưa rõ"}</span>
+              <span className="badge">
+                {product.productVariants[0].condition || "Chưa rõ"}
+              </span>
               <p className="stock">
-                {product.quantity > 0
-                  ? `Còn ${product.quantity} sản phẩm`
+                {product.productVariants[0].quantity > 0
+                  ? `Còn ${product.productVariants[0].quantity} sản phẩm`
                   : "Hết hàng"}
               </p>
             </div>
             <p className="price" style={{ color: "black", marginLeft: "5%" }}>
-              Giá: <span className="price">đ{product.price}</span>
+              Giá:{" "}
+              <span className="price">
+                {product.productVariants[0].resalePrice} Đ
+              </span>
             </p>
             <p className="detail-text">
               📍 {product.location || "Không rõ địa chỉ"}
@@ -133,18 +170,20 @@ export default function DetailProduct() {
                 ? product.updatedAt.substring(0, 10)
                 : "N/A"}
             </p>
-            <p className="detail-text">Size: {product.size || "Không có"}</p>
+            <p className="detail-text">
+              Size: {product.productVariants[0].size || "Không có"}
+            </p>
 
             <p style={{ color: "black", fontSize: "14px", marginTop: "20px" }}>
               Vận chuyển & Trả hàng:
             </p>
-            <p style={{ fontSize: "13px", fontWeight: "400" }}>
+            <p style={{ fontSize: "13px", fontWeight: "400", color: "gray" }}>
               Miễn phí vận chuyển cho đơn hàng từ 89.000 VND trở lên. Đổi/trả
               hàng trong vòng 14 ngày để được hoàn tiền hoặc tín dụng mua sắm.
             </p>
 
             <div className="action-buttons">
-              <button className="btn">THÊM VÀO GIỎ</button>
+              <button className="btn" onClick={handleAddToCart}>THÊM VÀO GIỎ</button>
               <button className="btn buy">MUA NGAY</button>
             </div>
 
