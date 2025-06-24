@@ -1,5 +1,13 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import "./PaymentTest.css";
+import { appService } from "../../service/appService";
+import {
+  calculateShippingFee,
+  getDistricts,
+  getProvinces,
+  getWards,
+} from "../../service/ghnService";
+import { orderService } from "../../service/orderService";
 
 const bankList = [
   {
@@ -37,6 +45,30 @@ const bankList = [
 export default function PaymentTest() {
   const [selectedMethod, setSelectedMethod] = useState("cod");
   const [selectedBank, setSelectedBank] = useState("");
+  const [cartItems, setCartItems] = useState([]);
+  const [receivers, setReceivers] = useState([]);
+  const [selectedReceiverId, setSelectedReceiverId] = useState("");
+  const [fee, setFee] = useState(null);
+  const [data, setData] = useState(null);
+  const [note, setNote] = useState("");
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    setCartItems(storedCart ? JSON.parse(storedCart) : []);
+  }, []);
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const response = await appService.getProfile();
+        setReceivers(response.data.metadata.addresses);
+        setData(response.data.metadata);
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+      }
+    };
+    fetchAddress();
+  }, []);
 
   const handleSelect = (id) => {
     setSelectedBank(id);
@@ -45,15 +77,187 @@ export default function PaymentTest() {
   const handleChange = (e) => {
     setSelectedMethod(e.target.value);
   };
+
+  const getAddressCodesFromNames = async (
+    provinceName,
+    districtName,
+    wardName
+  ) => {
+    try {
+      const provinces = await getProvinces();
+      console.log(provinceName);
+      const normalizeProvinceName = (name) => {
+        return name
+          ?.toLowerCase()
+          .replace(/^tỉnh\s+/i, "") // Bỏ "Tỉnh "
+          .replace(/^thành phố\s+/i, "") // Bỏ "Thành phố "
+          .trim();
+      };
+      const province = provinces.find(
+        (p) =>
+          normalizeProvinceName(p.ProvinceName) ===
+          normalizeProvinceName(provinceName)
+      );
+      if (!province) return null;
+
+      const districts = await getDistricts(province.ProvinceID);
+      const district = districts.find((d) => d.DistrictName === districtName);
+      if (!district) return null;
+
+      const wards = await getWards(district.DistrictID);
+      const ward = wards.find((w) => w.WardName === wardName);
+      if (!ward) return null;
+
+      return {
+        district_id: district.DistrictID,
+        ward_code: ward.WardCode,
+      };
+    } catch (error) {
+      console.error("Lỗi khi tra cứu mã vùng:", error);
+      return null;
+    }
+  };
+
+  // Tổng giá trị sản phẩm
+  const subtotal = cartItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
+  // Phí ship thực tế (nếu là số thì dùng, nếu là lỗi hoặc null thì là 0)
+  const shippingFee = typeof fee === "number" ? fee : 0;
+
+  // Giảm giá tạm thời (hardcode, bạn có thể xử lý thêm logic voucher sau)
+  const discount = 20000; // Hoặc 0 nếu chưa nhập mã
+
+  // Tổng thanh toán
+  const total = subtotal + shippingFee - discount;
+
+  useEffect(() => {
+    const fetchFee = async () => {
+      if (!selectedReceiverId) {
+        setFee(null);
+        return;
+      }
+      const selectedReceiver = receivers.find(
+        (r) => r.id === Number(selectedReceiverId)
+      );
+
+      if (!selectedReceiver) return;
+
+      console.log(selectedReceiver);
+      const addressCodes = await getAddressCodesFromNames(
+        selectedReceiver.province,
+        selectedReceiver.district,
+        selectedReceiver.ward
+      );
+
+      console.log(addressCodes);
+
+      if (!addressCodes) {
+        setFee("Lỗi");
+        return;
+      }
+
+      try {
+        const res = await calculateShippingFee({
+          to_district_id: addressCodes.district_id,
+          to_ward_code: addressCodes.ward_code,
+          weight: 500,
+          length: 20,
+          width: 15,
+          height: 10,
+        });
+        setFee(res);
+      } catch (error) {
+        console.error("Lỗi tính phí:", error);
+        setFee("Lỗi");
+      }
+    };
+
+    fetchFee();
+  }, [selectedReceiverId, receivers]);
+
+  const handleOrder = async () => {
+    if (!selectedReceiverId) {
+      alert("Vui lòng chọn người nhận");
+      return;
+    }
+    if (selectedMethod === "card" && !selectedBank) {
+      alert("Vui lòng chọn ngân hàng");
+      return;
+    }
+
+    const orderItems = cartItems.map((item) => ({
+      productVariantId: item.productVariantId || item.id, // fallback nếu chưa có variant
+      quantity: item.quantity,
+      version: item.version || 1, // hoặc lấy từ item nếu có version riêng
+    }));
+    const selectedReceiver = receivers.find(
+      (r) => r.id === Number(selectedReceiverId)
+    );
+    const shippingAddress = selectedReceiver
+      ? `${selectedReceiver.name}, ${selectedReceiver.phone}, ${selectedReceiver.detail}, ${selectedReceiver.ward}, ${selectedReceiver.district}, ${selectedReceiver.province}`
+      : "";
+    const orderData = {
+      orderItems: cartItems.map((item) => ({
+        productVariantId: item.productVariantId || item.id,
+        quantity: item.quantity,
+        version: item.version || 1,
+      })),
+      shopId: 1,
+      shippingFee: total,
+      voucherUserId: null,
+      voucherCode: null,
+      note: note, // Ghi chú đơn hàng
+      customerName: data.lastName, // Tên khách hàng
+      customerPhone: data.phone, // Số điện thoại khách hàng
+      shippingAddress: shippingAddress,
+    };
+    console.log(orderData);
+    try {
+      const response = await orderService.postOrder(orderData);
+      alert("Đặt hàng thành công!");
+      console.log(response);
+      localStorage.removeItem("cart"); // ✅ Xóa giỏ hàng khỏi localStorage
+      setCartItems([]);
+    } catch (err) {
+      console.error("Lỗi khi đặt hàng:", err);
+      alert("Đặt hàng thất bại. Vui lòng thử lại.");
+    }
+  };
+
   return (
     <div className="payment-page">
       <div className="payment-container">
         {/* Thông tin đơn hàng */}
         <div className="form-section">
           <h2>Thông tin đơn hàng</h2>
-          <input style={{ marginBottom: "12px" }} placeholder="Họ và tên" />
 
-          <input placeholder="Ghi chú đơn hàng (nếu có)" />
+          <select
+            value={selectedReceiverId}
+            onChange={(e) => setSelectedReceiverId(e.target.value)}
+            style={{
+              marginBottom: "12px",
+              padding: "10px",
+              borderRadius: "5px",
+              width: "100%",
+              outline: "none",
+            }}
+          >
+            <option value="">Chọn người nhận</option>
+            {receivers.map((receiver) => (
+              <option key={receiver.id} value={receiver.id}>
+                {`${receiver.name} - ${receiver.phone} - ${receiver.detail} / ${receiver.province} / ${receiver.district} / ${receiver.ward}`}
+              </option>
+            ))}
+          </select>
+
+          <input
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Ghi chú đơn hàng (nếu có)"
+          />
 
           <h3
             style={{
@@ -62,7 +266,7 @@ export default function PaymentTest() {
           >
             Phương thức vận chuyển
           </h3>
-          <div className="shipping-fee">Phí ship đơn hàng 20,000đ</div>
+          <div className="shipping-fee">Phí ship đơn hàng {fee || "0"}Đ</div>
 
           <h3>Hình thức thanh toán</h3>
           <div className="payment-method">
@@ -135,7 +339,8 @@ export default function PaymentTest() {
                   display: "flex",
                   alignItems: "center",
                   padding: "2%",
-                  borderBottom: selectedMethod === "card" ? "1px solid #ccc" : "none",
+                  borderBottom:
+                    selectedMethod === "card" ? "1px solid #ccc" : "none",
                 }}
               >
                 <input
@@ -191,20 +396,36 @@ export default function PaymentTest() {
         {/* Giỏ hàng */}
         <div className="cart-section">
           <h2>Giỏ hàng</h2>
-          <div className="cart-item">
-            <div>
-              <p>Áo thun Unisex</p>
-              <span>Size M</span>
+          {cartItems.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "left",
+                marginBottom: "10px",
+              }}
+              className="cart-item"
+            >
+              <img src={item.image} alt={item.name} />
+              <div className="item-details">
+                <p
+                  style={{
+                    color: item.quantity > 0 ? "black" : "red",
+                    margin: "0",
+                  }}
+                >
+                  {item.quantity > 0 ? item.name : item.name + " (Hết hàng)"}
+                </p>
+                <p style={{ color: "black", margin: "0" }}>
+                  Giá: {item.price.toLocaleString()}đ
+                </p>
+                <p style={{ color: "black", margin: "0" }}>
+                  Số lượng: {item.quantity}
+                </p>
+              </div>
             </div>
-            <p>39,000đ</p>
-          </div>
-          <div className="cart-item">
-            <div>
-              <p>Quần short Unisex</p>
-              <span>Size M</span>
-            </div>
-            <p>39,000đ</p>
-          </div>
+          ))}
 
           <h3>Ưu Đãi Dành Cho Bạn</h3>
           <div className="voucher-box">
@@ -220,19 +441,19 @@ export default function PaymentTest() {
           <div className="summary">
             <div className="summary-row">
               <span>Tạm tính:</span>
-              <span>78,000đ</span>
+              <span>{subtotal.toLocaleString()}đ</span>
             </div>
             <div className="summary-row">
               <span>Phí vận chuyển:</span>
-              <span>-20,000đ</span>
+              <span>{shippingFee.toLocaleString()}đ</span>
             </div>
             <div className="summary-row">
               <span>Giảm giá đơn hàng:</span>
-              <span>-20,000đ</span>
+              <span>-{discount.toLocaleString()}đ</span>
             </div>
             <div className="summary-row total">
               <strong>Tổng:</strong>
-              <strong>78,000đ</strong>
+              <strong>{total.toLocaleString()}đ</strong>
             </div>
           </div>
         </div>
@@ -250,27 +471,35 @@ export default function PaymentTest() {
         }}
         className="place-order"
       >
-        <div style={{
-          display: "flex",
-          alignContent: "center",
-          marginLeft: '5%',
-          width: '60%',
-          justifyContent: 'space-between',
-        }}>
-          <p style={{
-            margin: '0',
-            color: 'black',
-            fontSize: '18px',
-            borderRight: '1px solid black',
-            padding: '3% 20% 3% 5%'
-          }}>
-            {selectedMethod === "cod" ? "Thanh toán khi nhận hàng" : selectedMethod === "momo" ? "Thanh toán Momo" : "Thẻ tín dụng / ngân hàng"}
+        <div
+          style={{
+            display: "flex",
+            alignContent: "center",
+            marginLeft: "5%",
+            width: "60%",
+            justifyContent: "space-between",
+          }}
+        >
+          <p
+            style={{
+              margin: "0",
+              color: "black",
+              fontSize: "18px",
+              borderRight: "1px solid black",
+              padding: "3% 20% 3% 5%",
+            }}
+          >
+            {selectedMethod === "cod"
+              ? "Thanh toán khi nhận hàng"
+              : selectedMethod === "momo"
+              ? "Thanh toán Momo"
+              : "Thẻ tín dụng / ngân hàng"}
           </p>
-          <span style={{fontSize: '18px',
-            padding: '3% 0% 3% 0%',
-          }}>Chưa dùng voucher</span>
+          <span style={{ fontSize: "18px", padding: "3% 0% 3% 0%" }}>
+            Chưa dùng voucher
+          </span>
         </div>
-        <button>Đặt hàng</button>
+        <button onClick={handleOrder}>Đặt hàng</button>
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ export default function DetailShop() {
       });
       openNotification("success", "Thành công", "Đổi trạng thái thành công");
     } catch (err) {
-      console.log(err.response.data.metadata);
+      console.log(err.response);
         const errorMeta = err.response?.data?.metadata;
         let errorMessage = '';
         if (Array.isArray(errorMeta)) {
