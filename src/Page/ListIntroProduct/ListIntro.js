@@ -1,13 +1,16 @@
 import React from "react";
 import { Carousel } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import '../../css/HomePage/ListIntro.css'
+import '../../css/HomePage/ListIntro.css';
+import banner1 from '../../img/banner/banner1.jpg';
+import banner2 from '../../img/banner/banner2.jpg';
+import banner3 from '../../img/banner/banner3.jpg';
 
 const ListIntro = () => {
   const carouselRef = React.useRef();
 
   return (
-    <div style={{ position: "relative", width: "100%", margin: "auto" , padding: '1% 0'}}>
+    <div style={{ position: "relative", width: "100%", margin: "auto", padding: '1% 0' }}>
       {/* Nút điều hướng bên trái */}
       <button
         style={{
@@ -28,7 +31,7 @@ const ListIntro = () => {
         }}
         onClick={() => carouselRef.current.prev()}
       >
-        <LeftOutlined/>
+        <LeftOutlined />
       </button>
 
       {/* Carousel */}
@@ -38,21 +41,25 @@ const ListIntro = () => {
         dots={{ className: "custom-dots" }}
         dotPosition="bottom"
       >
-        <div>
-          <div
-            style={{
-              height: "60vh",
-              background: "#ddd",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <img src="https://via.placeholder.com/800x200" alt="slide 1" />
+        {[banner1, banner2, banner3].map((banner, index) => (
+          <div key={index}>
+            <div
+              style={{
+                height: "60vh",
+                background: "#ddd",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src={banner}
+                alt={`banner ${index + 1}`}
+                style={{ height: "100%", width: "100%", objectFit: "cover" }}
+              />
+            </div>
           </div>
-        </div>
-        
-        
+        ))}
       </Carousel>
 
       {/* Nút điều hướng bên phải */}

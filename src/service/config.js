@@ -11,6 +11,9 @@ export const configHeader = () => {
     };
 };
 
+
+console.log(localUserService.getAccessToken())
+
 // Tạo Axios instance
 export const https = axios.create({
     baseURL: BASE_URL,

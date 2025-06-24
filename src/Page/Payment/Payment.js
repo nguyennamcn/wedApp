@@ -2,23 +2,36 @@ import React, { useState, useEffect } from "react";
 import "./Payment.css";
 import ProductLike from "../DetailProduct/ProductLike";
 import { useNavigate } from "react-router-dom";
+import {
+  getDistricts,
+  getEstimatedDeliveryTime,
+  getProvinces,
+  getWards,
+} from "../../service/ghnService";
 
 export default function Payment() {
   const [cartItems, setCartItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const navigate = useNavigate();
-  // Load cart từ localStorage khi trang load
+
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedProvinceId, setSelectedProvinceId] = useState(null);
+  const [selectedDistrictId, setSelectedDistrictId] = useState(null);
+  const [selectedWardCode, setSelectedWardCode] = useState("");
+
+  const [leadtime, setLeadtime] = useState(null);
+
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartItems(storedCart);
   }, []);
 
-  // Cập nhật localStorage khi cartItems thay đổi
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Chọn tất cả hoặc bỏ chọn
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       setSelectedItems(cartItems.map((item) => item.id));
@@ -27,7 +40,6 @@ export default function Payment() {
     }
   };
 
-  // Chọn từng sản phẩm
   const handleSelectItem = (id) => {
     if (selectedItems.includes(id)) {
       setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
@@ -38,14 +50,11 @@ export default function Payment() {
 
   const isAllSelected = selectedItems.length === cartItems.length;
 
-  // Tính tổng tiền các item được chọn
   const total = cartItems
     .filter((item) => selectedItems.includes(item.id))
     .reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
 
-  // Tăng/giảm số lượng
   const updateQuantity = (id, change) => {
-    console.log("Update quantity for id:", id);
     const updatedCart = cartItems.map((item) => {
       if (item.id === id) {
         const newQuantity = (item.quantity || 1) + change;
@@ -59,12 +68,51 @@ export default function Payment() {
     setCartItems(updatedCart);
   };
 
-  // Xóa sản phẩm khỏi giỏ hàng
   const deleteItem = (id) => {
     const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
     setSelectedItems(selectedItems.filter((itemId) => itemId !== id));
   };
+
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      const result = await getProvinces();
+      setProvinces(result);
+    };
+    fetchProvinces();
+  }, []);
+
+  const handleProvinceChange = async (e) => {
+    const provinceId = parseInt(e.target.value);
+    setSelectedProvinceId(provinceId);
+    const districts = await getDistricts(provinceId);
+    setDistricts(districts);
+    setSelectedDistrictId(null);
+    setWards([]);
+    setSelectedWardCode("");
+  };
+
+  const handleDistrictChange = async (e) => {
+    const districtId = parseInt(e.target.value);
+    setSelectedDistrictId(districtId);
+    const wards = await getWards(districtId);
+    setWards(wards);
+    setSelectedWardCode("");
+  };
+
+  useEffect(() => {
+    const fetchLeadtime = async () => {
+      if (selectedDistrictId && selectedWardCode) {
+        const lead = await getEstimatedDeliveryTime({
+          to_district_id: selectedDistrictId,
+          to_ward_code: selectedWardCode,
+          service_id: 53320,
+        });
+        if (lead) setLeadtime(lead);
+      }
+    };
+    fetchLeadtime();
+  }, [selectedDistrictId, selectedWardCode]);
 
   return (
     <>
@@ -90,9 +138,7 @@ export default function Payment() {
           </div>
           <hr />
           {cartItems.map((item) => (
-            <div className="cart-item" 
-            
-            key={item.id}>
+            <div className="cart-item" key={item.id}>
               <input
                 style={{ width: "16px", height: "16px" }}
                 type="checkbox"
@@ -100,23 +146,23 @@ export default function Payment() {
                 onChange={() => handleSelectItem(item.id)}
               />
               <img
-              onClick={() => navigate(`/product/${item.id}`)}
-              src={item.image} alt={item.name} />
+                onClick={() => navigate(`/product/${item.id}`)}
+                src={item.image}
+                alt={item.name}
+              />
               <div className="item-info">
-                <div onClick={() => navigate(`/product/${item.id}`)} className="item-name"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                  >{item.name}</div>
+                <div
+                  onClick={() => navigate(`/product/${item.id}`)}
+                  className="item-name"
+                  style={{ cursor: "pointer" }}
+                >
+                  {item.name}
+                </div>
                 <div className="item-color">{item.color}</div>
                 <div className="quantity">
                   <button
                     onClick={() => updateQuantity(item.id, -1)}
-                    style={{
-                      border: "none",
-                      backgroundColor: "transparent",
-                      outline: "none",
-                    }}
+                    style={{ border: "none", background: "transparent" }}
                   >
                     -
                   </button>
@@ -133,11 +179,7 @@ export default function Payment() {
                   />
                   <button
                     onClick={() => updateQuantity(item.id, 1)}
-                    style={{
-                      border: "none",
-                      backgroundColor: "transparent",
-                      outline: "none",
-                    }}
+                    style={{ border: "none", background: "transparent" }}
                   >
                     +
                   </button>
@@ -148,12 +190,8 @@ export default function Payment() {
               </div>
               <button
                 onClick={() => deleteItem(item.id)}
-                style={{
-                  border: "none",
-                  backgroundColor: "transparent",
-                  outline: "none",
-                }}
                 className="delete"
+                style={{ border: "none", background: "transparent" }}
               >
                 ×
               </button>
@@ -172,12 +210,23 @@ export default function Payment() {
               <span>Giảm giá:</span>
               <span>0₫</span>
             </div>
-            <div style={{ marginBottom: "5%" }} className="summary-row total">
+            <div className="summary-row total" style={{ marginBottom: "5%" }}>
               <span>Tổng cộng:</span>
               <span>{total.toLocaleString()}₫</span>
             </div>
 
             <h4>Ước tính thời gian giao hàng</h4>
+            <p style={{ color: "black" }}>
+              {leadtime
+                ? leadtime.toLocaleDateString("vi-VN", {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })
+                : "Đang cập nhật..."}
+            </p>
+
             <div className="shipping">
               <select
                 style={{
@@ -186,9 +235,17 @@ export default function Payment() {
                   outline: "none",
                   width: "45%",
                 }}
+                onChange={handleProvinceChange}
+                value={selectedProvinceId || ""}
               >
-                <option>Chọn tỉnh/ thành phố</option>
+                <option value="">Chọn tỉnh/ thành phố</option>
+                {provinces.map((p) => (
+                  <option key={p.ProvinceID} value={p.ProvinceID}>
+                    {p.ProvinceName}
+                  </option>
+                ))}
               </select>
+
               <select
                 style={{
                   padding: "10px 0",
@@ -196,26 +253,56 @@ export default function Payment() {
                   outline: "none",
                   width: "45%",
                 }}
+                onChange={handleDistrictChange}
+                value={selectedDistrictId || ""}
+                disabled={!selectedProvinceId}
               >
-                <option>Chọn quận/ huyện</option>
+                <option value="">Chọn quận/ huyện</option>
+                {districts.map((d) => (
+                  <option key={d.DistrictID} value={d.DistrictID}>
+                    {d.DistrictName}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                style={{
+                  padding: "10px 0",
+                  borderRadius: "5px",
+                  outline: "none",
+                  width: "45%",
+                  marginTop: "10px",
+                }}
+                onChange={(e) => setSelectedWardCode(e.target.value)}
+                value={selectedWardCode}
+                disabled={!selectedDistrictId}
+              >
+                <option value="">Chọn phường/ xã</option>
+                {wards.map((w) => (
+                  <option key={w.WardCode} value={w.WardCode}>
+                    {w.WardName}
+                  </option>
+                ))}
               </select>
             </div>
 
             <input
               style={{
-                padding: "10px 10px",
+                padding: "10px",
                 borderRadius: "5px",
                 outline: "none",
                 width: "100%",
                 marginBottom: "5%",
+                marginTop: "5%",
               }}
               type="text"
               placeholder="Nhập mã khuyến mãi nếu có"
               className="coupon"
             />
-            <button 
-            onClick={() => navigate('/payment')}
-            className="checkout-btn">THANH TOÁN NGAY</button>
+
+            <button onClick={() => navigate("/payment")} className="checkout-btn">
+              THANH TOÁN NGAY
+            </button>
           </div>
         </div>
       </div>
