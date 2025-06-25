@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./PaymentTest.css";
 import { appService } from "../../service/appService";
 import {
@@ -8,6 +8,8 @@ import {
   getWards,
 } from "../../service/ghnService";
 import { orderService } from "../../service/orderService";
+import { Modal } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const bankList = [
   {
@@ -43,7 +45,7 @@ const bankList = [
 ];
 
 export default function PaymentTest() {
-  const [selectedMethod, setSelectedMethod] = useState("cod");
+  const [selectedMethod, setSelectedMethod] = useState("CASH_ON_DELIVERY");
   const [selectedBank, setSelectedBank] = useState("");
   const [cartItems, setCartItems] = useState([]);
   const [receivers, setReceivers] = useState([]);
@@ -51,6 +53,45 @@ export default function PaymentTest() {
   const [fee, setFee] = useState(null);
   const [data, setData] = useState(null);
   const [note, setNote] = useState("");
+  const [orderId, setOrderId] = useState("");
+  const navigiton = useNavigate();
+  const [orderIds, setOrderIds] = useState([]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOk = async () => {
+    try {
+      // Nếu bạn vẫn đang dùng orderId (1 đơn), thì bỏ dòng này:
+      // console.log(orderId);
+
+      for (const id of orderIds) {
+        const res = await orderService.conformOrder({
+          orderCode: id,
+          paymentType: selectedMethod,
+        });
+        console.log(`Xác nhận đơn hàng ${id} thành công:`, res.data);
+      }
+
+      setIsModalOpen(false);
+      localStorage.removeItem("cart"); // ✅ Xóa giỏ hàng
+      setCartItems([]);
+      navigiton("/settings/buylist");
+    } catch (err) {
+      console.error("Lỗi khi xác nhận đơn hàng:", err);
+      alert("Có lỗi xảy ra khi xác nhận đơn hàng.");
+    }
+  };
+
+  const handleCancel = async () => {
+    try {
+      await Promise.all(orderIds.map((id) => orderService.cancelOrder(id)));
+      console.log("Tất cả đơn hàng đã được hủy.");
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error("Lỗi khi hủy đơn hàng:", err);
+      alert("Có lỗi xảy ra khi hủy đơn hàng.");
+    }
+  };
 
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
@@ -85,7 +126,7 @@ export default function PaymentTest() {
   ) => {
     try {
       const provinces = await getProvinces();
-      console.log(provinceName);
+      console.log(districtName);
       const normalizeProvinceName = (name) => {
         return name
           ?.toLowerCase()
@@ -101,7 +142,11 @@ export default function PaymentTest() {
       if (!province) return null;
 
       const districts = await getDistricts(province.ProvinceID);
-      const district = districts.find((d) => d.DistrictName === districtName);
+      const district = districts.find(
+        (d) =>
+          normalizeProvinceName(d.DistrictName) ===
+          normalizeProvinceName(districtName)
+      );
       if (!district) return null;
 
       const wards = await getWards(district.DistrictID);
@@ -188,45 +233,58 @@ export default function PaymentTest() {
       return;
     }
 
-    const orderItems = cartItems.map((item) => ({
-      productVariantId: item.productVariantId || item.id, // fallback nếu chưa có variant
-      quantity: item.quantity,
-      version: item.version || 1, // hoặc lấy từ item nếu có version riêng
-    }));
     const selectedReceiver = receivers.find(
       (r) => r.id === Number(selectedReceiverId)
     );
     const shippingAddress = selectedReceiver
       ? `${selectedReceiver.name}, ${selectedReceiver.phone}, ${selectedReceiver.detail}, ${selectedReceiver.ward}, ${selectedReceiver.district}, ${selectedReceiver.province}`
       : "";
-    const orderData = {
-      orderItems: cartItems.map((item) => ({
-        productVariantId: item.productVariantId || item.id,
-        quantity: item.quantity,
-        version: item.version || 1,
-      })),
-      shopId: 1,
-      shippingFee: total,
-      voucherUserId: null,
-      voucherCode: null,
-      note: note, // Ghi chú đơn hàng
-      customerName: data.lastName, // Tên khách hàng
-      customerPhone: data.phone, // Số điện thoại khách hàng
-      shippingAddress: shippingAddress,
-    };
-    console.log(orderData);
+
+    // Nhóm cartItems theo shopId
+    const groupedByShop = cartItems.reduce((acc, item) => {
+      if (!acc[item.shopId]) {
+        acc[item.shopId] = [];
+      }
+      acc[item.shopId].push(item);
+      return acc;
+    }, {});
+
     try {
-      const response = await orderService.postOrder(orderData);
-      alert("Đặt hàng thành công!");
-      console.log(response);
-      localStorage.removeItem("cart"); // ✅ Xóa giỏ hàng khỏi localStorage
-      setCartItems([]);
+      const orderCodes = [];
+
+      for (const shopId in groupedByShop) {
+        const items = groupedByShop[shopId];
+
+        const orderData = {
+          orderItems: items.map((item) => ({
+            productVariantId: item.variantId || item.id,
+            quantity: item.quantity,
+            version: item.version || 1,
+          })),
+          shopId: parseInt(shopId),
+          shippingFee: total, // Nếu cần chia phí ship theo shop thì tính lại tại đây
+          voucherUserId: null,
+          voucherCode: null,
+          note: note,
+          customerName: data.lastName,
+          customerPhone: data.phone,
+          shippingAddress: shippingAddress,
+        };
+
+        const response = await orderService.postOrder(orderData);
+        console.log(response);
+        orderCodes.push(response.data.metadata.orderCode);
+      }
+
+      setIsModalOpen(true);
+      setOrderIds(orderCodes); // Nếu muốn lưu nhiều orderId
     } catch (err) {
       console.error("Lỗi khi đặt hàng:", err);
       alert("Đặt hàng thất bại. Vui lòng thử lại.");
     }
   };
 
+  console.log(orderIds);
   return (
     <div className="payment-page">
       <div className="payment-container">
@@ -282,22 +340,24 @@ export default function PaymentTest() {
                   alignItems: "center",
                   padding: "2%",
                   borderBottom:
-                    selectedMethod === "cod" ? "1px solid #ccc" : "none",
+                    selectedMethod === "CASH_ON_DELIVERY"
+                      ? "1px solid #ccc"
+                      : "none",
                 }}
               >
                 <input
                   style={{ width: "10%" }}
                   type="radio"
                   name="payment"
-                  value="cod"
+                  value="CASH_ON_DELIVERY"
                   onChange={handleChange}
-                  checked={selectedMethod === "cod"}
+                  checked={selectedMethod === "CASH_ON_DELIVERY"}
                 />
                 <span style={{ width: "90%" }}>
                   Thanh toán khi nhận hàng (COD)
                 </span>
               </div>
-              {selectedMethod === "cod" && (
+              {selectedMethod === "CASH_ON_DELIVERY" && (
                 <ul style={{ padding: "1% 5%", margin: "0" }}>
                   <li>Khách hàng được kiểm tra hàng trước khi nhận hàng.</li>
                   <li>Freeship đơn từ 250k</li>
@@ -321,9 +381,9 @@ export default function PaymentTest() {
                   style={{ width: "10%" }}
                   type="radio"
                   name="payment"
-                  value="momo"
+                  value="ONLINE_PAYMENT"
                   onChange={handleChange}
-                  checked={selectedMethod === "momo"}
+                  checked={selectedMethod === "ONLINE_PAYMENT"}
                 />
                 <span style={{ width: "90%" }}>Thanh toán Momo</span>
               </div>
@@ -489,9 +549,9 @@ export default function PaymentTest() {
               padding: "3% 20% 3% 5%",
             }}
           >
-            {selectedMethod === "cod"
+            {selectedMethod === "CASH_ON_DELIVERY"
               ? "Thanh toán khi nhận hàng"
-              : selectedMethod === "momo"
+              : selectedMethod === "ONLINE_PAYMENT"
               ? "Thanh toán Momo"
               : "Thẻ tín dụng / ngân hàng"}
           </p>
@@ -501,6 +561,24 @@ export default function PaymentTest() {
         </div>
         <button onClick={handleOrder}>Đặt hàng</button>
       </div>
+      <Modal
+        style={{
+          marginTop: "10%",
+        }}
+        title="Xác nhận order !"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <p
+          style={{
+            color: "black",
+          }}
+        >
+          Some contents...
+        </p>
+      </Modal>
     </div>
   );
 }

@@ -131,6 +131,7 @@ export default function SettingPage() {
         window.location.reload()
       }, 1200);
     } catch (error) {
+    
       console.error("Lỗi khi cập nhật người dùng:", error);
     }
   };
