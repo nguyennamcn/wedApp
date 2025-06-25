@@ -68,7 +68,7 @@ const UserDrop = ({ user, logoutBtn }) => {
     {
       key: "2",
       label: (
-        <a href="/orders">
+        <a href="/settings/buylist">
           <FileTextOutlined /> Đơn mua
         </a>
       ),

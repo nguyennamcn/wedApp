@@ -51,8 +51,9 @@ export default function DetailProduct() {
       image: product.productImageUrl[0],
       quantity: 1,
       size: variant.size,
-      variantId: variant._id,
+      variantId: variant.id,
       shopId: product.shopId || "unknown",
+      version: variant.version
     };
     addToCart(cartProduct);
     setTimeout(() => {
