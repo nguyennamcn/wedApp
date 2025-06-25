@@ -97,7 +97,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              777
+              8
             </span>
             <span
               style={{
@@ -142,7 +142,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              250
+              15
             </span>
             <span
               style={{
@@ -187,7 +187,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              7,120
+              0
             </span>
             <span
               style={{
@@ -232,7 +232,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              80,3tr
+              0
             </span>
             <span
               style={{
@@ -375,7 +375,7 @@ export default function Dashboard() {
                     margin: "0",
                     fontSize: "16px",
                     color: "white",
-                  }}>80,000,000</p>
+                  }}>0</p>
                   <p style={{
                     margin: "0",
                     fontSize: "14px",
