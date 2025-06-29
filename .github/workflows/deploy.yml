@@ -2,7 +2,7 @@ name: Deploy Frontend to GCP VM
 
 on:
   push:
-    branches: [CICD]
+    branches: [master]
 
 jobs:
   build-and-deploy:

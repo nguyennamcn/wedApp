@@ -187,7 +187,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              16
+              0
             </span>
             <span
               style={{
