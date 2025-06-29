@@ -79,6 +79,12 @@ export default function InvaSeller() {
     }
   };
 
+  const conditionMap = {
+    PENDING: "Chờ xác nhận",
+    SHOP_CONFIRMED: "Đã xác nhận",
+    refurbished: "Tân trang",
+  };
+
   return (
     <div style={{ padding: 20, fontFamily: "Arial, sans-serif" }}>
       <h2 style={{ marginBottom: 16 }}>Quản lý đơn hàng</h2>
@@ -174,7 +180,7 @@ export default function InvaSeller() {
 
                 <td style={tdStyle}>{order.customerName}</td>
                 <td style={tdStyle}>{order.price}Đ</td>
-                <td style={tdStyle}>{order.status}</td>
+                <td style={tdStyle}>{conditionMap[order.status] || "Không rõ"}</td>
                 <td style={tdStyle}>GHN</td>
                 <td style={tdStyle}>Lấy tại kho</td>
               </tr>

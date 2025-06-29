@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -21,6 +21,7 @@ import { RiArrowUpBoxFill } from "react-icons/ri";
 import { CiBank } from "react-icons/ci";
 import { CiMoneyBill } from "react-icons/ci";
 import { Flex, Progress } from 'antd';
+import { appService } from "../../../service/appService";
 
 const allData = {
   "6months": [
@@ -53,6 +54,38 @@ const allData = {
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("6months");
+  const [totalSeller , setTotalSeller] = useState([]);
+  const [data, setData] =useState([]);
+
+  useEffect(() => {
+      appService
+        .getAllSellerAD()
+        .then((res) => {
+          setTotalSeller(res.data.metadata)          
+        })
+        .catch((err) => {
+          console.error("Error fetching stores:", err);
+        });
+    },[]);
+
+    console.log(totalSeller)
+  
+  useEffect(() => {
+      appService
+        .getAllOrderAD()
+        .then((res) => {
+          console.log(res);
+          setData(res.data.metadata)
+        })
+        .catch((err) => {
+          console.error("Error fetching stores:", err);
+        });
+    }, []);
+
+
+    console.log(
+      data
+    )
 
   const handleChangeRange = (e) => {
     setTimeRange(e.target.value);
@@ -97,7 +130,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              8
+              {totalSeller.totalSellers}
             </span>
             <span
               style={{
@@ -187,7 +220,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              16
+              {data.totalOrders}
             </span>
             <span
               style={{
@@ -232,7 +265,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              0
+              {data.totalPrice}Đ
             </span>
             <span
               style={{
@@ -321,7 +354,7 @@ export default function Dashboard() {
               fontSize: "24px",
               margin: "0",
               fontWeight: "600",
-            }}>120,000,200₫</p>
+            }}>{data.totalPrice}Đ</p>
             <p style={{
               fontSize: "20px",
               margin: "0",
@@ -351,7 +384,7 @@ export default function Dashboard() {
                     margin: "0",
                     fontSize: "16px",
                     color: "white",
-                  }}>0</p>
+                  }}>{data.totalPrice}Đ</p>
                   <p style={{
                     margin: "0",
                     fontSize: "14px",
@@ -380,7 +413,7 @@ export default function Dashboard() {
                     margin: "0",
                     fontSize: "14px",
                     color: "#467341",
-                  }}>Nguồn thu</p>
+                  }}>Nguồn chi</p>
                 </div>
               </div>
             </div>
@@ -415,7 +448,7 @@ export default function Dashboard() {
                 fontSize: "13px",
                 fontWeight: "600",
                 margin: "0",
-              }}>12,497</p>
+              }}>{data.totalPrice}Đ</p>
               <p style={{
                 fontSize: "12px",
                 fontWeight: "400",
