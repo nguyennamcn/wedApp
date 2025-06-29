@@ -221,6 +221,7 @@ export default function Dashboard() {
               }}
             >
               {data.totalOrders}
+
             </span>
             <span
               style={{
