@@ -252,7 +252,9 @@ export default function DetailProduct() {
         <ProductLike />
       </div>
       <div style={{ textAlign: "center" }}>
-        <button className="see-more-btn">Xem thêm</button>
+        <button style={{
+          border: 'none'
+        }} className="see-more-btn">Xem thêm</button>
       </div>
     </div>
   );

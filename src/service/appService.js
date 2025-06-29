@@ -72,6 +72,12 @@ export const appService = {
     );
   },
 
+  getOwnerProduct: (page, pageSize) => {
+    return https.get(
+      `/product-service/api/v1/products/owner?currentPage=${page}&pageSize=${pageSize}`
+    );
+  },
+
   getAllProductAdmin: (page, pageSize) => {
     return https.get(
       `/product-service/api/v1/products/admin?currentPage=${page}&pageSize=${pageSize}`
@@ -86,7 +92,7 @@ export const appService = {
   },
 
   updateProductActive: (id, isActive) => {
-    console.log(id, isActive)
+    console.log(id, isActive);
     return https.put(
       `/product-service/api/v1/products/${id}/update_status?isActive=${isActive}`
     );

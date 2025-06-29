@@ -65,7 +65,7 @@ export default function PaymentTest() {
       // console.log(orderId);
 
       for (const id of orderIds) {
-        const res = await orderService.conformOrder({
+        const res = await orderService.conformOrderRoot({
           orderCode: id,
           paymentType: selectedMethod,
         });

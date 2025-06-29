@@ -12,7 +12,7 @@ export const orderService = {
     });
   },
 
-  conformOrder: ({ orderCode, paymentType }) => {
+  conformOrderRoot: ({ orderCode, paymentType }) => {
     return https.put(`/order-service/api/v1/orders/${orderCode}/confirm`, null, {
       params: {
         paymentType: paymentType,
