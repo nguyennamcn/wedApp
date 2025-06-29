@@ -51,7 +51,7 @@ const ProductLike = () => {
           marginLeft: "5%",
         }}
       >
-        Các sản phẩm khácJJ
+        Có thể bạn cũng thích
       </h3>
 
       {/* Nút điều hướng bên trái */}

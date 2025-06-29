@@ -16,7 +16,7 @@ export default function DetailProduct() {
   const { addToCart } = useCart();
 
   const [startIndex, setStartIndex] = useState(0);
-  const maxThumbnails = 5;
+  const maxThumbnails = 6;
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -53,7 +53,7 @@ export default function DetailProduct() {
       size: variant.size,
       variantId: variant.id,
       shopId: product.shopId || "unknown",
-      version: variant.version
+      version: variant.version,
     };
     addToCart(cartProduct);
     setTimeout(() => {
@@ -66,11 +66,15 @@ export default function DetailProduct() {
     appService
       .getDetailProduct(id)
       .then((res) => {
-        console.log(res.data.metadata);
-        setProduct(res.data.metadata);
-        if (res.data.images && res.data.images.length > 0) {
-          setSelectedImage(res.data.images[0]); // ảnh đầu tiên là ảnh chính
+        const data = res.data.metadata;
+        console.log(data);
+        setProduct(data);
+
+        // Đặt ảnh đầu tiên làm ảnh chính
+        if (data.productImageUrl && data.productImageUrl.length > 0) {
+          setSelectedImage(data.productImageUrl[0]);
         }
+
         setLoading(false);
       })
       .catch((err) => {
@@ -78,6 +82,12 @@ export default function DetailProduct() {
         setLoading(false);
       });
   }, [id]);
+
+  const conditionMap = {
+    NEW: "Rất tốt",
+    used: "Đã qua sử dụng",
+    refurbished: "Tân trang",
+  };
 
   if (loading) return <p>Đang tải...</p>;
   if (!product) return <p>Không tìm thấy sản phẩm.</p>;
@@ -104,13 +114,6 @@ export default function DetailProduct() {
           {/* Images */}
           <div className="image-section">
             <div className="thumbnail-grid">
-              {product.productImageUrl &&
-                product.productImageUrl.length > maxThumbnails && (
-                  <button className="scroll-btn up" onClick={handlePrev}>
-                    ↑
-                  </button>
-                )}
-
               {(product.productImageUrl || [])
                 .slice(startIndex, startIndex + maxThumbnails)
                 .map((img, idx) => (
@@ -123,13 +126,6 @@ export default function DetailProduct() {
                     />
                   </div>
                 ))}
-
-              {product.productImageUrl &&
-                product.productImageUrl.length > maxThumbnails && (
-                  <button className="scroll-btn down" onClick={handleNext}>
-                    ↓
-                  </button>
-                )}
             </div>
 
             <img
@@ -147,8 +143,10 @@ export default function DetailProduct() {
               <span style={{ fontSize: "14px", fontWeight: "bold" }}>
                 Tình trạng:
               </span>
-              <span className="badge">
-                {product.productVariants[0].condition || "Chưa rõ"}
+              <span style={{
+                marginLeft: 10
+              }} className="badge">
+               {conditionMap[product.productVariants[0].condition] || "Chưa rõ"}
               </span>
               <p className="stock">
                 {product.productVariants[0].quantity > 0
@@ -157,16 +155,22 @@ export default function DetailProduct() {
               </p>
             </div>
             <p className="price" style={{ color: "black", marginLeft: "5%" }}>
-              Giá:{" "}
+              Giá bán lại:{" "}
               <span className="price">
                 {product.productVariants[0].resalePrice} Đ
               </span>
             </p>
-            <p className="detail-text">
-              📍 {product.location || "Không rõ địa chỉ"}
+            <p className="price" style={{ color: "black", marginLeft: "5%", fontSize: 14, fontWeight: 400, opacity: 0.4 }}>
+              Giá mua gốc:{" "}
+              <span>
+                {product.productVariants[0].originalPrice} Đ
+              </span>
             </p>
             <p className="detail-text">
-              📦 Cập nhật{" "}
+              {product.location || "Không rõ địa chỉ"}
+            </p>
+            <p className="detail-text">
+              Cập nhật : {" "}
               {product.updatedAt && product.updatedAt.substring
                 ? product.updatedAt.substring(0, 10)
                 : "N/A"}
@@ -178,13 +182,14 @@ export default function DetailProduct() {
             <p style={{ color: "black", fontSize: "14px", marginTop: "20px" }}>
               Vận chuyển & Trả hàng:
             </p>
-            <p style={{ fontSize: "13px", fontWeight: "400", color: "gray" }}>
-              Miễn phí vận chuyển cho đơn hàng từ 89.000 VND trở lên. Đổi/trả
-              hàng trong vòng 14 ngày để được hoàn tiền hoặc tín dụng mua sắm.
+            <p style={{ fontSize: "13px", fontWeight: "400", color: "gray", paddingRight: '50%' }}>
+              Miễn phí vận chuyển cho đơn hàng từ 89.000 VND trở lên. Đổi/trả hàng trong vòng 14 ngày để được hoàn tiền hoặc nhận tín dụng mua sắm. Có thể áp dụng phí đổi trả. 
             </p>
 
             <div className="action-buttons">
-              <button className="btn" onClick={handleAddToCart}>THÊM VÀO GIỎ</button>
+              <button className="btn" onClick={handleAddToCart}>
+                THÊM VÀO GIỎ
+              </button>
               <button className="btn buy">MUA NGAY</button>
             </div>
 
@@ -201,9 +206,11 @@ export default function DetailProduct() {
 
         {/* Seller Info (có thể sửa tiếp khi có dữ liệu shop) */}
         <div
-          style={{ display: "flex", justifyContent: "center", marginTop: "5%" }}
+          style={{ display: "flex",  marginTop: "5%" , alignItems: 'center', gap: 30}}
         >
-          <div className="seller-info">
+          <div style={{
+            width: '30%'
+          }} className="seller-info">
             <img
               src={product.productImageUrl[0]}
               className="avatar"
@@ -222,21 +229,86 @@ export default function DetailProduct() {
               </div>
             </div>
           </div>
+          <div style={{
+            width: '15%'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%'
+            }}>
+              <p style={{
+                color: 'black'
+              }}>Đánh giá</p>
+              <p style={{
+                color: '#6EB566'
+              }}>114,4k</p>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%'
+            }}>
+              <p style={{
+                color: 'black'
+              }}>Sản phẩm</p>
+              <p style={{
+                color: '#6EB566'
+              }}>114,4k</p>
+            </div>
+          </div>
+          <div style={{
+            width: '15%'
+          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%'
+            }}>
+              <p style={{
+                color: 'black'
+              }}>Tỉ lệ phản hồi</p>
+              <p style={{
+                color: '#6EB566'
+              }}>114,4k</p>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              width: '100%'
+            }}>
+              <p style={{
+                color: 'black'
+              }}>Người theo dõi</p>
+              <p style={{
+                color: '#6EB566'
+              }}>114,4k</p>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Product Details */}
       <div className="product-details">
-        <h2 className="section-title">CHI TIẾT SẢN PHẨM</h2>
-        <p className="section-content">
+        <h2 style={{
+          padding: '2% 5%'
+        }} className="section-title">CHI TIẾT SẢN PHẨM</h2>
+        <p style={{
+          background: 'white',
+          color: 'black',
+          padding: '2% 5%'
+        }} className="section-content">
           {product.description || "Không có mô tả."}
         </p>
 
-        <h3 className="section-title">THÔNG SỐ CHI TIẾT</h3>
+        <h3 style={{
+          color: 'black',
+          padding: '1% 5%'
+        }} className="section-title">THÔNG SỐ CHI TIẾT</h3>
         <div className="specs">
           <div className="spec-row">
             <span className="spec-label">Tình trạng:</span>
-            <span>{product.condition}</span>
+            <span>{conditionMap[product.condition] || "Không rõ"}</span>
           </div>
           <div className="spec-row">
             <span className="spec-label">Loại sản phẩm:</span>
@@ -252,9 +324,14 @@ export default function DetailProduct() {
         <ProductLike />
       </div>
       <div style={{ textAlign: "center" }}>
-        <button style={{
-          border: 'none'
-        }} className="see-more-btn">Xem thêm</button>
+        <button
+          style={{
+            border: "none",
+          }}
+          className="see-more-btn"
+        >
+          Xem thêm
+        </button>
       </div>
     </div>
   );

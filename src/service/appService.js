@@ -123,4 +123,13 @@ export const appService = {
       },
     });
   },
+// admin order
+  getAllOrderAD: () => {
+    return https.get(`/order-service/api/v1/dashboard/admin/order-stats`);
+  },
+
+  getAllSellerAD: () => {
+    return https.get(`/store-service/api/v1/dashboard/admin/stats`);
+  },
+  
 };

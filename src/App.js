@@ -27,6 +27,7 @@ import LayoutCart from "./Layout/LayoutCart";
 import LayoutPayment from "./Layout/LayoutPayment";
 import TestPage from "./Page/TestPage/TestPage";
 import ChatPage from "./Page/ChatBox/ChatPage";
+import LayoutChat from "./Layout/LayoutChat";
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -130,7 +131,7 @@ function App() {
           <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
           <Route path="/2" element={<ChatTest />} />
-          <Route path="/chatbox" element={<Layout Component={ChatPage} />} />
+          <Route path="/chatbox" element={<LayoutChat Component={ChatPage} />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/seller" element={<Layout Component={SellerPage} />} />
           <Route path="/admin-page" element={<Navigate to="/admin-page/dashboard" replace />} />
