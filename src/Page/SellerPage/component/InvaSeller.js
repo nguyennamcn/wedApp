@@ -4,7 +4,7 @@ import { Modal } from "antd";
 
 const TABS = [
   { label: "Tất cả", status: "" },
-  { label: "Chờ xác nhận", status: "WAITING_CONFIRMATION" },
+  { label: "Chờ xác nhận", status: "PENDING" },
   { label: "Chờ lấy hàng", status: "WAITING_PICKUP" },
   { label: "Đang giao", status: "DELIVERING" },
   { label: "Đã giao", status: "DELIVERED" },
@@ -15,8 +15,9 @@ export default function InvaSeller() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState("");
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1); // bắt đầu từ 1
   const pageSize = 6;
+  const [totalPages, setTotalPages] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orderDetail, setOrderDetail] = useState(null);
   const [detailVisible, setDetailVisible] = useState(false);
@@ -26,12 +27,14 @@ export default function InvaSeller() {
       setLoading(true);
       try {
         const criteria = {
-          currentPage,
+          currentPage: currentPage, // vì backend đếm từ 0
           pageSize,
           ...(statusFilter && { orderStatus: statusFilter }),
         };
+        console.log(criteria)
         const res = await orderService.getAllOrder(criteria);
         setOrders(res.data.metadata.metadata || []);
+        setTotalPages(res.data.metadata.maxPage || 1);
       } catch (error) {
         console.error("Lỗi lấy danh sách đơn hàng:", error);
       } finally {
@@ -44,6 +47,7 @@ export default function InvaSeller() {
   const handleViewDetail = async (orderCode) => {
     try {
       const res = await orderService.getOrderDetail(orderCode);
+      console.log(res)
       setOrderDetail(res.data.metadata);
       setSelectedOrder(orderCode);
       setDetailVisible(true);
@@ -55,21 +59,21 @@ export default function InvaSeller() {
   const handleConform = async (orderCode) => {
     try {
       const res = await orderService.conformOrder(orderCode);
-      console.log("Xác nhận đơn hàng thành công:", res.data);
       Modal.success({
         title: "Đã xác nhận đơn hàng",
         content: `Đơn hàng ${orderCode} đã được xác nhận thành công.`,
       });
       setDetailVisible(false);
 
-      // Sau khi xác nhận, cập nhật lại danh sách
+      // Reload đơn hàng
       const criteria = {
-        currentPage,
+        currentPage: currentPage - 1,
         pageSize,
         ...(statusFilter && { orderStatus: statusFilter }),
       };
       const updated = await orderService.getAllOrder(criteria);
       setOrders(updated.data.metadata.metadata || []);
+      setTotalPages(updated.data.metadata.maxPage || 1);
     } catch (err) {
       console.error("Lỗi khi xác nhận đơn hàng:", err);
       Modal.error({
@@ -82,7 +86,9 @@ export default function InvaSeller() {
   const conditionMap = {
     PENDING: "Chờ xác nhận",
     SHOP_CONFIRMED: "Đã xác nhận",
-    refurbished: "Tân trang",
+    DELIVERING: "Đang giao",
+    DELIVERED: "Đã giao",
+    CANCELLED: "Đã hủy",
   };
 
   return (
@@ -96,7 +102,7 @@ export default function InvaSeller() {
             key={index}
             onClick={() => {
               setStatusFilter(tab.status);
-              setCurrentPage(0);
+              setCurrentPage(1); // reset về page 1 khi chọn tab
             }}
             style={{
               padding: "8px 16px",
@@ -117,25 +123,6 @@ export default function InvaSeller() {
         ))}
       </div>
 
-      {/* Action bar */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 12,
-          alignItems: "center",
-        }}
-      >
-        <div>
-          <button style={buttonStyle}>📂 Bộ lọc</button>
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <button style={buttonStyle}>⇅ Sắp xếp theo</button>
-          <button style={buttonStyle}>⎘ Xuất</button>
-          <button style={buttonStyle}>⋯</button>
-        </div>
-      </div>
-
       {/* Table */}
       <table
         style={{
@@ -152,10 +139,10 @@ export default function InvaSeller() {
             </th>
             <th style={thStyle}>Đơn hàng</th>
             <th style={thStyle}>Khách hàng</th>
-            <th style={thStyle}>tiền hàng</th>
-            <th style={thStyle}>Trạng thái đơn hàng</th>
-            <th style={thStyle}>Phương thức vận chuyển</th>
-            <th style={thStyle}>Cách giao hàng</th>
+            <th style={thStyle}>Tiền hàng</th>
+            <th style={thStyle}>Trạng thái</th>
+            <th style={thStyle}>Vận chuyển</th>
+            <th style={thStyle}>Giao hàng</th>
           </tr>
         </thead>
         <tbody>
@@ -177,10 +164,11 @@ export default function InvaSeller() {
                 >
                   #{order.orderCode}
                 </td>
-
                 <td style={tdStyle}>{order.customerName}</td>
-                <td style={tdStyle}>{order.price}Đ</td>
-                <td style={tdStyle}>{conditionMap[order.status] || "Không rõ"}</td>
+                <td style={tdStyle}>{order.price.toLocaleString()}₫</td>
+                <td style={tdStyle}>
+                  {conditionMap[order.status] || "Không rõ"}
+                </td>
                 <td style={tdStyle}>GHN</td>
                 <td style={tdStyle}>Lấy tại kho</td>
               </tr>
@@ -198,22 +186,38 @@ export default function InvaSeller() {
           gap: 6,
         }}
       >
-        {[0, 1, 2, 3, 4].map((page) => (
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          style={pageButtonStyle}
+        >
+          «
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
             style={{
-              padding: "6px 12px",
+              ...pageButtonStyle,
               backgroundColor: currentPage === page ? "green" : "white",
               color: currentPage === page ? "white" : "black",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
               fontWeight: currentPage === page ? "bold" : "normal",
             }}
           >
-            {page + 1}
+            {page}
           </button>
         ))}
+
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          style={pageButtonStyle}
+        >
+          »
+        </button>
       </div>
 
       <p
@@ -226,6 +230,9 @@ export default function InvaSeller() {
       >
         Chỉ hiển thị đơn hàng trong 12 tháng qua
       </p>
+
+      {/* Modal hiển thị chi tiết đơn hàng (giữ nguyên như bạn đã làm) */}
+      {/* Bạn có thể copy phần modal chi tiết từ code trước để tránh trùng lặp quá dài ở đây */}
       <Modal
         title={
           <span style={{ fontSize: 18, fontWeight: "bold" }}>
@@ -392,6 +399,13 @@ const buttonStyle = {
   background: "#f0f0f0",
   border: "1px solid #ddd",
   borderRadius: 4,
+  cursor: "pointer",
+};
+
+const pageButtonStyle = {
+  padding: "6px 12px",
+  border: "1px solid #ccc",
+  borderRadius: "4px",
   cursor: "pointer",
 };
 
