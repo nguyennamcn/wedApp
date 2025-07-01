@@ -30,7 +30,7 @@ export default function ChatPage() {
 
     try {
       const res = await axios.post(
-        "http://ddns.truong51972.id.vn/api/ai_agent",
+        "https://e_commerce_ai_dev.truong51972.id.vn/api/ai_agent",
         {
           session_id: sessionId,
           user_id: "2",
