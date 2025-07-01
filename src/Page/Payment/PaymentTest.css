@@ -4,7 +4,7 @@
   font-family: Arial, sans-serif;
 }
 
-.payment-container {
+.payment-container2 {
   display: grid;
   grid-template-columns: 2fr 1.2fr;
   gap: 30px;

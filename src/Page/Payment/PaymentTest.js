@@ -301,7 +301,7 @@ export default function PaymentTest() {
   };
   return (
     <div className="payment-page">
-      <div className="payment-container">
+      <div className="payment-container2">
         {/* Thông tin đơn hàng */}
         <div className="form-section">
           <h2>Thông tin đơn hàng</h2>
