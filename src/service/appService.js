@@ -132,4 +132,9 @@ export const appService = {
     return https.get(`/store-service/api/v1/dashboard/admin/stats`);
   },
   
+// payment momo
+  CreatePayment: (orderId) => {
+    console.log({orderId})
+    return https.post(`/order-service/api/v1/momo`, { orderId });
+  },
 };
