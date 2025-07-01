@@ -85,13 +85,7 @@ export default function InfoUser() {
           <span className="font-xmark">xmark</span>
           {(dt || ip) && (
             <div className="header-right">
-              <div className="language">
-                <FaGlobe className="icon iconglo" />
-                <span>VI - Vietnamese</span>
-              </div>
-              <div className="cart">
-                <FaShoppingCart className="icon cart-icon" />
-              </div>
+            
               <button onClick={onClick} className="menu-button">
                 Tới trang mua sắm
               </button>

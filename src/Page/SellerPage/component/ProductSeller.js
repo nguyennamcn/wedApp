@@ -8,7 +8,7 @@ import {
   Select,
   Switch,
 } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BiSolidLeftArrow } from "react-icons/bi";
 import { ImNotification } from "react-icons/im";
 import { LiaSave } from "react-icons/lia";
@@ -16,8 +16,12 @@ import { Upload, Typography, Row, Col } from "antd";
 import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { IoWarningOutline } from "react-icons/io5";
 import "./mainSel.css";
-import ProductPriceForm from "./ProductPriceForm";
 import SizeChartSelector from "./SizeChartSelector";
+import { localUserService } from "../../../service/localService";
+import { appService } from "../../../service/appService";
+import axios from "axios";
+import { BASE_URL } from "../../../service/config";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
@@ -41,6 +45,26 @@ export default function ProductSeller() {
   const [condition, setCondition] = useState();
   const [unit, setUnit] = useState("g");
   const [codEnabled, setCodEnabled] = useState(true);
+  const [savedImages, setSavedImages] = useState([]);
+  const [cate, setCate] = useState([]);
+  const [brand, setBrand] = useState([]);
+  const { Option, OptGroup } = Select;
+  const [subCate, setSubCate] = useState([]);
+  const [selectedCate, setSelectedCate] = useState(null);
+  const [name, setName] = useState();
+  const [category, setCategory] = useState(null);
+  const [subCategory, setSubCategory] = useState(null);
+  const [brandId, setBrandId] = useState(null);
+  const [originalPrice, setOriginalPrice] = useState("");
+  const [retailPrice, setRetailPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [sizeChartData, setSizeChartData] = useState(null);
+  const [ad1, setAd1] = useState();
+  const [ad2, setAd2] = useState();
+  const [ad3, setAd3] = useState();
+  const [isUploading, setIsUploading] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (key, { fileList }) => {
     const isImage = fileList.every((file) =>
       ["image/jpeg", "image/png", "image/jpg"].includes(file.type)
@@ -50,37 +74,163 @@ export default function ProductSeller() {
       return;
     }
 
-    setFileListMap((prev) => ({
-      ...prev,
-      [key]: fileList.slice(-1), // giữ lại ảnh mới nhất (1 ảnh mỗi ô)
-    }));
+    setFileListMap((prev) => {
+      const newState = {
+        ...prev,
+        [key]: fileList.slice(-1), 
+      };
+      return newState;
+    });
   };
 
-  const hkdStep1 = (values) => {
-    if (step < 5) {
-      setStep(2);
+  console.log(fileListMap);
+
+  const handleParentChange = async (value) => {
+    setSelectedCate(value);
+    console.log(value);
+    try {
+      const res = await appService.getSubCate(value);
+      console.log(res);
+      setSubCate(res.data.metadata); 
+    } catch (error) {
+      console.error("Lỗi lấy danh mục con:", error);
     }
   };
 
-  const hkdStep2 = (values) => {
+  const deepFlatten = (arr) =>
+    arr.reduce(
+      (acc, val) =>
+        Array.isArray(val) ? acc.concat(deepFlatten(val)) : acc.concat(val),
+      []
+    );
+
+  const hkdStep1 = () => {
+    const allFileWrappersNested = Object.values(fileListMap);
+
+    const flatFileWrappers = deepFlatten(allFileWrappersNested);
+
+    const images = flatFileWrappers
+      .map((fileWrapper) => fileWrapper.originFileObj)
+      .filter(Boolean);
+
+    if (images.length < 5) {
+      message.warning("Vui lòng tải lên ít nhất 5 ảnh.");
+      return;
+    }
+
+    setSavedImages(images);
+
+    setStep(2);
+  };
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const res = await appService.getAllBrand();
+        setBrand(res?.data?.metadata);
+      } catch (err) {
+        console.error("Lỗi khi lấy danh sách brand:", err);
+      }
+    };
+
+    fetchBrands();
+  }, []);
+
+  useEffect(() => {
+    const fetchCates = async () => {
+      try {
+        const res = await appService.getAllCate();
+        setCate(res?.data?.metadata);
+      } catch (err) {
+        console.error("Lỗi khi lấy danh sách brand:", err);
+      }
+    };
+
+    fetchCates();
+  }, []);
+
+  const hkdStep2 = () => {
     if (step < 5) {
       setStep(3);
     }
   };
 
-  const hkdStep3 = (values) => {
+  const hkdStep3 = () => {
     if (step < 5) {
-      setStep(4);
+      setStep(4); 
     }
   };
 
+  const hkdStep4 = async () => {
+    const data = {
+      name: name || "",
+      description: "",
+      story: "",
+      saleStatus: "SELLING",
+      origin: "vai",
+      productDetails: {
+        additionalProp1: ad1 || "",
+        additionalProp2: ad2 || "",
+        additionalProp3: ad3 || "",
+      },
+      brandId: Number(brandId) || 0,
+      subcategory: Number(subCategory) || 0,
+      requestType: "CREATE",
+      variantRequestList: [
+        {
+          productSize: sizeChartData || "",
+          quantity: Number(quantity) || 0,
+          originalPrice: Number(originalPrice) || 0,
+          resalePrice: Number(retailPrice) || 0,
+          productCondition: "NEW",
+        },
+      ],
+    };
+
+    try {
+      const res = await appService.postProduct(data);
+      const productId = res?.data?.metadata;
+
+      if (!productId) {
+        message.error("Không thể lấy ID sản phẩm từ phản hồi.");
+        return;
+      }
+
+      console.log("✅ Đã tạo sản phẩm, ID:", productId);
+
+      const formData = new FormData();
+
+      savedImages.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      setIsUploading(true);
+
+      const response = await axios.post(
+        `${BASE_URL}/product-service/api/v1/products/${productId}/upload_images`,
+        formData,
+        {
+          params: { id: productId },
+          headers: {
+            Authorization: `Bearer ${localUserService.getAccessToken()}`, 
+          },
+        }
+      );
+
+      console.log(response);
+      navigate("/seller-page/product");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsUploading(false); 
+    }
+  };
+
+
+  console.log(localUserService.getAccessToken())
   const ProductCondition = ({ value, onChange }) => {
     return (
-      <div
-        style={{
-          width: "100%",
-        }}
-      >
+      <div style={{ width: "100%" }}>
         <Radio.Group
           value={value}
           onChange={(e) => onChange(e.target.value)}
@@ -90,24 +240,28 @@ export default function ProductSeller() {
             justifyContent: "space-around",
           }}
         >
-          {options.map((option) => (
-            <Radio.Button
-              key={option}
-              value={option}
-              style={{
-                marginRight: 8,
-                borderRadius: 6,
-                border: "1px solid #ccc",
-                color: "#389e0d",
-                fontWeight: "bold",
-                width: "10%",
-                textAlign: "center",
-                fontSize: "16px",
-              }}
-            >
-              {option}
-            </Radio.Button>
-          ))}
+          {options.map((option) => {
+            const isSelected = value === option;
+            return (
+              <Radio.Button
+                key={option}
+                value={option}
+                style={{
+                  marginRight: 8,
+                  borderRadius: 6,
+                  border: isSelected ? "2px solid #52c41a" : "1px solid #ccc",
+                  color: isSelected ? "white" : "#389e0d",
+                  fontWeight: "bold",
+                  backgroundColor: isSelected ? "#52c41a" : "white",
+                  width: "10%",
+                  textAlign: "center",
+                  fontSize: "16px",
+                }}
+              >
+                {option}
+              </Radio.Button>
+            );
+          })}
         </Radio.Group>
       </div>
     );
@@ -352,7 +506,7 @@ export default function ProductSeller() {
                   {/* Các ảnh phụ */}
                   <div
                     style={{
-                      width: "40%",
+                      width: "45%",
                       display: "flex",
                       alignItems: "center",
                     }}
@@ -501,59 +655,80 @@ export default function ProductSeller() {
                 <Title level={3} style={{ textAlign: "center" }}>
                   Thông tin cơ bản
                 </Title>
+
+                {/* Tên sản phẩm */}
                 <Text strong>* Tên sản phẩm</Text>
                 <br />
-                <Text
-                  style={{
-                    opacity: "0.6",
-                  }}
-                >
+                <Text style={{ opacity: "0.6" }}>
                   Độ dài đề xuất: 40 ký tự trở lên. Hạng mục sẽ được tự động xác
                   định theo tên sản phẩm.
                 </Text>
                 <Input
-                  style={{
-                    margin: "1% 0",
-                  }}
+                  style={{ margin: "1% 0" }}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="[Thương hiệu] + [Nội dung] + [Phạm vi áp dụng] + [Loại sản phẩm] + [Chức năng / Tính năng]"
                 />
+
+                {/* Danh mục cha */}
                 <Text strong>* Hạng mục</Text>
                 <br />
-                <Text
-                  style={{
-                    opacity: "0.6",
-                  }}
-                >
+                <Text style={{ opacity: "0.6" }}>
                   Các bài niêm yết sản phẩm bị chia sai danh mục, bị cấm hoặc bị
                   hạn chế có thể sẽ bị xóa.
-                </Text>{" "}
-                <br />
+                </Text>
                 <Select
-                  style={{
-                    width: "100%",
-                    margin: "1% 0 0 0",
-                  }}
+                  style={{ width: "100%", margin: "1% 0 0 0" }}
                   showSearch
-                  placeholder="Select a person"
-                  filterOption={(input, option) => {
-                    var _a;
-                    return (
-                      (_a =
-                        option === null || option === void 0
-                          ? void 0
-                          : option.label) !== null && _a !== void 0
-                        ? _a
-                        : ""
-                    )
-                      .toLowerCase()
-                      .includes(input.toLowerCase());
+                  placeholder="Chọn danh mục"
+                  value={category}
+                  onChange={(value) => {
+                    setCategory(value);
+                    setSubCategory(null); // reset danh mục con khi đổi danh mục cha
+                    handleParentChange(value);
                   }}
-                  options={[
-                    { value: "1", label: "Jack" },
-                    { value: "2", label: "Lucy" },
-                    { value: "3", label: "Tom" },
-                  ]}
-                />
+                  optionLabelProp="label"
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
+                      .toLowerCase()
+                      .includes(input.toLowerCase())
+                  }
+                >
+                  {cate.map((parent) => (
+                    <OptGroup key={parent.id} label={parent.name}>
+                      {parent.children.map((child) => (
+                        <Option
+                          key={child.id}
+                          value={child.id}
+                          label={child.name}
+                        >
+                          {child.name}
+                        </Option>
+                      ))}
+                    </OptGroup>
+                  ))}
+                </Select>
+
+                {/* Danh mục con */}
+                <Select
+                  style={{ width: "100%", marginTop: "2%" }}
+                  placeholder={
+                    category
+                      ? "Chọn danh mục con"
+                      : "Vui lòng chọn danh mục cha trước"
+                  }
+                  value={subCategory}
+                  onChange={(value) => setSubCategory(value)}
+                  disabled={!category}
+                >
+                  {subCate.map((item) => (
+                    <Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Option>
+                  ))}
+                </Select>
+
+                {/* Thông báo */}
                 <div
                   style={{
                     width: "100%",
@@ -562,10 +737,9 @@ export default function ProductSeller() {
                     alignItems: "center",
                     borderRadius: "5px",
                     boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-                    marginBottom: "2%",
+                    margin: "2% 0",
                     height: "5vh",
                     overflow: "hidden",
-                    margin: "2% 0",
                   }}
                 >
                   <span
@@ -576,11 +750,7 @@ export default function ProductSeller() {
                       marginRight: "10px",
                     }}
                   ></span>
-                  <ImNotification
-                    style={{
-                      color: "#6EB566",
-                    }}
-                  />
+                  <ImNotification style={{ color: "#6EB566" }} />
                   <span
                     style={{
                       fontSize: "14px",
@@ -592,43 +762,29 @@ export default function ProductSeller() {
                     cấp 1&2&3 không
                   </span>
                 </div>
+
+                {/* Thương hiệu */}
                 <Text strong>* Thương hiệu</Text>
                 <br />
-                <Text
-                  style={{
-                    opacity: "0.6",
-                  }}
-                >
+                <Text style={{ opacity: "0.6" }}>
                   Các bài niêm yết sản phẩm bị chia sai danh mục, bị cấm hoặc bị
                   hạn chế có thể sẽ bị xóa.
-                </Text>{" "}
-                <br />
+                </Text>
                 <Select
-                  style={{
-                    width: "100%",
-                    margin: "1% 0 0 0",
-                  }}
+                  style={{ width: "100%", margin: "1% 0 0 0" }}
                   showSearch
-                  placeholder="Select a person"
-                  filterOption={(input, option) => {
-                    var _a;
-                    return (
-                      (_a =
-                        option === null || option === void 0
-                          ? void 0
-                          : option.label) !== null && _a !== void 0
-                        ? _a
-                        : ""
-                    )
+                  placeholder="Chọn thương hiệu"
+                  value={brandId}
+                  onChange={(value) => setBrandId(value)}
+                  filterOption={(input, option) =>
+                    (option?.label ?? "")
                       .toLowerCase()
-                      .includes(input.toLowerCase());
-                  }}
-                  options={[
-                    { value: "1", label: "Jack" },
-                    { value: "2", label: "Lucy" },
-                    { value: "3", label: "Tom" },
-                  ]}
+                      .includes(input.toLowerCase())
+                  }
+                  options={brand.map((b) => ({ value: b.id, label: b.name }))}
                 />
+
+                {/* Thông báo lặp lại */}
                 <div
                   style={{
                     width: "100%",
@@ -637,10 +793,9 @@ export default function ProductSeller() {
                     alignItems: "center",
                     borderRadius: "5px",
                     boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-                    marginBottom: "2%",
+                    margin: "2% 0",
                     height: "5vh",
                     overflow: "hidden",
-                    margin: "2% 0",
                   }}
                 >
                   <span
@@ -651,11 +806,7 @@ export default function ProductSeller() {
                       marginRight: "10px",
                     }}
                   ></span>
-                  <ImNotification
-                    style={{
-                      color: "#6EB566",
-                    }}
-                  />
+                  <ImNotification style={{ color: "#6EB566" }} />
                   <span
                     style={{
                       fontSize: "14px",
@@ -667,19 +818,15 @@ export default function ProductSeller() {
                     cấp 1&2&3 không
                   </span>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    marginTop: "5%",
-                  }}
-                >
+
+                {/* Nút điều hướng */}
+                <div style={{ display: "flex", marginTop: "5%" }}>
                   <div style={{ width: "80%", textAlign: "left" }}>
                     <Button
                       onClick={handlePrev}
                       style={{
                         background: "none",
                         color: "black",
-                        outline: "none",
                         border: "none",
                       }}
                     >
@@ -687,14 +834,7 @@ export default function ProductSeller() {
                     </Button>
                   </div>
                   <div style={{ width: "10%" }}>
-                    <Button
-                      style={{
-                        outline: "none",
-                        border: "none",
-                      }}
-                    >
-                      Hủy bỏ
-                    </Button>
+                    <Button style={{ border: "none" }}>Hủy bỏ</Button>
                   </div>
                   <div style={{ width: "10%", textAlign: "right" }}>
                     <Button
@@ -702,7 +842,7 @@ export default function ProductSeller() {
                       style={{
                         background: "#6EB566",
                         color: "white",
-                        outline: "none",
+                        border: "none",
                       }}
                       htmlType="submit"
                     >
@@ -809,9 +949,79 @@ export default function ProductSeller() {
                 </Text>{" "}
                 <br />
                 <Text>* Giá và hàng có sẵn</Text>
-                <ProductPriceForm />
+                <Form
+                  style={{
+                    border: "1px solid black",
+                    borderRadius: "10px",
+                    padding: "2% 1%",
+                    margin: "2% 0",
+                  }}
+                  layout="vertical"
+                >
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <Form.Item
+                        label={<Text strong>* Giá gốc</Text>}
+                        name="originalPrice"
+                        rules={[
+                          { required: true, message: "Vui lòng nhập giá gốc" },
+                        ]}
+                      >
+                        <Input
+                          prefix="đ"
+                          placeholder="Giá gốc"
+                          value={originalPrice}
+                          onChange={(e) => setOriginalPrice(e.target.value)}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item
+                        label={<Text strong>* Giá bán lẻ</Text>}
+                        name="retailPrice"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Vui lòng nhập giá bán lẻ",
+                          },
+                        ]}
+                      >
+                        <Input
+                          prefix="đ"
+                          placeholder="Giá bán lẻ"
+                          value={retailPrice}
+                          onChange={(e) => setRetailPrice(e.target.value)}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item
+                        label={<Text strong>* Số lượng</Text>}
+                        name="quantity"
+                        rules={[
+                          { required: true, message: "Vui lòng nhập số lượng" },
+                        ]}
+                      >
+                        <Input
+                          placeholder="Số lượng"
+                          type="number"
+                          value={quantity}
+                          onChange={(e) => setQuantity(e.target.value)}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form>
                 <Text>* Bảng kích cỡ</Text>
-                <SizeChartSelector />
+                <SizeChartSelector
+                  onChange={(data) => {
+                    setSizeChartData(data.customTemplateString);
+                    console.log(
+                      "Dữ liệu từ form chính:",
+                      data.customTemplateString
+                    );
+                  }}
+                />
                 <div
                   style={{
                     display: "flex",
@@ -898,17 +1108,32 @@ export default function ProductSeller() {
                     <Row gutter={16} style={{ marginTop: 8 }}>
                       <Col span={8}>
                         <Form.Item name="height">
-                          <Input suffix="cm" placeholder="Chiều cao" />
+                          <Input
+                            suffix="cm"
+                            placeholder="Chiều cao"
+                            value={ad1}
+                            onChange={(e) => setAd1(e.target.value)}
+                          />
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item name="width">
-                          <Input suffix="cm" placeholder="Chiều rộng" />
+                          <Input
+                            suffix="cm"
+                            placeholder="Chiều rộng"
+                            value={ad2}
+                            onChange={(e) => setAd2(e.target.value)}
+                          />
                         </Form.Item>
                       </Col>
                       <Col span={8}>
                         <Form.Item name="length">
-                          <Input suffix="cm" placeholder="Chiều dài" />
+                          <Input
+                            suffix="cm"
+                            placeholder="Chiều dài"
+                            value={ad3}
+                            onChange={(e) => setAd3(e.target.value)}
+                          />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -965,7 +1190,8 @@ export default function ProductSeller() {
                     </div>
                     <div style={{ width: "10%", textAlign: "right" }}>
                       <Button
-                        onClick={hkdStep3}
+                        onClick={hkdStep4}
+                        loading={isUploading}
                         style={{
                           background: "#6EB566",
                           color: "white",
@@ -973,7 +1199,7 @@ export default function ProductSeller() {
                         }}
                         htmlType="submit"
                       >
-                        Gửi xét duyệt
+                        {isUploading ? "Đang gửi..." : "Gửi xét duyệt"}
                       </Button>
                     </div>
                   </div>

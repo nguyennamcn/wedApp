@@ -73,13 +73,14 @@ export default function HeaderAdmin() {
           width: "100%",
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           transition: "all 0.3s ease-in-out",
-          padding: "0px 10%",
+          padding: "0px 1%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
           height: '10vh',
           position: "fixed",
           top: "0",
+          zIndex: '1001'
         }}
       >
         <div

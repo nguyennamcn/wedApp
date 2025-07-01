@@ -8,6 +8,7 @@ import axios from "axios";
 import { BASE_URL } from "../../service/config";
 import { FaCheckCircle } from "react-icons/fa";
 import { appService } from "../../service/appService";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterSeller() {
   const [step, setStep] = useState(1);
@@ -22,11 +23,14 @@ export default function RegisterSeller() {
   const [category, setCategory] = useState(null);
   const [isModalAdd2, setIsModalAdd2] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const navigate = useNavigate();
 
   const onChange = (e) => {
     setBusinessType(e.target.value); // Chỉ chọn một loại hình kinh doanh
     setStep(1);
   };
+
+  console.log(localUserService.getAccessToken());
 
   const handleStep1 = (values) => {
     setShopName(values.shopName);
@@ -125,13 +129,11 @@ export default function RegisterSeller() {
           },
         }
       );
-      alert("Tải ảnh CCCD thành công!");
       setEnd(true);
       setFrontFile(null);
       setBackFile(null);
     } catch (err) {
       console.error(err);
-      alert("Có lỗi xảy ra, vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -720,6 +722,7 @@ export default function RegisterSeller() {
                   giờ để duyệt
                 </p>
                 <button
+                  onClick={() => navigate("/seller-page")}
                   style={{
                     padding: "2% 10%",
                     background: "#6EB566",
@@ -1170,6 +1173,7 @@ export default function RegisterSeller() {
                   giờ để duyệt
                 </p>
                 <button
+                  onClick={() => navigate("/seller-page")}
                   style={{
                     padding: "2% 10%",
                     background: "#6EB566",

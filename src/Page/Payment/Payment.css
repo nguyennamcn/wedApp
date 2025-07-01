@@ -1,12 +1,6 @@
-.payment-container {
-  display: flex;
-  gap: 30px;
-  padding: 5%;
-  font-family: Arial, sans-serif;
-}
 
 .cart-section {
-  flex: 2;
+  width: 70%;
 }
 
 .select-all {
@@ -80,7 +74,6 @@
   border: 1px solid #ccc;
   padding: 20px;
   border-radius: 6px;
-  width: 30%;
 }
 
 .order-summary h3 {

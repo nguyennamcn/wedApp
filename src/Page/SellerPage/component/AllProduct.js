@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   Input,
@@ -9,83 +9,58 @@ import {
   Space,
   Pagination,
   Typography,
+  Spin,
+  Empty,
 } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { ImNotification } from "react-icons/im";
 import { useNavigate } from "react-router-dom";
+import { appService } from "../../../service/appService";
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
 
-const allProducts = [
-  {
-    key: "1",
-    name: "Quần Short Unisex Basic Thể Thao",
-    image: "https://via.placeholder.com/60",
-    sales: 5,
-    price: "39,000đ",
-    inventory: 3,
-    contentQuality: "Đạt chuẩn",
-    status: "active",
-  },
-  {
-    key: "2",
-    name: "Áo Polo Nam Trơn Nhiều Màu",
-    image: "https://via.placeholder.com/60",
-    sales: 0,
-    price: "129,000đ",
-    inventory: 5,
-    contentQuality: "Cần cải thiện",
-    status: "active",
-  },
-  {
-    key: "3",
-    name: "Túi Đeo Chéo Unisex Nhỏ Gọn",
-    image: "https://via.placeholder.com/60",
-    sales: 10,
-    price: "79,000đ",
-    inventory: 1,
-    contentQuality: "Thiếu nội dung",
-    status: "violations",
-  },
-  {
-    key: "4",
-    name: "Giày Sneaker Nam Nữ",
-    image: "https://via.placeholder.com/60",
-    sales: 2,
-    price: "299,000đ",
-    inventory: 2,
-    contentQuality: "Đạt chuẩn",
-    status: "unlisted",
-  },
-  {
-    key: "5",
-    name: "Balo Laptop Chống Nước",
-    image: "https://via.placeholder.com/60",
-    sales: 8,
-    price: "199,000đ",
-    inventory: 4,
-    contentQuality: "Cần cải thiện",
-    status: "active",
-  },
-];
-
 export default function AllProduct() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [tabKey, setTabKey] = useState("all");
   const [subTabKey, setSubTabKey] = useState("allSub");
   const [searchText, setSearchText] = useState("");
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+
   const navigate = useNavigate();
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const res = await appService.getOwnerProduct(page - 1, pageSize);
+      setProducts(res.data.metadata.metadata || []); // điều chỉnh nếu cấu trúc khác
+      setTotal(res.data.totalElements || 0);
+    } catch (err) {
+      console.error("Lỗi tải sản phẩm:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log(products)
+
+  useEffect(() => {
+    fetchProducts();
+  }, [page, pageSize]);
 
   const handleSearch = (value) => {
     setSearchText(value.toLowerCase());
   };
 
-  const handleThem = () =>{
-    navigate('/seller-page/addProduct')
-  }
+  const handleThem = () => {
+    navigate("/seller-page/addProduct");
+  };
 
   const filterProducts = () => {
-    let data = [...allProducts];
+    let data = [...products];
 
     if (tabKey !== "all") {
       data = data.filter((item) => item.status === tabKey);
@@ -113,7 +88,7 @@ export default function AllProduct() {
       key: "name",
       render: (text, record) => (
         <Space>
-          <img src={record.image} alt="product" width={40} />
+          <img src={record.imageUrl || "https://via.placeholder.com/60"} alt="product" width={40} />
           <span>{text}</span>
         </Space>
       ),
@@ -125,8 +100,8 @@ export default function AllProduct() {
     },
     {
       title: "Giá",
-      dataIndex: "price",
-      key: "price",
+      dataIndex: "resalePrice",
+      key: "resalePrice",
     },
     {
       title: "Kho hàng",
@@ -134,9 +109,9 @@ export default function AllProduct() {
       key: "inventory",
     },
     {
-      title: "Chất lượng nội dung",
-      dataIndex: "contentQuality",
-      key: "contentQuality",
+      title: "Chất lượng sản phẩm",
+      dataIndex: "productCondition",
+      key: "productCondition",
       render: (text) => {
         let color = "green";
         if (text === "Cần cải thiện") color = "orange";
@@ -152,11 +127,7 @@ export default function AllProduct() {
   ];
 
   return (
-    <div
-      style={{
-        padding: "2%",
-      }}
-    >
+    <div style={{ padding: "2%" }}>
       <div
         style={{
           width: "100%",
@@ -170,53 +141,33 @@ export default function AllProduct() {
           overflow: "hidden",
         }}
       >
-        <span
-          style={{
-            width: "5px",
-            height: "100%",
-            backgroundColor: "#6EB566",
-            marginRight: "10px",
-          }}
-        ></span>
-        <ImNotification
-          style={{
-            color: "#6EB566",
-          }}
-        />
-        <span
-          style={{
-            fontSize: "14px",
-            color: "#000",
-            marginLeft: "10px",
-          }}
-        >
-          Đơn đăng ký của bạn hiện đang trong quá trình xét duyệt. Sản phẩm của
-          bạn sẽ hiển thị với khách hàng sau khi hoàn tất xác minh. Cảm ơn bạn
-          đã kiên nhẫn chờ đợi!
+        <span style={{ width: "5px", height: "100%", backgroundColor: "#6EB566", marginRight: "10px" }}></span>
+        <ImNotification style={{ color: "#6EB566" }} />
+        <span style={{ fontSize: "14px", color: "#000", marginLeft: "10px" }}>
+          Đơn đăng ký của bạn hiện đang trong quá trình xét duyệt. Sản phẩm của bạn sẽ hiển thị với khách hàng sau khi hoàn tất xác minh. Cảm ơn bạn đã kiên nhẫn chờ đợi!
         </span>
       </div>
+
       <div style={{ padding: 24, background: "#fff", borderRadius: 8 }}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Title level={3}>Sản phẩm</Title>
-          <Button
-          onClick={handleThem}
-          type="primary" icon={<PlusOutlined />}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleThem}>
             Thêm sản phẩm mới
           </Button>
         </div>
 
         <Tabs activeKey={tabKey} onChange={setTabKey} type="line">
           <TabPane tab="Tất cả" key="all" />
-          <TabPane tab="Đang hoạt động (3)" key="active" />
-          <TabPane tab="Vi phạm (1)" key="violations" />
-          <TabPane tab="Chờ duyệt bởi Xmark (0)" key="pending" />
-          <TabPane tab="Chưa được đăng (1)" key="unlisted" />
+          <TabPane tab="Đang hoạt động" key="active" />
+          <TabPane tab="Vi phạm" key="violations" />
+          <TabPane tab="Chờ duyệt bởi Xmark" key="pending" />
+          <TabPane tab="Chưa được đăng" key="unlisted" />
         </Tabs>
 
         <Tabs activeKey={subTabKey} onChange={setSubTabKey} type="card">
           <TabPane tab="Tất cả" key="allSub" />
-          <TabPane tab="Cần bổ sung (1)" key="missing" />
-          <TabPane tab="Cần cải thiện nội dung (2)" key="improve" />
+          <TabPane tab="Cần bổ sung" key="missing" />
+          <TabPane tab="Cần cải thiện nội dung" key="improve" />
         </Tabs>
 
         <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
@@ -232,16 +183,25 @@ export default function AllProduct() {
           </Select>
         </div>
 
-        <Table
-          dataSource={filterProducts()}
-          columns={columns}
-          pagination={false}
-          bordered
-          rowKey="key"
-        />
+        <Spin spinning={loading}>
+          <Table
+            dataSource={filterProducts()}
+            columns={columns}
+            pagination={false}
+            bordered
+            rowKey={(record) => record.id || record.key}
+            locale={{ emptyText: <Empty description="Không có dữ liệu" /> }}
+          />
+        </Spin>
 
         <div style={{ textAlign: "center", marginTop: 16 }}>
-          <Pagination defaultCurrent={1} total={filterProducts().length * 10} />
+          <Pagination
+            current={page}
+            pageSize={pageSize}
+            total={total}
+            onChange={(p) => setPage(p)}
+            showSizeChanger={false}
+          />
         </div>
       </div>
     </div>

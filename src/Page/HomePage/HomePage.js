@@ -57,7 +57,6 @@ export default function HomePage() {
 
         <div
           style={{
-            margin: "40px 0",
             padding: "0 10%",
           }}
         >

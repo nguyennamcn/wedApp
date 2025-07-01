@@ -6,6 +6,7 @@ import ShippingAddressModal from "./ShippingAddressModal";
 import { useNavigate } from "react-router-dom";
 import ChinhSachmodal from "./ChinhSachmodal";
 
+
 export default function HomeSeller() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
@@ -26,44 +27,6 @@ export default function HomeSeller() {
       }}
       className="home-seller-container"
     >
-      <div
-        style={{
-          width: "100%",
-          background: "#fff",
-          display: "flex",
-          alignItems: "center",
-          borderRadius: "5px",
-          boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-          marginBottom: "2%",
-          height: "5vh",
-          overflow: "hidden",
-        }}
-      >
-        <span
-          style={{
-            width: "5px",
-            height: "100%",
-            backgroundColor: "#6EB566",
-            marginRight: "10px",
-          }}
-        ></span>
-        <ImNotification
-          style={{
-            color: "#6EB566",
-          }}
-        />
-        <span
-          style={{
-            fontSize: "14px",
-            color: "#000",
-            marginLeft: "10px",
-          }}
-        >
-          Đơn đăng ký của bạn hiện đang trong quá trình xét duyệt. Sản phẩm của
-          bạn sẽ hiển thị với khách hàng sau khi hoàn tất xác minh. Cảm ơn bạn
-          đã kiên nhẫn chờ đợi!
-        </span>
-      </div>
 
       <h2>4 bước để bắt đầu</h2>
       <p>

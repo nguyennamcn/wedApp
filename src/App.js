@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./Page/HomePage/HomePage";
 import ErrorPage from "./Page/ErrolPage/ErrorPage";
@@ -23,17 +23,23 @@ import InvationBuy from "./Page/UserPage/InvationBuy";
 import PaymentTest from "./Page/Payment/PaymentTest";
 import ChatTest from "./Components/ChatBox/ChatTest";
 import NavbarSellerWrap from "./Page/SellerPage/NavbarSeller";
+import LayoutCart from "./Layout/LayoutCart";
+import LayoutPayment from "./Layout/LayoutPayment";
+import TestPage from "./Page/TestPage/TestPage";
+import ChatPage from "./Page/ChatBox/ChatPage";
+import LayoutChat from "./Layout/LayoutChat";
+import WaitForPayment from "./Page/Payment/WaitForPayment";
 
 function App() {
+  // eslint-disable-next-line no-unused-vars
   const [api, contextHolder] = notification.useNotification();
-  const [attempts, setAttempts] = useState(0);
 
-  const openNotification = (type, message, description) => {
-    api[type]({
-      message: message,
-      description: description,
-    });
-  };
+  // const openNotification = (type, message, description) => {
+  //   api[type]({
+  //     message: message,
+  //     description: description,
+  //   });
+  // };
   // useEffect(() => {
   //   let violationCount = 0;
   //   // 🛑 Chặn phím tắt mở DevTools & View Source
@@ -117,21 +123,25 @@ function App() {
           <Route path="/settings/address" element={<ProtectedRoute><LayoutUser Component={AddressPage} /></ProtectedRoute>} />
           <Route path="/settings/changepass" element={<ProtectedRoute><LayoutUser Component={ChangePass} /></ProtectedRoute>} />
           <Route path="/settings/buylist" element={<ProtectedRoute><LayoutUser Component={InvationBuy} /></ProtectedRoute>} />
-          <Route path="/detail" element={<Layout Component={DetailProduct} />} />
+          <Route path="/product/:id" element={<Layout Component={DetailProduct} />} />
           <Route path="/blog/blog1" element={<Layout Component={BlogPage} />} />
-          <Route path="/payment" element={<Layout Component={Payment} />} />
-          <Route path="/payment2" element={<Layout Component={PaymentTest} />} />
+          <Route path="/cart" element={<LayoutCart Component={Payment} />} />
+          <Route path="/payment" element={<LayoutPayment Component={PaymentTest} />} />
           <Route path="/admin-login" element={<LayoutAdmin Component={AdminPage} />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
           <Route path="/2" element={<ChatTest />} />
+          <Route path="/chatbox" element={<LayoutChat Component={ChatPage} />} />
+          <Route path="/test" element={<TestPage />} />
+          <Route path="/wait-for-payment" element={<WaitForPayment />} />
           <Route path="/seller" element={<Layout Component={SellerPage} />} />
           <Route path="/admin-page" element={<Navigate to="/admin-page/dashboard" replace />} />
           <Route path="/seller-page" element={<Navigate to="/seller-page/restricted" />} />
           <Route path="/admin-page/:section" element={<NavBarAdminWrapper />} />
           <Route path="/admin-page/:section/:id?" element={<NavBarAdminWrapper />} />
           <Route path="/seller-page/:section" element={<NavbarSellerWrap />} />
+          
         </Routes>
       </BrowserRouter>
     </div>

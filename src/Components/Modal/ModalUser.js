@@ -778,7 +778,9 @@ export default function ModalUser({ isOpen, onClose }) {
           </button>
 
           {/* Tiêu đề */}
-          <h2 className="modal-title">ĐĂNG NHẬP</h2>
+          <h2 style={{
+            color: 'black'
+          }} className="modal-title">ĐĂNG NHẬP</h2>
 
           {/* Form nhập thông tin */}
           <div className="modal-body">
