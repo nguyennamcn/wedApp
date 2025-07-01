@@ -9,7 +9,7 @@ import {
 } from "../../service/ghnService";
 import { orderService } from "../../service/orderService";
 import { Modal } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const bankList = [
   {
@@ -53,7 +53,6 @@ export default function PaymentTest() {
   const [fee, setFee] = useState(null);
   const [data, setData] = useState(null);
   const [note, setNote] = useState("");
-  const [orderId, setOrderId] = useState("");
   const navigiton = useNavigate();
   const [orderIds, setOrderIds] = useState([]);
 
@@ -61,23 +60,40 @@ export default function PaymentTest() {
 
   const handleOk = async () => {
     try {
-      // Nếu bạn vẫn đang dùng orderId (1 đơn), thì bỏ dòng này:
-      // console.log(orderId);
+      if (selectedMethod === "CASH_ON_DELIVERY") {
+        for (const id of orderIds) {
+          const res = await orderService.conformOrderRoot({
+            orderCode: id,
+            paymentType: selectedMethod,
+          });
+          console.log(`Xác nhận đơn hàng ${id} thành công:`, res.data);
+        }
 
-      for (const id of orderIds) {
-        const res = await orderService.conformOrderRoot({
-          orderCode: id,
-          paymentType: selectedMethod,
-        });
-        console.log(`Xác nhận đơn hàng ${id} thành công:`, res.data);
+        setIsModalOpen(false);
+        localStorage.removeItem("cart"); // ✅ Xóa giỏ hàng
+        setCartItems([]);
+        navigiton("/settings/buylist");
       }
 
-      setIsModalOpen(false);
-      localStorage.removeItem("cart"); // ✅ Xóa giỏ hàng
-      setCartItems([]);
-      navigiton("/settings/buylist");
+      if (selectedMethod === "ONLINE_PAYMENT") {
+        for (const id of orderIds) {
+          const res = await orderService.conformOrderRoot({
+            orderCode: id,
+            paymentType: selectedMethod,
+          });
+          console.log(`Xác nhận đơn hàng ${id} thành công:`, res.data);
+        }
+
+        setIsModalOpen(false);
+        localStorage.removeItem("cart");
+        setCartItems([]);
+        navigiton("/wait-for-payment", { state: { orderIds } });
+      }
     } catch (err) {
-      console.error("Lỗi khi xác nhận đơn hàng:", err);
+      console.error(
+        "Lỗi khi xác nhận đơn hàng:",
+        err.response?.data || err.message
+      );
       alert("Có lỗi xảy ra khi xác nhận đơn hàng.");
     }
   };
@@ -283,8 +299,6 @@ export default function PaymentTest() {
       alert("Đặt hàng thất bại. Vui lòng thử lại.");
     }
   };
-
-  console.log(orderIds);
   return (
     <div className="payment-page">
       <div className="payment-container">
