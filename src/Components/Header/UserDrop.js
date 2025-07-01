@@ -187,7 +187,7 @@ const UserDrop = ({ user, logoutBtn }) => {
               cursor: "pointer",
               textTransform: "capitalize",
             }}>
-              {data?.firstName} {data?.lastName}
+              {`${data?.firstName ?? ''} ${data?.lastName ?? ''}`.slice(0, 10)}
             </span>
           </div>
         </Dropdown>
