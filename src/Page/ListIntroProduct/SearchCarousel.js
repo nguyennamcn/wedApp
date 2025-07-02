@@ -108,7 +108,7 @@ const SearchCarousel = () => {
                   marginTop: "10px",
                 }}
               >
-                {product.resalePrice} Đ
+                {product.resalePrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
               </div>
             </div>
           </Card>

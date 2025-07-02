@@ -106,7 +106,7 @@ const DailyDeals = () => {
                   }}
                 >
                   <div style={{ color: "green", fontWeight: "bold" }}>
-                    {product.resalePrice} Đ
+                    {product.resalePrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
                   </div>
                 </div>
               </div>

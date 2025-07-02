@@ -266,7 +266,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {data.totalPrice}Đ
+              {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
             </span>
             <span
               style={{
@@ -355,7 +355,9 @@ export default function Dashboard() {
               fontSize: "24px",
               margin: "0",
               fontWeight: "600",
-            }}>{data.totalPrice}Đ</p>
+            }}>
+            {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+            </p>
             <p style={{
               fontSize: "20px",
               margin: "0",
@@ -385,7 +387,9 @@ export default function Dashboard() {
                     margin: "0",
                     fontSize: "16px",
                     color: "white",
-                  }}>{data.totalPrice}Đ</p>
+                  }}>
+                  {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                  </p>
                   <p style={{
                     margin: "0",
                     fontSize: "14px",
@@ -449,7 +453,9 @@ export default function Dashboard() {
                 fontSize: "13px",
                 fontWeight: "600",
                 margin: "0",
-              }}>{data.totalPrice}Đ</p>
+              }}>
+              {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+              </p>
               <p style={{
                 fontSize: "12px",
                 fontWeight: "400",
