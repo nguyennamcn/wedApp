@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./ChatPage.css";
 import { RiRobot2Line } from "react-icons/ri";
 import axios from "axios";
@@ -9,6 +9,8 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [sessionId, setSessionId] = useState("");
   const [showIntro, setShowIntro] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
   // Tạo session_id khi mở trang
   useEffect(() => {
@@ -16,17 +18,35 @@ export default function ChatPage() {
     setSessionId(newSessionId);
   }, []);
 
+  // Scroll tới dòng cuối khi có tin nhắn mới
+  useEffect(() => {
+    scrollToBottom();
+  }, [content]);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
     if (showIntro) {
       setShowIntro(false);
     }
 
-    // Thêm tin nhắn người dùng vào khung chat
     const userMessage = { id: Date.now(), content: input, sender: "user" };
     setContent((prev) => [...prev, userMessage]);
+    setInput("");
 
-    console.log("first");
+    const loadingMessageId = Date.now() + 1;
+    const thinkingMessage = {
+      id: loadingMessageId,
+      content: "thinking...",
+      sender: "bot-loading",
+    };
+    setContent((prev) => [...prev, thinkingMessage]);
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -38,15 +58,19 @@ export default function ChatPage() {
         }
       );
 
-      const botMessage = {
-        id: Date.now() + 1,
+      const updatedBotMessage = {
+        id: loadingMessageId,
         content: res.data.messages,
         sender: "bot",
       };
-      setContent((prev) => [...prev, botMessage]);
-      setInput("");
+
+      setContent((prev) =>
+        prev.map((msg) => (msg.id === loadingMessageId ? updatedBotMessage : msg))
+      );
     } catch (error) {
       console.error("Lỗi khi gửi tin nhắn:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,11 +104,11 @@ export default function ChatPage() {
           style={{
             display: "flex",
             flexDirection: "column",
-            height: "100%", // đảm bảo chiếm hết chiều cao có thể
-            maxHeight: "50vh", // hoặc đặt cố định nếu bạn muốn
+            height: "100%",
+            maxHeight: "50vh",
           }}
         >
-          {/* Vùng hiển thị tin nhắn có scroll */}
+          {/* Vùng hiển thị tin nhắn */}
           <div
             style={{
               flex: 1,
@@ -93,27 +117,45 @@ export default function ChatPage() {
               flexDirection: "column",
               gap: 10,
               paddingRight: "5px",
-              paddingBottom: "10px", // tránh che nội dung khi có thanh cuộn
+              paddingBottom: "10px",
             }}
           >
             {content.map((item) => (
               <p
                 key={item.id}
                 style={{
-                  background: item.sender === "bot" ? "#25BA4D" : "#ccc",
-                  color: item.sender === "bot" ? "white" : "black",
+                  background: item.sender === "user" ? "#ccc" : "#25BA4D",
+                  color:
+                    item.sender === "bot-loading"
+                      ? "white"
+                      : item.sender === "bot"
+                      ? "white"
+                      : "black",
                   padding: "3%",
                   fontSize: "14px",
                   borderRadius: "10px",
-                  width: "100%",
+                  width: "fit-content",
+                  maxWidth: "80%",
                   wordWrap: "break-word",
                   whiteSpace: "pre-wrap",
-                  textAlign: "left",
+                  alignSelf:
+                    item.sender === "user" ? "flex-end" : "flex-start",
+                  fontStyle: item.sender === "bot-loading" ? "italic" : "normal",
                 }}
               >
-                {item.content}
+                {item.sender === "bot-loading" ? (
+                  <>
+                    Đang suy nghĩ
+                    <span className="dot-1">.</span>
+                    <span className="dot-2">.</span>
+                    <span className="dot-3">.</span>
+                  </>
+                ) : (
+                  item.content
+                )}
               </p>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Vùng nhập tin nhắn */}
@@ -148,6 +190,7 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
+
       <div style={{ width: "70%", padding: "3%" }}>
         <p style={{ color: "black", fontSize: 36 }}>
           <RiRobot2Line />
