@@ -3,6 +3,7 @@ import { Carousel, Card } from "antd";
 import "./dali.css";
 import { appService } from "../../service/appService";
 import { useNavigate } from "react-router-dom";
+import FancyLoadingPage from "../../Components/Spinner/FancyLoadingPage";
 
 const { Meta } = Card;
 
@@ -50,6 +51,9 @@ const DailyDeals = () => {
 
   return (
     <div>
+      {loading && (
+        <FancyLoadingPage />
+      )}
       {/* Tiêu đề */}
       <div style={{ marginBottom: "10px", textAlign: "center" }}>
         <h3

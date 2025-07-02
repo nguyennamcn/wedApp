@@ -29,6 +29,7 @@ import TestPage from "./Page/TestPage/TestPage";
 import ChatPage from "./Page/ChatBox/ChatPage";
 import LayoutChat from "./Layout/LayoutChat";
 import WaitForPayment from "./Page/Payment/WaitForPayment";
+import FancyLoadingPage from "./Components/Spinner/FancyLoadingPage";
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -131,7 +132,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
-          <Route path="/2" element={<ChatTest />} />
+          <Route path="/2" element={<FancyLoadingPage />} />
           <Route path="/chatbox" element={<LayoutChat Component={ChatPage} />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/wait-for-payment" element={<WaitForPayment />} />

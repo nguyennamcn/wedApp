@@ -9,7 +9,7 @@ import {
 } from "../../service/ghnService";
 import { orderService } from "../../service/orderService";
 import { Modal } from "antd";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const bankList = [
   {
@@ -306,25 +306,31 @@ export default function PaymentTest() {
         <div className="form-section">
           <h2>Thông tin đơn hàng</h2>
 
-          <select
-            value={selectedReceiverId}
-            onChange={(e) => setSelectedReceiverId(e.target.value)}
-            style={{
-              marginBottom: "12px",
-              padding: "10px",
-              borderRadius: "5px",
-              width: "100%",
-              outline: "none",
-            }}
-          >
-            <option value="">Chọn người nhận</option>
-            {receivers.map((receiver) => (
-              <option key={receiver.id} value={receiver.id}>
-                {`${receiver.name} - ${receiver.phone} - ${receiver.detail} / ${receiver.province} / ${receiver.district} / ${receiver.ward}`}
-              </option>
-            ))}
-          </select>
-
+          {receivers.length === 0 ? (
+            <p style={{ color: "black" }}>
+              Bạn chưa có địa chỉ nhận hàng nào. Vui lòng{" "}
+              <Link to="/settings/address">thêm địa chỉ</Link> để tiếp tục.
+            </p>
+          ) : (
+            <select
+              value={selectedReceiverId}
+              onChange={(e) => setSelectedReceiverId(e.target.value)}
+              style={{
+                marginBottom: "12px",
+                padding: "10px",
+                borderRadius: "5px",
+                width: "100%",
+                outline: "none",
+              }}
+            >
+              <option value="">Chọn người nhận</option>
+              {receivers.map((receiver) => (
+                <option key={receiver.id} value={receiver.id}>
+                  {`${receiver.name} - ${receiver.phone} - ${receiver.detail} / ${receiver.province} / ${receiver.district} / ${receiver.ward}`}
+                </option>
+              ))}
+            </select>
+          )}
           <input
             value={note}
             onChange={(e) => setNote(e.target.value)}
