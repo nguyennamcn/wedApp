@@ -5,16 +5,14 @@ import dayjs from "dayjs";
 import { appService } from "../../service/appService";
 import axios from "axios";
 import { BASE_URL } from "../../service/config";
-import LoadingPage from "../../Components/Spinner/LoadingPage";
 import { localUserService } from "../../service/localService";
+import FancyLoadingPage from "../../Components/Spinner/FancyLoadingPage";
 
 
 export default function SettingPage() {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [userData, setUserData] = useState(null);
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState(false);
 
@@ -140,7 +138,7 @@ export default function SettingPage() {
     <div style={{ padding: "2%" , background: 'white'}}>
       {contextHolder}
       {loading && (
-        <LoadingPage />
+        <FancyLoadingPage />
       )}
       <p style={{ fontSize: "30px" }}>Hồ sơ của tôi</p>
       <hr style={{ marginBottom: "5%" }} />

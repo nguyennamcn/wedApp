@@ -3,6 +3,7 @@ import { Carousel, Button, Card } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { appService } from "../../service/appService";
+import FancyLoadingPage from "../../Components/Spinner/FancyLoadingPage";
 
 const { Meta } = Card;
 
@@ -41,6 +42,9 @@ const SearchCarousel = () => {
         marginTop: "5%",
       }}
     >
+      {loading && (
+        <FancyLoadingPage />
+      )}
       {/* Tiêu đề */}
       <h3
         style={{

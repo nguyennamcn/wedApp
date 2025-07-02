@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Tabs, Empty, Modal } from "antd";
 import "./Ivb.css"; // import CSS tuỳ chỉnh
 import { orderService } from "../../service/orderService";
+import FancyLoadingPage from "../../Components/Spinner/FancyLoadingPage";
 
 const orders = [
   {
@@ -40,6 +41,7 @@ const orders = [
 
 export default function InvationBuy() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     orderService
       .getOrder({
@@ -48,6 +50,7 @@ export default function InvationBuy() {
       })
       .then((res) => {
         setOrders(res.data.metadata.metadata || []);
+        setLoading(false);
       })
       .catch((err) => {
         console.error("Error fetching orders:", err);
@@ -57,6 +60,7 @@ export default function InvationBuy() {
   console.log(orders);
   return (
     <div style={{ background: "white", minHeight: "100vh" }}>
+      {loading && <FancyLoadingPage />}
       <Tabs
         defaultActiveKey="all"
         className="custom-tabs"

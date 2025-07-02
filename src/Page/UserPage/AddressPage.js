@@ -6,6 +6,7 @@ import UpdateAddress from "../../Components/AddAddrassModal/UpdateAddress";
 import LoadingPage from "../../Components/Spinner/LoadingPage";
 import { Button, notification, Popconfirm } from "antd";
 import type { PopconfirmProps } from "antd";
+import FancyLoadingPage from "../../Components/Spinner/FancyLoadingPage";
 
 export default function AddressPage() {
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -93,7 +94,7 @@ export default function AddressPage() {
   return (
     <div>
       {contextHolder}
-      {ld && <LoadingPage />}
+      {ld && <FancyLoadingPage />}
       <div
         style={{
           background: "white",
