@@ -30,6 +30,8 @@ import ChatPage from "./Page/ChatBox/ChatPage";
 import LayoutChat from "./Layout/LayoutChat";
 import WaitForPayment from "./Page/Payment/WaitForPayment";
 import FancyLoadingPage from "./Components/Spinner/FancyLoadingPage";
+import TermsPage from "./Page/SubPage/TermsPage";
+import PrivacyPage from "./Page/SubPage/PrivacyPage";
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -135,6 +137,8 @@ function App() {
           <Route path="/2" element={<FancyLoadingPage />} />
           <Route path="/chatbox" element={<LayoutChat Component={ChatPage} />} />
           <Route path="/test" element={<TestPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/wait-for-payment" element={<WaitForPayment />} />
           <Route path="/seller" element={<Layout Component={SellerPage} />} />
           <Route path="/admin-page" element={<Navigate to="/admin-page/dashboard" replace />} />
