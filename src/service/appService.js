@@ -72,6 +72,12 @@ export const appService = {
     );
   },
 
+  getAllProductShopId: (shopId, page = 0, pageSize = 10) => {
+    return https.get(
+      `/product-service/api/v1/products?currentPage=${page}&pageSize=${pageSize}&shopId=${shopId}`
+    );
+  },
+
   getOwnerProduct: (page, pageSize) => {
     return https.get(
       `/product-service/api/v1/products/owner?currentPage=${page}&pageSize=${pageSize}`
@@ -112,6 +118,11 @@ export const appService = {
     return https.get(`/store-service/api/v1/stores/detail/${id}`);
   },
 
+  getDetailStoreCus: (id) => {
+    console.log(id);
+    return https.get(`/store-service/api/v1/stores/detail/${id}/customer`);
+  },
+
   getDetailStoreUser: () => {
     return https.get(`/store-service/api/v1/stores/detail`);
   },
@@ -123,7 +134,7 @@ export const appService = {
       },
     });
   },
-// admin order
+  // admin order
   getAllOrderAD: () => {
     return https.get(`/order-service/api/v1/dashboard/admin/order-stats`);
   },
@@ -131,10 +142,16 @@ export const appService = {
   getAllSellerAD: () => {
     return https.get(`/store-service/api/v1/dashboard/admin/stats`);
   },
-  
-// payment momo
+
+  getAllUserAD: (currentPage = 1, pageSize = 10) => {
+    return https.get(`/user-service/api/v1/dashboard/admin/stats`, {
+      params: { currentPage, pageSize },
+    });
+  },
+
+  // payment momo
   CreatePayment: (orderId) => {
-    console.log({orderId})
+    console.log({ orderId });
     return https.post(`/order-service/api/v1/momo`, { orderId });
   },
 };

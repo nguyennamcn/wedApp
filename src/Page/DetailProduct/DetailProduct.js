@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./DetailProduct.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import OrtherProductShop from "./OrtherProductShop";
 import ProductLike from "./ProductLike";
 import { RiArrowDropLeftFill } from "react-icons/ri";
@@ -14,12 +14,14 @@ export default function DetailProduct() {
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [dataShop, setDataShop] = useState(null);
   const { addToCart } = useCart();
 
   const [startIndex, setStartIndex] = useState(0);
   const maxThumbnails = 6;
 
   const [api, contextHolder] = notification.useNotification();
+  const navigate = useNavigate();
 
   const openNotification = (type, message, description) => {
     api[type]({
@@ -63,6 +65,24 @@ export default function DetailProduct() {
     window.dispatchEvent(new Event("cart-updated"));
   };
 
+  const handleBuyNow = () => {
+    const variant = product.productVariants[0];
+    const cartProduct = {
+      id: product.id || "unknown",
+      name: product.productName,
+      price: variant.resalePrice,
+      image: product.productImageUrl[0],
+      quantity: 1,
+      size: variant.size,
+      variantId: variant.id,
+      shopId: product.shopId || "unknown",
+      version: variant.version,
+    };
+
+    localStorage.setItem("checkoutProduct", JSON.stringify([cartProduct]));
+    navigate("/payment-now"); // chuyển sang trang thanh toán
+  };
+
   useEffect(() => {
     appService
       .getDetailProduct(id)
@@ -83,6 +103,20 @@ export default function DetailProduct() {
         setLoading(false);
       });
   }, [id]);
+
+  useEffect(() => {
+    if (product && product.shopId) {
+      appService
+        .getDetailStoreCus(product.shopId)
+        .then((res) => {
+          console.log(res.data.metadata);
+          setDataShop(res.data.metadata);
+        })
+        .catch((err) => {
+          console.error("Error fetching store details:", err);
+        });
+    }
+  }, [product]);
 
   const conditionMap = {
     NEW: "Rất tốt",
@@ -220,7 +254,9 @@ export default function DetailProduct() {
               <button className="btn" onClick={handleAddToCart}>
                 THÊM VÀO GIỎ
               </button>
-              <button className="btn buy">MUA NGAY</button>
+              <button onClick={handleBuyNow} className="btn buy">
+                MUA NGAY
+              </button>
             </div>
 
             <div className="questions">
@@ -233,8 +269,8 @@ export default function DetailProduct() {
             </div>
           </div>
         </div>
-
-        {/* Seller Info (có thể sửa tiếp khi có dữ liệu shop) */}
+        
+        {/* seller info */}
         <div
           style={{
             display: "flex",
@@ -250,16 +286,20 @@ export default function DetailProduct() {
             className="seller-info"
           >
             <img
-              src={product.productImageUrl[0]}
+              src={
+                dataShop?.avatarUrl
+                  ? dataShop.avatarUrl
+                  : "https://via.placeholder.com/100" // ảnh mặc định nếu null
+              }
               className="avatar"
               alt="Shop"
             />
             <div>
               <p style={{ fontSize: "14px", color: "black" }}>
-                {product.productName || "Shop"}
+                {dataShop?.shopName || "Shop"}
               </p>
               <p style={{ fontSize: "12px", color: "gray" }}>
-                Online chưa xác định
+                {dataShop?.online ? "Đang hoạt động" : "Ngoại tuyến"}
               </p>
               <div className="seller-actions">
                 <button className="chat-btn">💬 Chat ngay</button>
@@ -267,104 +307,26 @@ export default function DetailProduct() {
               </div>
             </div>
           </div>
-          <div
-            style={{
-              width: "15%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <p
-                style={{
-                  color: "black",
-                }}
-              >
-                Đánh giá
-              </p>
-              <p
-                style={{
-                  color: "#6EB566",
-                }}
-              >
-                114,4k
-              </p>
+
+          <div style={{ width: "15%" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p style={{ color: "black" }}>Đánh giá</p>
+              <p style={{ color: "#6EB566" }}>{dataShop?.rating || 0}</p>
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <p
-                style={{
-                  color: "black",
-                }}
-              >
-                Sản phẩm
-              </p>
-              <p
-                style={{
-                  color: "#6EB566",
-                }}
-              >
-                114,4k
-              </p>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p style={{ color: "black" }}>Sản phẩm</p>
+              <p style={{ color: "#6EB566" }}>{dataShop?.productsCount || 0}</p>
             </div>
           </div>
-          <div
-            style={{
-              width: "15%",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <p
-                style={{
-                  color: "black",
-                }}
-              >
-                Tỉ lệ phản hồi
-              </p>
-              <p
-                style={{
-                  color: "#6EB566",
-                }}
-              >
-                114,4k
-              </p>
+
+          <div style={{ width: "15%" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p style={{ color: "black" }}>Tỉ lệ phản hồi</p>
+              <p style={{ color: "#6EB566" }}>{dataShop?.responseRate || 0}%</p>
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <p
-                style={{
-                  color: "black",
-                }}
-              >
-                Người theo dõi
-              </p>
-              <p
-                style={{
-                  color: "#6EB566",
-                }}
-              >
-                114,4k
-              </p>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <p style={{ color: "black" }}>Người theo dõi</p>
+              <p style={{ color: "#6EB566" }}>{dataShop?.followers || 0}</p>
             </div>
           </div>
         </div>
