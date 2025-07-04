@@ -8,7 +8,7 @@ import {
   Image,
 } from "antd";
 import { appService } from "../../../service/appService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { localUserService } from "../../../service/localService";
 
 const { TextArea } = Input;
@@ -20,6 +20,7 @@ export default function DetailProduct() {
   const [status, setStatus] = useState("pending");
   const [api, contextHolder] = notification.useNotification();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const openNotification = (type, message, description) => {
     api[type]({
@@ -56,7 +57,11 @@ export default function DetailProduct() {
         reasonReject: reason || "Không có lời nhắn",
         productApprovalStatus: status.toUpperCase(),
       });
+      
       openNotification("success", "Thành công", "Đổi trạng thái thành công");
+      setTimeout(() => {
+        navigate("/admin-page/posts");
+      }, 1500);
     } catch (err) {
       const errorMeta = err.response?.data?.metadata;
       let errorMessage = "";

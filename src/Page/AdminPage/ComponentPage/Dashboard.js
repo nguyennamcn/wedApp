@@ -20,7 +20,7 @@ import { RiArrowDownBoxFill } from "react-icons/ri";
 import { RiArrowUpBoxFill } from "react-icons/ri";
 import { CiBank } from "react-icons/ci";
 import { CiMoneyBill } from "react-icons/ci";
-import { Flex, Progress } from 'antd';
+import { Flex, Progress } from "antd";
 import { appService } from "../../../service/appService";
 
 const allData = {
@@ -54,38 +54,47 @@ const allData = {
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("6months");
-  const [totalSeller , setTotalSeller] = useState([]);
-  const [data, setData] =useState([]);
+  const [totalSeller, setTotalSeller] = useState([]);
+  const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
 
   useEffect(() => {
-      appService
-        .getAllSellerAD()
-        .then((res) => {
-          setTotalSeller(res.data.metadata)          
-        })
-        .catch((err) => {
-          console.error("Error fetching stores:", err);
-        });
-    },[]);
+    appService
+      .getAllSellerAD()
+      .then((res) => {
+        setTotalSeller(res.data.metadata);
+      })
+      .catch((err) => {
+        console.error("Error fetching stores:", err);
+      });
+  }, []);
 
-    console.log(totalSeller)
-  
+  console.log(totalSeller);
+
   useEffect(() => {
-      appService
-        .getAllOrderAD()
-        .then((res) => {
-          console.log(res);
-          setData(res.data.metadata)
-        })
-        .catch((err) => {
-          console.error("Error fetching stores:", err);
-        });
-    }, []);
+    appService
+      .getAllOrderAD()
+      .then((res) => {
+        setData(res.data.metadata);
+      })
+      .catch((err) => {
+        console.error("Error fetching stores:", err);
+      });
+  }, []);
 
+  useEffect(() => {
+    appService
+      .getAllUserAD()
+      .then((res) => {
+        console.log(res);
+        setData1(res.data.metadata);
+      })
+      .catch((err) => {
+        console.error("Error fetching stores:", err);
+      });
+  }, []);
 
-    console.log(
-      data
-    )
+  console.log(data1);
 
   const handleChangeRange = (e) => {
     setTimeRange(e.target.value);
@@ -160,7 +169,7 @@ export default function Dashboard() {
               fontSize: "15px",
             }}
           >
-            Người mua
+            Người dùng
           </p>
           <div
             style={{
@@ -175,7 +184,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              15
+              {data1.total}
             </span>
             <span
               style={{
@@ -221,7 +230,6 @@ export default function Dashboard() {
               }}
             >
               {data.totalOrders}
-
             </span>
             <span
               style={{
@@ -266,7 +274,10 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+              {data.totalPrice?.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
             </span>
             <span
               style={{
@@ -347,78 +358,111 @@ export default function Dashboard() {
         </div>
 
         {/* Wallet Box */}
-        <div style={{
-          width: "30%",
-        }}>
+        <div
+          style={{
+            width: "30%",
+          }}
+        >
           <div className="wallet-box">
-            <p style={{
-              fontSize: "24px",
-              margin: "0",
-              fontWeight: "600",
-            }}>
-            {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+            <p
+              style={{
+                fontSize: "24px",
+                margin: "0",
+                fontWeight: "600",
+              }}
+            >
+              {data.totalPrice?.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
             </p>
-            <p style={{
-              fontSize: "20px",
-              margin: "0",
-              marginBottom: "10%",
-            }}>Ví của sàn</p>
+            <p
+              style={{
+                fontSize: "20px",
+                margin: "0",
+                marginBottom: "10%",
+              }}
+            >
+              Ví của sàn
+            </p>
 
             <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            className="wallet-transactions">
-              <div style={{
+              style={{
                 display: "flex",
+                justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: "10px",
-              }}>
-                <RiArrowDownBoxFill 
+              }}
+              className="wallet-transactions"
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <RiArrowDownBoxFill
                   style={{
                     color: "#046BDA",
                     fontSize: "52px",
                   }}
                 />
                 <div>
-                  <p style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    color: "white",
-                  }}>
-                  {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                  <p
+                    style={{
+                      margin: "0",
+                      fontSize: "16px",
+                      color: "white",
+                    }}
+                  >
+                    {data.totalPrice?.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
                   </p>
-                  <p style={{
-                    margin: "0",
-                    fontSize: "14px",
-                    color: "#467341",
-                  }}>Nguồn thu</p>
+                  <p
+                    style={{
+                      margin: "0",
+                      fontSize: "14px",
+                      color: "#467341",
+                    }}
+                  >
+                    Nguồn thu
+                  </p>
                 </div>
               </div>
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "10px",
-              }}>
-                <RiArrowUpBoxFill 
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "10px",
+                }}
+              >
+                <RiArrowUpBoxFill
                   style={{
                     color: "#D7686B",
                     fontSize: "52px",
                   }}
                 />
                 <div>
-                  <p style={{
-                    margin: "0",
-                    fontSize: "16px",
-                    color: "white",
-                  }}>0</p>
-                  <p style={{
-                    margin: "0",
-                    fontSize: "14px",
-                    color: "#467341",
-                  }}>Nguồn chi</p>
+                  <p
+                    style={{
+                      margin: "0",
+                      fontSize: "16px",
+                      color: "white",
+                    }}
+                  >
+                    0
+                  </p>
+                  <p
+                    style={{
+                      margin: "0",
+                      fontSize: "14px",
+                      color: "#467341",
+                    }}
+                  >
+                    Nguồn chi
+                  </p>
                 </div>
               </div>
             </div>
@@ -428,55 +472,74 @@ export default function Dashboard() {
               <button className="btn-receive">Nhận</button>
             </div>
           </div>
-          <div style={{
-            display: "flex",
-            backgroundColor: "#CAF7C6",
-            borderRadius: "10px",
-            padding: "5%",
-            marginTop: '10px'
-          }}>
+          <div
+            style={{
+              display: "flex",
+              backgroundColor: "#CAF7C6",
+              borderRadius: "10px",
+              padding: "5%",
+              marginTop: "10px",
+            }}
+          >
             <div className="summary-row-db">
-              <p style={{
-                color: "#383838",
-                fontSize: "14px",
-                fontWeight: "600",
-                margin: "0",
-              }}>Tài sản:</p>
-              <CiBank 
+              <p
+                style={{
+                  color: "#383838",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  margin: "0",
+                }}
+              >
+                Tài sản:
+              </p>
+              <CiBank
                 style={{
                   width: "36px",
                   height: "36px",
                   color: "#0451AB",
                 }}
               />
-              <p style={{
-                fontSize: "13px",
-                fontWeight: "600",
-                margin: "0",
-              }}>
-              {data.totalPrice?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+              <p
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  margin: "0",
+                }}
+              >
+                {data.totalPrice?.toLocaleString("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })}
               </p>
-              <p style={{
-                fontSize: "12px",
-                fontWeight: "400",
-                margin: "0",
-              }}>Đạt được <span>70%</span></p>
+              <p
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                  margin: "0",
+                }}
+              >
+                Đạt được <span>70%</span>
+              </p>
               <Flex vertical gap="small" style={{ width: 180 }}>
                 <Progress
                   percent={70}
-                  percentPosition={{ align: 'end', type: 'inner' }}
+                  percentPosition={{ align: "end", type: "inner" }}
                   size={[150, 12]}
                   strokeColor="linear-gradient(to right, #4A90E2 6%, #8BD8FA 100%)"
                 />
               </Flex>
             </div>
             <div className="summary-row-db">
-              <p style={{
-                color: "#383838",
-                fontSize: "14px",
-                fontWeight: "600",
-                margin: "0",
-              }}>Tài sản:</p>
+              <p
+                style={{
+                  color: "#383838",
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  margin: "0",
+                }}
+              >
+                Tài sản:
+              </p>
               <CiMoneyBill
                 style={{
                   width: "36px",
@@ -484,20 +547,28 @@ export default function Dashboard() {
                   color: "#219415",
                 }}
               />
-              <p style={{
-                fontSize: "13px",
-                fontWeight: "600",
-                margin: "0",
-              }}>12,497</p>
-              <p style={{
-                fontSize: "12px",
-                fontWeight: "400",
-                margin: "0",
-              }}>Đạt được <span>50%</span></p>
+              <p
+                style={{
+                  fontSize: "13px",
+                  fontWeight: "600",
+                  margin: "0",
+                }}
+              >
+                12,497
+              </p>
+              <p
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                  margin: "0",
+                }}
+              >
+                Đạt được <span>50%</span>
+              </p>
               <Flex vertical gap="small" style={{ width: 180 }}>
                 <Progress
                   percent={50}
-                  percentPosition={{ align: 'end', type: 'inner' }}
+                  percentPosition={{ align: "end", type: "inner" }}
                   size={[150, 12]}
                   strokeColor="linear-gradient(to right, #2DB71E 6%, #AAD8A5 100%)"
                 />

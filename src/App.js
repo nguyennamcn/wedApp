@@ -32,6 +32,7 @@ import WaitForPayment from "./Page/Payment/WaitForPayment";
 import FancyLoadingPage from "./Components/Spinner/FancyLoadingPage";
 import TermsPage from "./Page/SubPage/TermsPage";
 import PrivacyPage from "./Page/SubPage/PrivacyPage";
+import PaymentNow from "./Page/Payment/PaymentNow";
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -130,6 +131,7 @@ function App() {
           <Route path="/blog/blog1" element={<Layout Component={BlogPage} />} />
           <Route path="/cart" element={<LayoutCart Component={Payment} />} />
           <Route path="/payment" element={<LayoutPayment Component={PaymentTest} />} />
+          <Route path="/payment-now" element={<LayoutPayment Component={PaymentNow} />} />
           <Route path="/admin-login" element={<LayoutAdmin Component={AdminPage} />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/" element={<InfoUser />} />

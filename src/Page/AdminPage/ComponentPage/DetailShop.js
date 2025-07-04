@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Input, Select, Button, message, notification } from "antd";
 import { appService } from "../../../service/appService";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { TextArea } = Input;
 
@@ -11,6 +11,7 @@ export default function DetailShop() {
   const [reason, setReason] = useState("");
   const [status, setStatus] = useState("pending");
   const [api, contextHolder] = notification.useNotification();
+  const navigate = useNavigate();
   const openNotification = (type, message, description) => {
     api[type]({
       message: message,
@@ -37,6 +38,9 @@ export default function DetailShop() {
         verificationStatus: status.toUpperCase(),
       });
       openNotification("success", "Thành công", "Đổi trạng thái thành công");
+      setTimeout(() => {
+        navigate("/admin-page/store");
+      }, 1500);
     } catch (err) {
       console.log(err.response);
         const errorMeta = err.response?.data?.metadata;
