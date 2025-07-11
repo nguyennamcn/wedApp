@@ -33,6 +33,7 @@ import FancyLoadingPage from "./Components/Spinner/FancyLoadingPage";
 import TermsPage from "./Page/SubPage/TermsPage";
 import PrivacyPage from "./Page/SubPage/PrivacyPage";
 import PaymentNow from "./Page/Payment/PaymentNow";
+import SearchResults from "./Page/SearchPage/SearchResults";
 
 function App() {
   // eslint-disable-next-line no-unused-vars
@@ -137,6 +138,7 @@ function App() {
           <Route path="/" element={<InfoUser />} />
           <Route path="/1" element={<LoginPageTest />} />
           <Route path="/2" element={<FancyLoadingPage />} />
+          <Route path="/search" element={<Layout Component={SearchResults} />} />
           <Route path="/chatbox" element={<LayoutChat Component={ChatPage} />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/terms" element={<TermsPage />} />

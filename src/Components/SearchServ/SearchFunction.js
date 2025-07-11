@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { SlArrowDown } from "react-icons/sl";
+import { useNavigate } from 'react-router-dom';
 
 const SearchFunction = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [value, setValue] = useState('');
+  const navigate = useNavigate();
+
+  const onSearchClick = () => {
+    if (value.trim()) {
+      navigate(`/search?keyword=${encodeURIComponent(value.trim())}`);
+    }
+  };
   
     useEffect(() => {
       const handleScroll = () => {
@@ -36,6 +44,9 @@ const SearchFunction = () => {
       <Input
         placeholder="Tìm..."
         bordered={false}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onPressEnter={onSearchClick}
         style={{ 
           flex: 1, 
           background : 'transparent',
@@ -44,6 +55,7 @@ const SearchFunction = () => {
         }}
       />
       <SearchOutlined 
+      onClick={onSearchClick}
       style={{ 
         color: 'white', 
         fontSize: '20px', 

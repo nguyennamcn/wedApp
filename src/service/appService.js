@@ -72,6 +72,12 @@ export const appService = {
     );
   },
 
+  searchProducts: (criteria) => {
+    return https.get("/product-service/api/v1/products", {
+      params: criteria,
+    });
+  },
+
   getAllProductShopId: (shopId, page = 0, pageSize = 10) => {
     return https.get(
       `/product-service/api/v1/products?currentPage=${page}&pageSize=${pageSize}&shopId=${shopId}`

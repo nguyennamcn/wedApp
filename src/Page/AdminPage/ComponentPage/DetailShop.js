@@ -9,7 +9,7 @@ export default function DetailShop() {
   const { id } = useParams();
   const [stores, setStores] = useState([]);
   const [reason, setReason] = useState("");
-  const [status, setStatus] = useState("pending");
+  const [status, setStatus] = useState("");
   const [api, contextHolder] = notification.useNotification();
   const navigate = useNavigate();
   const openNotification = (type, message, description) => {
@@ -20,10 +20,12 @@ export default function DetailShop() {
   };
 
   useEffect(() => {
-    appService.getDetailStore(id)
+    appService
+      .getDetailStore(id)
       .then((res) => {
         console.log(res?.data?.metadata);
         setStores(res?.data?.metadata);
+        setStatus(res?.data?.metadata?.verificationStatus || "PENDING");
       })
       .catch((err) => {
         console.error("Error fetching stores:", err);
@@ -43,21 +45,34 @@ export default function DetailShop() {
       }, 1500);
     } catch (err) {
       console.log(err.response);
-        const errorMeta = err.response?.data?.metadata;
-        let errorMessage = '';
-        if (Array.isArray(errorMeta)) {
-          errorMessage = errorMeta.map((item) => item.message).join("\n");
-        } else if (typeof errorMeta === "object" && errorMeta?.message) {
-          errorMessage = errorMeta.message;
-        } else if (typeof errorMeta === "string") {
-          errorMessage = errorMeta;
-        } else {
-          errorMessage = "Đã xảy ra lỗi không xác định";
-        }
+      const errorMeta = err.response?.data?.metadata;
+      let errorMessage = "";
+      if (Array.isArray(errorMeta)) {
+        errorMessage = errorMeta.map((item) => item.message).join("\n");
+      } else if (typeof errorMeta === "object" && errorMeta?.message) {
+        errorMessage = errorMeta.message;
+      } else if (typeof errorMeta === "string") {
+        errorMessage = errorMeta;
+      } else {
+        errorMessage = "Đã xảy ra lỗi không xác định";
+      }
 
-        openNotification("error", "Thất bại", errorMessage);
+      openNotification("error", "Thất bại", errorMessage);
     }
   };
+
+  const statusOptions = [
+    { value: "PENDING", label: "Chờ xét duyệt" },
+    { value: "VERIFIED", label: "Xác thực" },
+    { value: "REJECTED", label: "Từ chối" },
+    { value: "SUSPENDED", label: "Cấm" },
+    { value: "NEED_MORE_INFO", label: "Cần thêm thông tin" },
+  ];
+
+  const filteredOptions =
+    status === "VERIFIED"
+      ? statusOptions.filter((option) => option.value !== "PENDING")
+      : statusOptions;
 
   return (
     <div style={{ padding: "5%", background: "#E8F5E9", minHeight: "100vh" }}>
@@ -98,12 +113,21 @@ export default function DetailShop() {
                 <img
                   src={stores?.frontIdentityNumber}
                   alt="front"
-                  style={{ width: "100px", height: "100px", borderRadius: "10px" }}
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "10px",
+                  }}
                 />
                 <img
                   src={stores?.backIdentityNumber}
                   alt="back"
-                  style={{ width: "100px", height: "100px", borderRadius: "10px", marginLeft: "10px" }}
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    borderRadius: "10px",
+                    marginLeft: "10px",
+                  }}
                 />
               </p>
             </div>
@@ -120,19 +144,16 @@ export default function DetailShop() {
           value={reason}
           onChange={(e) => setReason(e.target.value)}
         />
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+        <div
+          style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}
+        >
           <Select
             value={status}
             onChange={(value) => setStatus(value)}
-            options={[
-              { value: "PENDING", label: "Chờ xét duyệt" },
-              { value: "VERIFIED", label: "Xác thực" },
-              { value: "REJECTED", label: "Từ chối" },
-              { value: "SUSPENDED", label: "Cấm" },
-              { value: "NEED_MORE_INFO", label: "Cần thêm thông tin" },
-            ]}
+            options={filteredOptions}
             style={{ width: 180 }}
           />
+
           <Button
             type="primary"
             style={{ background: "#6EB566", borderColor: "#6EB566" }}

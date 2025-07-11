@@ -8,6 +8,8 @@ import { appService } from "../../service/appService";
 import { useCart } from "../CartPage/CartContext";
 import { notification } from "antd";
 import FancyLoadingPage from "../../Components/Spinner/FancyLoadingPage";
+import { IoLocationOutline } from "react-icons/io5";
+import { CiClock2 } from "react-icons/ci";
 
 export default function DetailProduct() {
   const { id } = useParams(); // lấy product id từ URL
@@ -222,16 +224,14 @@ export default function DetailProduct() {
               <span>{product.productVariants[0].originalPrice} Đ</span>
             </p>
             <p className="detail-text">
-              {product.location || "Không rõ địa chỉ"}
+              <IoLocationOutline /> Phường Nhật Tân, Quận Tây Hồ, Hà Nội
             </p>
             <p className="detail-text">
-              Cập nhật :{" "}
-              {product.updatedAt && product.updatedAt.substring
-                ? product.updatedAt.substring(0, 10)
-                : "N/A"}
+              <CiClock2 /> Cập nhật 1 ngày trước
             </p>
             <p className="detail-text">
-              Size: {product.productVariants[0].size || "Không có"}
+              Size: L - Hướng dẫn chọn size <br />
+              Chiều dài ước tính: 44-55 cm (tính từ cạp quần đến gấu quần)
             </p>
 
             <p style={{ color: "black", fontSize: "14px", marginTop: "20px" }}>
@@ -250,14 +250,40 @@ export default function DetailProduct() {
               sắm. Có thể áp dụng phí đổi trả.
             </p>
 
-            <div className="action-buttons">
-              <button className="btn" onClick={handleAddToCart}>
-                THÊM VÀO GIỎ
-              </button>
-              <button onClick={handleBuyNow} className="btn buy">
-                MUA NGAY
-              </button>
-            </div>
+            
+
+
+            {(() => {
+              const isOutOfStock = product.productVariants[0].quantity === 0;
+              console.log(isOutOfStock)
+
+              return (
+                <div className="action-buttons">
+                  <button
+                    className="btn"
+                    onClick={handleAddToCart}
+                    disabled={isOutOfStock}
+                    style={{
+                      backgroundColor: isOutOfStock ? "#ccc" : undefined,
+                      cursor: isOutOfStock ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    THÊM VÀO GIỎ
+                  </button>
+                  <button
+                    onClick={handleBuyNow}
+                    className="btn buy"
+                    disabled={isOutOfStock}
+                    style={{
+                      backgroundColor: isOutOfStock ? "#ccc" : "#6EB566",
+                      cursor: isOutOfStock ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    MUA NGAY
+                  </button>
+                </div>
+              );
+            })()}
 
             <div className="questions">
               <button className="question-btn">
@@ -269,7 +295,7 @@ export default function DetailProduct() {
             </div>
           </div>
         </div>
-        
+
         {/* seller info */}
         <div
           style={{
