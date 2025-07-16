@@ -32,11 +32,13 @@ export default function SearchResults() {
       });
       const data = res.data.metadata.metadata || [];
 
+      console.log(data)
+
       const mapped = data.map((p) => ({
         id: p.id,
         name: p.name,
         imageUrl: p.imageUrl || p.image || '',
-        price: p.salePrice || p.discountedPrice || p.price || 0,
+        price: p.resalePrice || p.discountedPrice || p.price || 0,
       }));
 
       setNewProducts(mapped.slice(0, 10));
