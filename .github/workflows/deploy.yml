@@ -20,9 +20,6 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build React app
-      run: CI=false npm run build
-
     - name: Docker Build
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/xmark-frontend:latest .
 
