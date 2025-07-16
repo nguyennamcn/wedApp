@@ -17,9 +17,6 @@ jobs:
       with:
         node-version: 'node'
 
-    - name: Install dependencies
-      run: npm install
-
     - name: Docker Build
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/xmark-frontend:latest .
 
