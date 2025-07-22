@@ -64,12 +64,12 @@ export default function FooterPage() {
             </p>
             <h6>Theo dõi xmark</h6>
             <p>
-              <a href="https://www.facebook.com/profile.php?id=61574917165179" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.facebook.com/profile.php?id=61574917165179" target="_blank" rel="noopener noreferrer" style={{ color: "white", textDecoration: "none" }}>
                 <FaFacebook /> Facebook
               </a>
             </p>
             <p>
-              <a href="https://www.instagram.com/xmark_2hand/" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/xmark_2hand/" target="_blank" rel="noopener noreferrer" style={{ color: "white", textDecoration: "none" }}>
                 <FaInstagram /> Instagram
               </a>
             </p>
