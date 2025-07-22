@@ -22,6 +22,12 @@ import { CiBank } from "react-icons/ci";
 import { CiMoneyBill } from "react-icons/ci";
 import { Flex, Progress } from "antd";
 import { appService } from "../../../service/appService";
+import { tiktokService } from "../../../service/tiktokService";
+import { IoEyeSharp } from "react-icons/io5";
+import { AiFillLike } from "react-icons/ai";
+import { LiaComment } from "react-icons/lia";
+import { IoIosShareAlt } from "react-icons/io";
+import logo from "../../../img/xmark-high-resolution-logo.png";
 
 const allData = {
   "6months": [
@@ -58,6 +64,36 @@ export default function Dashboard() {
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
 
+  const TIKTOK_REFRESH_TOKEN =
+    "rft.QujG9VNvTCVS2ZTrUAz4sPJjXzq0BXkwM4WBwQ2YVrFJ0bU8Q0DTDmKuP1ZK!6463.va";
+  const [tiktokData, setTiktokData] = useState(null);
+
+  useEffect(() => {
+    async function fetchTikTokData() {
+      try {
+        // Bước 1: Refresh token
+        const refreshRes = await tiktokService.refreshToken(
+          TIKTOK_REFRESH_TOKEN
+        );
+        const newAccessToken = refreshRes.data.access_token;
+        const openId = refreshRes.data.open_id;
+
+        // Bước 2: Gọi API lấy thông tin người dùng TikTok
+        const userInfoRes = await tiktokService.getUserInfo(
+          newAccessToken,
+          openId
+        );
+        setTiktokData(userInfoRes.data);
+
+        console.log("TikTok User Info:", userInfoRes.data);
+      } catch (error) {
+        console.error("TikTok integration failed", error);
+      }
+    }
+
+    fetchTikTokData();
+  }, []);
+
   useEffect(() => {
     appService
       .getAllSellerAD()
@@ -68,8 +104,6 @@ export default function Dashboard() {
         console.error("Error fetching stores:", err);
       });
   }, []);
-
-  console.log(totalSeller);
 
   useEffect(() => {
     appService
@@ -86,15 +120,12 @@ export default function Dashboard() {
     appService
       .getAllUserAD()
       .then((res) => {
-        console.log(res);
         setData1(res.data.metadata);
       })
       .catch((err) => {
         console.error("Error fetching stores:", err);
       });
   }, []);
-
-  console.log(data1);
 
   const handleChangeRange = (e) => {
     setTimeRange(e.target.value);
@@ -575,6 +606,292 @@ export default function Dashboard() {
               </Flex>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          margin: "3% 0",
+          display: "flex",
+          alignItems: "center",
+          gap: "3%",
+          backgroundColor: "#6EB566",
+          borderRadius: "10px",
+          width: "40%",
+        }}
+      >
+        <img
+          src={logo}
+          alt="TikTok Banner"
+          style={{
+            width: "80px",
+            height: "80px",
+            borderRadius: "50%",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            margin: "5%",
+          }}
+        />
+        <div style={{
+          width: '100%',
+        }}>
+          <h1 style={{
+            color: 'white'
+          }}>xmark</h1>
+          <span style={{
+            color: 'white',
+            marginRight: '3%'
+          }}>6000 Followers</span>
+          <span style={{
+            color: 'white'
+          }}>1440 Likes</span>
+        </div>
+      </div>
+      <div className="stats-boxes">
+        <div className="stat-card">
+          <IoEyeSharp
+            style={{
+              height: "37px",
+              width: "37px",
+              color: "#43903A",
+            }}
+          />
+          <p
+            style={{
+              margin: "0",
+              fontSize: "15px",
+            }}
+          >
+            Lượt xem video
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "24px",
+                fontWeight: "600",
+              }}
+            >
+              3.5k
+            </span>
+            <span
+              style={{
+                color: "green",
+                fontSize: "12px",
+                marginLeft: "5px",
+                padding: "2px 5px",
+                backgroundColor: "#e6f7ff",
+                borderRadius: "5px",
+              }}
+            >
+              <BsArrowUp /> 7.34%
+            </span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <AiFillLike
+            style={{
+              height: "37px",
+              width: "37px",
+              color: "#43903A",
+            }}
+          />
+          <p
+            style={{
+              margin: "0",
+              fontSize: "15px",
+            }}
+          >
+            Lượt thích
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "24px",
+                fontWeight: "600",
+              }}
+            >
+              {data1.total}
+            </span>
+            <span
+              style={{
+                color: "green",
+                fontSize: "12px",
+                marginLeft: "5px",
+                padding: "2px 5px",
+                backgroundColor: "#e6f7ff",
+                borderRadius: "5px",
+              }}
+            >
+              <BsArrowUp /> 7.34%
+            </span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <LiaComment
+            style={{
+              height: "37px",
+              width: "37px",
+              color: "#43903A",
+            }}
+          />
+          <p
+            style={{
+              margin: "0",
+              fontSize: "15px",
+            }}
+          >
+            Bình luận
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "24px",
+                fontWeight: "600",
+              }}
+            >
+              {data.totalOrders}
+            </span>
+            <span
+              style={{
+                color: "green",
+                fontSize: "12px",
+                marginLeft: "5px",
+                padding: "2px 5px",
+                backgroundColor: "#e6f7ff",
+                borderRadius: "5px",
+              }}
+            >
+              <BsArrowUp /> 7.34%
+            </span>
+          </div>
+        </div>
+        <div className="stat-card">
+          <IoIosShareAlt
+            style={{
+              height: "37px",
+              width: "37px",
+              color: "#43903A",
+            }}
+          />
+          <p
+            style={{
+              margin: "0",
+              fontSize: "15px",
+            }}
+          >
+            Lượt chia sẻ
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "24px",
+                fontWeight: "600",
+              }}
+            >
+              {data.totalPrice?.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}
+            </span>
+            <span
+              style={{
+                color: "red",
+                fontSize: "12px",
+                marginLeft: "5px",
+                padding: "2px 5px",
+                backgroundColor: "#e6f7ff",
+                borderRadius: "5px",
+              }}
+            >
+              <BsArrowDown /> 7.34%
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="main-content">
+        {/* Chart */}
+        <div className="chart-box">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "5%",
+            }}
+            className="chart-header"
+          >
+            <span
+              style={{
+                fontSize: "16px",
+                color: "#6EB566",
+                padding: "5px 10px",
+                borderRadius: "10px",
+                background:
+                  "linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(227, 253, 224, 0.5) 12%, rgba(223, 252, 220, 0.6) 100%)",
+              }}
+            >
+              Phân tích doanh số
+            </span>
+            <select
+              style={{
+                outline: "none",
+                marginTop: "5%",
+              }}
+              value={timeRange}
+              onChange={handleChangeRange}
+              className="range-select"
+            >
+              <option value="6months">6 tháng</option>
+              <option value="12months">12 tháng</option>
+              <option value="2years">2 năm</option>
+            </select>
+          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={allData[timeRange]}>
+              <Line
+                type="monotone"
+                dataKey="truyCap"
+                stroke="#FF4C4C"
+                name="Lượt truy cập"
+              />
+              <Line
+                type="monotone"
+                dataKey="doanhThu"
+                stroke="#00C49F"
+                name="Doanh thu"
+              />
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
