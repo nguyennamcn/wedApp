@@ -13,6 +13,7 @@ import dv2 from "../../img/EXE/11.png";
 import dv3 from "../../img/EXE/12.png";
 import FooterPage from "../../Components/Footer/FooterPage";
 
+
 export default function InfoUser() {
   const nagivate = useNavigate();
   const data = [

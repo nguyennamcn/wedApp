@@ -1,14 +1,20 @@
 import React from 'react'
 import img1 from '../../img/EXE/3.png'
+import th1 from "../../img/ima/Frame 28437-9f1c3961.png";
+import th2 from "../../img/ima/Frame 28440-c86753d5.jpg";
+import th3 from "../../img/ima/Frame 28441-b2f38279.png";
+import th4 from "../../img/ima/Frame 28444-a5f95ab5.jpg";
+import th5 from "../../img/ima/banana republic-9e06b026.jpg";
+import th6 from "../../img/ima/nike-6831b575.png";
 
 export default function HotProduct() {
     const data = [
-        { key: 1, context: 'Nike', img: img1 },
-        { key: 2, context: 'Nike', img: img1 },
-        { key: 3, context: 'Nike', img: img1 },
-        { key: 4, context: 'Nike', img: img1 },
-        { key: 5, context: 'Nike', img: img1 },
-        { key: 6, context: 'Nike', img: img1 }
+        { key: 1, context: 'Nike', img: th1 },
+        { key: 2, context: 'Nike', img: th2 },
+        { key: 3, context: 'Nike', img: th3 },
+        { key: 4, context: 'Nike', img: th4 },
+        { key: 5, context: 'Nike', img: th5 },
+        { key: 6, context: 'Nike', img: th6 }
     ];
 
     return (
@@ -25,28 +31,18 @@ export default function HotProduct() {
                     <div
                         key={item.key}
                         className="col-12 col-md-6 col-lg-2 mb-4"
-                        style={{
-                            height: '400px',
-                            backgroundImage: `url(${item.img})`,
-                            backgroundSize: '300% 100%', // Ensures image covers the div
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
                     >
-                        <p
+                        <img
+                            src={item.img}
+                            alt={item.context}
                             style={{
-                                color: 'white',
                                 width: '100%',
-                                height: '100%',
-                                margin: '0',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginLeft: '8%'
+                                height: 'auto',
+                                borderRadius: '10px',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                             }}
-                        >
-                            {item.context}
-                        </p>
+                        />
+                        
                     </div>
                 ))}
             </div>

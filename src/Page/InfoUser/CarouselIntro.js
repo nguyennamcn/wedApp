@@ -10,6 +10,7 @@ import logo6 from "../../img/EXE/1.png";
 import logo7 from "../../img/EXE/1.png";
 import logo8 from "../../img/EXE/1.png";
 
+
 const { Meta } = Card;
 
 const CarouselIntro = () => {
