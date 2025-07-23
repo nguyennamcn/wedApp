@@ -71,7 +71,7 @@ export default function Posts() {
   }, [currentPage, allProducts, searchTerm]);
 
   return (
-    <div style={{ padding: "30px", background: "#F0F8FF", minHeight: "100vh" }}>
+    <div style={{ padding: "30px", background: "rgb(247, 247, 247)", minHeight: "100vh" }}>
       {/* Header */}
       <div
         style={{ display: "flex", marginBottom: "20px", alignItems: "center" }}
