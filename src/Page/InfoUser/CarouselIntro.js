@@ -9,7 +9,8 @@ import logo5 from "../../img/EXE/1.png";
 import logo6 from "../../img/EXE/1.png";
 import logo7 from "../../img/EXE/1.png";
 import logo8 from "../../img/EXE/1.png";
-
+import { useNavigate } from "react-router-dom";
+import { appService } from "../../service/appService";
 
 const { Meta } = Card;
 
@@ -20,6 +21,28 @@ const CarouselIntro = () => {
   const [mp, setMp] = useState(false);
   const [ip, setIp] = useState(false);
   const [dt, setDt] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const pageSize = 0;
+  const navigate = useNavigate();
+  const [product, setProducts] = useState([]);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    try {
+      const response = await appService.getAllProduct(0, pageSize);
+      setProducts(response.data.metadata.metadata);
+    } catch (error) {
+      console.error("Lỗi khi lấy sản phẩm:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log(product);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   useEffect(() => {
     const updateSlidesToShow = () => {
@@ -176,7 +199,7 @@ const CarouselIntro = () => {
             slidesToShow={slidesToShow}
             arrows={false}
           >
-            {products.map((product, index) => (
+            {product.map((product, index) => (
               <div
                 key={product.id}
                 style={{ padding: "10px", marginRight: "15px" }}
@@ -187,7 +210,6 @@ const CarouselIntro = () => {
                     width: "100%",
                     textAlign: "center",
                     border: "none",
-                    boxShadow: "none",
                     boxShadow:
                       "0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.03)",
                     borderRadius: "0px",
@@ -195,24 +217,14 @@ const CarouselIntro = () => {
                   cover={
                     <div style={{ position: "relative", paddingTop: "100%" }}>
                       <img
-                        src={imageSrcs[index]}
+                        src={product.imageUrl}
                         alt={product.title}
-                        onMouseEnter={() => {
-                          const newImages = [...imageSrcs];
-                          newImages[index] = product.image2;
-                          setImageSrcs(newImages);
-                        }}
-                        onMouseLeave={() => {
-                          const newImages = [...imageSrcs];
-                          newImages[index] = product.image;
-                          setImageSrcs(newImages);
-                        }}
                         style={{
                           position: "absolute",
                           top: "50%",
                           left: "50%",
                           transform: "translate(-50%, -50%)",
-                          width: "350%",
+                          width: "100%",
                           height: "auto",
                           transition: "opacity 0.5s ease-in-out", // 🔥 Hiệu ứng chuyển đổi mượt
                           opacity: 1,
@@ -229,21 +241,23 @@ const CarouselIntro = () => {
                       fontSize: "20px",
                     }}
                   >
-                    {product.title.length > 10
-                      ? product.title.slice(0, 10) + "..."
-                      : product.title}
+                    {product.name.length > 25
+                      ? product.name.slice(0, 25) + "..."
+                      : product.name}
                   </div>
                   <div
                     style={{
                       textAlign: "left",
-                      fontSize: "16px",
-                      marginLeft: "10%",
                       fontSize: "24px",
+                      marginLeft: "10%",
                       color: "#42B635",
                       fontWeight: "bold",
                     }}
                   >
-                    {product.price}
+                    {product.resalePrice?.toLocaleString("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
                   </div>
                 </Card>
               </div>

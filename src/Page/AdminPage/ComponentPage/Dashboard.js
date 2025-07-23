@@ -8,12 +8,9 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  Area,
-  AreaChart,
 } from "recharts";
-
 import "./admincp.css";
-import { BsArrowUp } from "react-icons/bs";
+import { BsArrowUp, BsBookmark } from "react-icons/bs";
 import { BsArrowDown } from "react-icons/bs";
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import { HiMiniUsers } from "react-icons/hi2";
@@ -29,8 +26,16 @@ import { tiktokService } from "../../../service/tiktokService";
 import { IoEyeSharp } from "react-icons/io5";
 import { AiFillLike } from "react-icons/ai";
 import { LiaComment } from "react-icons/lia";
-import { IoIosShareAlt } from "react-icons/io";
-import logo from "../../../img/xmark_tiktok.jpg";
+import { IoIosHeartEmpty, IoIosShareAlt } from "react-icons/io";
+import logo from "../../../img/xmark-high-resolution-logo.png";
+import h1 from "../../../img/dashboardAd/ee.jpg";
+import h2 from "../../../img/dashboardAd/7bfe72085865d13b8874.jpg";
+import h3 from "../../../img/dashboardAd/7e9f3defdf8256dc0f93.jpg";
+import h4 from "../../../img/dashboardAd/af1e82efa88221dc7893.jpg";
+import h5 from "../../../img/dashboardAd/b997ad274c4ac5149c5b.jpg";
+import h6 from "../../../img/dashboardAd/fa202757c43a4d64142b.jpg";
+import { FaRegCommentDots } from "react-icons/fa";
+import axios from "axios";
 
 const allData = {
   "6months": [
@@ -61,21 +66,15 @@ const allData = {
   ],
 };
 
-const datatiktok = [
-  { name: "14 tháng 7", truyCap: 5 },
-  { name: "15 tháng 7", truyCap: 12 },
-  { name: "16 tháng 7", truyCap: 2 },
-  { name: "17 tháng 7", truyCap: 2 },
-  { name: "18 tháng 7", truyCap: 10 },
-  { name: "19 tháng 7", truyCap: 13 },
-  { name: "20 tháng 7", truyCap: 8 },
-];
-
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("6months");
   const [totalSeller, setTotalSeller] = useState([]);
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [videos1, setVideos1] = useState([]);
+  const [loading, setLoading] = useState(true); // Optional: loading state
+  const [error, setError] = useState(null);
 
   const TIKTOK_REFRESH_TOKEN =
     "rft.QujG9VNvTCVS2ZTrUAz4sPJjXzq0BXkwM4WBwQ2YVrFJ0bU8Q0DTDmKuP1ZK!6463.va";
@@ -128,6 +127,63 @@ export default function Dashboard() {
         console.error("Error fetching stores:", err);
       });
   }, []);
+
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.post(
+          "https://tiktok-service.truong51972.id.vn/api/get_user_info",    
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("API response:", response.data.data.user);
+        setVideos(response.data.data.user); // Cập nhật dữ liệu
+      } catch (err) {
+        console.error("Lỗi khi gọi API:", err);
+        setError("Không thể lấy dữ liệu");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await axios.post(
+          "https://tiktok-service.truong51972.id.vn/api/get_videos_info", 
+          {
+            from_date: "2025-07-23T00:00:00",
+            to_date: "2025-07-23T23:59:59.999999"
+          },   
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("API response:", response.data[0]);
+        setVideos1(response.data[0]); // Cập nhật dữ liệu
+      } catch (err) {
+        console.error("Lỗi khi gọi API:", err);
+        setError("Không thể lấy dữ liệu");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
+
+  console.log(videos1);
 
   useEffect(() => {
     appService
@@ -634,7 +690,7 @@ export default function Dashboard() {
         }}
       >
         <img
-          src={logo}
+          src={videos.avatar_large_url}
           alt="TikTok Banner"
           style={{
             width: "80px",
@@ -644,19 +700,34 @@ export default function Dashboard() {
             margin: "5%",
           }}
         />
-        <div style={{
-          width: '100%',
-        }}>
-          <h1 style={{
-            color: 'white'
-          }}>xmark</h1>
-          <span style={{
-            color: 'white',
-            marginRight: '3%'
-          }}>6137 Followers</span>
-          <span style={{
-            color: 'white'
-          }}>1580 Likes</span>
+        <div
+          style={{
+            width: "100%",
+          }}
+        >
+          <h1
+            style={{
+              color: "white",
+            }}
+          >
+            {videos.user_name}
+          </h1>
+          <span
+            style={{
+              color: "white",
+              marginRight: "3%",
+            }}
+          >
+            {videos.follower_count} Followers
+          </span>
+          <span
+            style={{
+              color: "white",
+              marginLeft: '5%'
+            }}
+          >
+            {videos.likes_count} Likes
+          </span>
         </div>
       </div>
       <div className="stats-boxes">
@@ -689,7 +760,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              3.5k
+              {videos1.view_count}
             </span>
             <span
               style={{
@@ -734,8 +805,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {/* {data1.total} */}
-              156
+              {videos1.like_count}
             </span>
             <span
               style={{
@@ -780,8 +850,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {/* {data.totalOrders} */}
-              5
+              {videos1.comment_count}
             </span>
             <span
               style={{
@@ -826,11 +895,7 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {/* {data.totalPrice?.toLocaleString("vi-VN", {
-                style: "currency",
-                currency: "VND",
-              })} */}
-              4
+              {videos1.share_count}
             </span>
             <span
               style={{
@@ -849,7 +914,8 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      {/* <div className="main-content">
+      <div className="main-content">
+        {/* Chart */}
         <div className="chart-box">
           <div
             style={{
@@ -860,6 +926,31 @@ export default function Dashboard() {
             }}
             className="chart-header"
           >
+            <span
+              style={{
+                fontSize: "16px",
+                color: "#6EB566",
+                padding: "5px 10px",
+                borderRadius: "10px",
+                background:
+                  "linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(227, 253, 224, 0.5) 12%, rgba(223, 252, 220, 0.6) 100%)",
+              }}
+            >
+              Phân tích doanh số
+            </span>
+            <select
+              style={{
+                outline: "none",
+                marginTop: "5%",
+              }}
+              value={timeRange}
+              onChange={handleChangeRange}
+              className="range-select"
+            >
+              <option value="6months">6 tháng</option>
+              <option value="12months">12 tháng</option>
+              <option value="2years">2 năm</option>
+            </select>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={allData[timeRange]}>
@@ -869,6 +960,12 @@ export default function Dashboard() {
                 stroke="#FF4C4C"
                 name="Lượt truy cập"
               />
+              <Line
+                type="monotone"
+                dataKey="doanhThu"
+                stroke="#00C49F"
+                name="Doanh thu"
+              />
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -877,55 +974,340 @@ export default function Dashboard() {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </div> */}
-        <div className="main-content">
-          <div className="chart-box">
+      </div>
+
+      {/* đang làm */}
+      <div
+        style={{
+          padding: "2% 2%",
+          marginTop: "2%",
+          background: "white",
+          borderRadius: "10px",
+        }}
+      >
+        <h1>Top bài viết nổi bật</h1>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "12px",
+            width: "100%",
+            padding: "16px 0",
+          }}
+        >
+          <img
+            src={h4}
+            alt="TikTok Post"
+            style={{ width: "10%", borderRadius: "8px" }}
+          />
+
+          <div style={{ flex: 1, marginLeft: "2%" }}>
+            <p style={{ margin: 0, fontSize: "24px" }}>
+              Đón chào xmark sau 3 ngày với công cụ mới nhé!
+            </p>
             <div
               style={{
                 display: "flex",
-                justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: "5%",
+                gap: "12px",
+                margin: "8px 0",
+                justifyContent: "space-between",
+                width: "25%",
               }}
-              className="chart-header"
             >
-              <h3>Lượt truy cập theo ngày</h3>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <IoIosHeartEmpty
+                  style={{
+                    fontSize: "24px",
+                    color: "red",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  128
+                </span>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <FaRegCommentDots
+                  style={{
+                    fontSize: "24px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  2
+                </span>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <BsBookmark
+                  style={{
+                    fontSize: "24px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  10
+                </span>
+              </div>
             </div>
 
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={datatiktok}>
-                <defs>
-                  <linearGradient id="colorTruyCap" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#1890FF" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#1890FF" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Area
-                  type="monotone"
-                  dataKey="truyCap"
-                  stroke="#1890FF"
-                  fill="url(#colorTruyCap)"
-                  name="Lượt truy cập"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="truyCap"
-                  stroke="#1890FF"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 6 }}
-                  name="Lượt truy cập"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "8px",
+                marginTop: "3%",
+              }}
+            >
+              <img
+                src={h5}
+                alt="User Avatar"
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+              <div>
+                <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
+                  Linh Chi Boutique’s
+                </p>
+                <p style={{ margin: 0, fontSize: "20px" }}>Áo đẹp lắm</p>
+              </div>
+            </div>
           </div>
         </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "12px",
+            width: "100%",
+            padding: "16px 0",
+          }}
+        >
+          <img
+            src={h1}
+            alt="TikTok Post"
+            style={{ width: "10%", borderRadius: "8px" }}
+          />
+
+          <div style={{ flex: 1, marginLeft: "2%" }}>
+            <p style={{ margin: 0, fontSize: "24px" }}>
+              Đàn ông mặc gì để không đụng hàng?
+            </p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                margin: "8px 0",
+                justifyContent: "space-between",
+                width: "25%",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <IoIosHeartEmpty
+                  style={{
+                    fontSize: "24px",
+                    color: "red",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  78
+                </span>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <FaRegCommentDots
+                  style={{
+                    fontSize: "24px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  1
+                </span>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <BsBookmark
+                  style={{
+                    fontSize: "24px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  3
+                </span>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "8px",
+                marginTop: "1%",
+              }}
+            >
+              <img
+                src={h6}
+                alt="User Avatar"
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+              <div>
+                <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
+                  Mẹ Thịnh
+                </p>
+                <p style={{ margin: 0, fontSize: "20px" }}>Áo đẹp lắm nha</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "12px",
+            width: "100%",
+            padding: "16px 0",
+          }}
+        >
+          <img
+            src={h2}
+            alt="TikTok Post"
+            style={{ width: "10%", borderRadius: "8px" }}
+          />
+
+          <div style={{ flex: 1, marginLeft: "2%" }}>
+            <p style={{ margin: 0, fontSize: "24px" }}>
+              Đón chào xmark sau 3 ngày với công cụ mới nhé!
+            </p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                margin: "8px 0",
+                justifyContent: "space-between",
+                width: "25%",
+              }}
+            >
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <IoIosHeartEmpty
+                  style={{
+                    fontSize: "24px",
+                    color: "red",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  6
+                </span>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <FaRegCommentDots
+                  style={{
+                    fontSize: "24px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  5
+                </span>
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "4px" }}
+              >
+                <BsBookmark
+                  style={{
+                    fontSize: "24px",
+                  }}
+                />
+                <span
+                  style={{
+                    fontSize: "24px",
+                  }}
+                >
+                  1
+                </span>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "8px",
+                marginTop: "2%",
+              }}
+            >
+              <img
+                src={h3}
+                alt="User Avatar"
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+              <div>
+                <p style={{ margin: 0, fontWeight: "bold", fontSize: "20px" }}>
+                  nhs9x.shop
+                </p>
+                <p style={{ margin: 0, fontSize: "20px" }}>Xin địa chỉ ak</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

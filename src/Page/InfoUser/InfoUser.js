@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import "./styles.css";
 import { FaGlobe, FaShoppingCart } from "react-icons/fa";
 import logo from "../../img/34.png";
@@ -12,9 +12,34 @@ import dv1 from "../../img/EXE/10.png";
 import dv2 from "../../img/EXE/11.png";
 import dv3 from "../../img/EXE/12.png";
 import FooterPage from "../../Components/Footer/FooterPage";
+import { appService } from "../../service/appService";
 
 
 export default function InfoUser() {
+  const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const pageSize = 0;
+    const navigate = useNavigate();
+    const carouselRef = useRef();
+  
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await appService.getAllProduct(0, pageSize);
+        setProducts(response.data.metadata.metadata);
+      } catch (error) {
+        console.error("Lỗi khi lấy sản phẩm:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    console.log(products);
+  
+    useEffect(() => {
+      fetchProducts();
+    }, []);
+
   const nagivate = useNavigate();
   const data = [
     {
