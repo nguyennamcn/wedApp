@@ -8,6 +8,8 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Area,
+  AreaChart,
 } from "recharts";
 import "./admincp.css";
 import { BsArrowUp, BsBookmark } from "react-icons/bs";
@@ -36,6 +38,16 @@ import h5 from "../../../img/dashboardAd/b997ad274c4ac5149c5b.jpg";
 import h6 from "../../../img/dashboardAd/fa202757c43a4d64142b.jpg";
 import { FaRegCommentDots } from "react-icons/fa";
 import axios from "axios";
+
+const datatt = [
+  { name: "14 tháng 7", truyCap: 5 },
+  { name: "15 tháng 7", truyCap: 12 },
+  { name: "16 tháng 7", truyCap: 2 },
+  { name: "17 tháng 7", truyCap: 2 },
+  { name: "18 tháng 7", truyCap: 10 },
+  { name: "19 tháng 7", truyCap: 13 },
+  { name: "20 tháng 7", truyCap: 8 },
+];
 
 const allData = {
   "6months": [
@@ -914,67 +926,54 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
-        {/* Chart */}
-        <div className="chart-box">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "5%",
-            }}
-            className="chart-header"
-          >
-            <span
-              style={{
-                fontSize: "16px",
-                color: "#6EB566",
-                padding: "5px 10px",
-                borderRadius: "10px",
-                background:
-                  "linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(227, 253, 224, 0.5) 12%, rgba(223, 252, 220, 0.6) 100%)",
-              }}
-            >
-              Phân tích doanh số
-            </span>
-            <select
-              style={{
-                outline: "none",
-                marginTop: "5%",
-              }}
-              value={timeRange}
-              onChange={handleChangeRange}
-              className="range-select"
-            >
-              <option value="6months">6 tháng</option>
-              <option value="12months">12 tháng</option>
-              <option value="2years">2 năm</option>
-            </select>
+          <div className="main-content">
+            <div className="chart-box">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: "5%",
+                }}
+                className="chart-header"
+              >
+                <h3>Lượt truy cập theo ngày</h3>
+              </div>
+
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={datatt}>
+                  <defs>
+                    <linearGradient id="colorTruyCap" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#1890FF" stopOpacity={0.3} />
+                      <stop offset="100%" stopColor="#1890FF" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Area
+                    type="monotone"
+                    dataKey="truyCap"
+                    stroke="#1890FF"
+                    fill="url(#colorTruyCap)"
+                    name="Lượt truy cập"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="truyCap"
+                    stroke="#1890FF"
+                    strokeWidth={2}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="Lượt truy cập"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={allData[timeRange]}>
-              <Line
-                type="monotone"
-                dataKey="truyCap"
-                stroke="#FF4C4C"
-                name="Lượt truy cập"
-              />
-              <Line
-                type="monotone"
-                dataKey="doanhThu"
-                stroke="#00C49F"
-                name="Doanh thu"
-              />
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
 
       {/* đang làm */}
       <div
