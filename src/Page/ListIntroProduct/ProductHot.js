@@ -108,14 +108,31 @@ const ProductHot = () => {
                 <Card
                   hoverable
                   onClick={() => navigate(`/product/${product.id}`)}
-                  cover={
-                    <img
-                      alt={product.name}
-                      src={
-                        product.imageUrl || "https://via.placeholder.com/150"
-                      }
-                    />
-                  }
+                    cover={
+                      <div
+                        style={{
+                          height: "250px", // hoặc điều chỉnh theo ý
+                          background: "#f5f5f5",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          overflow: "hidden",
+                          borderTopLeftRadius: "8px",
+                          borderTopRightRadius: "8px"
+                        }}
+                      >
+                        <img
+                          alt={product.name}
+                          src={product.imageUrl || "https://via.placeholder.com/150"}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            objectPosition: "top",
+                          }}
+                        />
+                      </div>
+                    }
                   actions={[<CameraOutlined key="view" />]}
                 >
                   <Meta

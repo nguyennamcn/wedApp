@@ -82,7 +82,17 @@ export default function SearchResults() {
     <div
       onClick={() => navigate(`/product/${product.id}`)}
      className="product-card" key={product.id}>
-      <img src={product.imageUrl} alt={product.name} />
+      <img
+        src={product.imageUrl}
+        alt={product.name}
+        style={{
+          width: "100%",
+          height: "250px",
+          objectFit: "cover",
+          objectPosition: "top",
+          borderRadius: "6px"
+        }}
+      />
       <p style={{color: 'black'}} className="product-name">{product.name}</p>
       <p className="product-price">{product.price.toLocaleString()}₫</p>
       <button className="add-btn">🛒</button>

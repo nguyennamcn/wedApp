@@ -91,16 +91,26 @@ const DailyDeals = () => {
             >
               <div
                 style={{
-                  height: "30vh",
-                  background: "#ddd",
+                  height: "250px", // hoặc tuỳ chỉnh
+                  background: "#f5f5f5",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  overflow: "hidden",
+                  borderRadius: "8px"
                 }}
               >
-                <img style={{
-                    width: '100%'
-                }} src={product.imageUrl} alt="product" />
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "top",
+                    borderRadius: "6px"
+                  }}
+                />
               </div>
               <div style={{ padding: "10%" }}>
                 <Meta title={product.name} />
