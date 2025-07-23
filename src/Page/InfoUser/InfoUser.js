@@ -44,15 +44,15 @@ export default function InfoUser() {
   const data = [
     {
       key: 1,
-      stt: "áo hoodle",
+      stt: "Áo thun nữ",
     },
     {
       key: 2,
-      stt: "áo hoodle 2",
+      stt: "Quần dài công sở",
     },
     {
       key: 3,
-      stt: "áo hoodle 3 ",
+      stt: "áo khoác",
     },
   ];
   const [mb, setMb] = useState(false);
@@ -236,7 +236,7 @@ export default function InfoUser() {
                 marginBottom: "1.5%",
               }}
             >
-              <span style={{ marginLeft: "5%" }}>Áo thun nam</span>
+              <span style={{ marginLeft: "5%", opacity: 0.6 }}>Nhập từ khoá tìm kiếm</span>
               <div>
                 <img style={{ width: "20%" }} src={logo} alt="img" />
                 <button

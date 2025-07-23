@@ -80,7 +80,7 @@ export default function DetailProduct() {
   };
 
   return (
-    <div style={{ padding: "5%", background: "#E8F5E9", minHeight: "100vh" }}>
+    <div style={{ padding: "5%", background: "rgb(247, 247, 247)", minHeight: "100vh" }}>
       {contextHolder}
 
       {/* Header */}

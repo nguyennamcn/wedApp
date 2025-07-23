@@ -86,16 +86,26 @@ const SearchCarousel = () => {
           >
             <div
               style={{
-                height: "30vh",
-                background: "#ddd",
+                height: "250px", // bạn có thể điều chỉnh tùy theo khung
+                background: "#f5f5f5",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                overflow: "hidden",
+                borderRadius: "8px",
               }}
             >
-              <img style={{
-                width: '100%'
-              }} src={product.imageUrl} alt="product" />
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "top",
+                  borderRadius: "6px",
+                }}
+              />
             </div>
 
             <div

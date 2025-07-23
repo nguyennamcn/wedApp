@@ -49,7 +49,7 @@ export default function Store() {
   }, [currentPage, pageSize]);
 
   return (
-    <div style={{ padding: "30px", background: "#E8F5E9", minHeight: "90vh" }}>
+    <div style={{ padding: "30px", background: "rgb(247, 247, 247)" , minHeight: "90vh" }}>
       {/* Header */}
       <div
         style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}

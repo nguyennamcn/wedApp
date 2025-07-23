@@ -75,7 +75,7 @@ export default function DetailShop() {
       : statusOptions;
 
   return (
-    <div style={{ padding: "5%", background: "#E8F5E9", minHeight: "100vh" }}>
+    <div style={{ padding: "5%", background: "rgb(247, 247, 247)" , minHeight: "100vh" }}>
       {/* Header */}
       {contextHolder}
       <div style={{ display: "flex", marginBottom: "30px" }}>

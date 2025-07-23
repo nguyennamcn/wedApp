@@ -28,6 +28,9 @@
 
 .tag-card img {
   width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4; /* tương ứng 960x1280 */
+  object-fit: cover;
   border-radius: 8px;
 }
 

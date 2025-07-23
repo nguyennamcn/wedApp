@@ -2,6 +2,7 @@
   padding: 24px;
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
+  background: rgb(247, 247, 247);
 }
 
 .stats-boxes {

@@ -23,7 +23,7 @@ export default function HomeSeller() {
   return (
     <div
       style={{
-        background: "none",
+        background: "rgb(247, 247, 247)",
       }}
       className="home-seller-container"
     >

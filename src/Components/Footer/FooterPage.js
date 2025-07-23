@@ -57,17 +57,21 @@ export default function FooterPage() {
               xmark
             </h1>
             <p>
-              <FaPhone /> Tổng đài CSKH: 0829982028
+              <FaPhone /> Tổng đài CSKH: 0946744287
             </p>
             <p>
-              <FaEnvelope /> Email: cskh@xmark.com
+              <FaEnvelope /> Email: namtran34311@gmail.com
             </p>
             <h6>Theo dõi xmark</h6>
             <p>
-              <FaFacebook /> Facebook
+              <a href="https://www.facebook.com/profile.php?id=61574917165179" target="_blank" rel="noopener noreferrer" style={{ color: "white", textDecoration: "none" }}>
+                <FaFacebook /> Facebook
+              </a>
             </p>
             <p>
-              <FaInstagram /> Instagram
+              <a href="https://www.instagram.com/xmark_2hand/" target="_blank" rel="noopener noreferrer" style={{ color: "white", textDecoration: "none" }}>
+                <FaInstagram /> Instagram
+              </a>
             </p>
           </div>
 
