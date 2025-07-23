@@ -8,7 +8,10 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Area,
+  AreaChart,
 } from "recharts";
+
 import "./admincp.css";
 import { BsArrowUp } from "react-icons/bs";
 import { BsArrowDown } from "react-icons/bs";
@@ -27,7 +30,7 @@ import { IoEyeSharp } from "react-icons/io5";
 import { AiFillLike } from "react-icons/ai";
 import { LiaComment } from "react-icons/lia";
 import { IoIosShareAlt } from "react-icons/io";
-import logo from "../../../img/xmark-high-resolution-logo.png";
+import logo from "../../../img/xmark_tiktok.jpg";
 
 const allData = {
   "6months": [
@@ -57,6 +60,16 @@ const allData = {
     { name: "Năm 2", truyCap: 22000, doanhThu: 14000 },
   ],
 };
+
+const datatiktok = [
+  { name: "14 tháng 7", truyCap: 5 },
+  { name: "15 tháng 7", truyCap: 12 },
+  { name: "16 tháng 7", truyCap: 2 },
+  { name: "17 tháng 7", truyCap: 2 },
+  { name: "18 tháng 7", truyCap: 10 },
+  { name: "19 tháng 7", truyCap: 13 },
+  { name: "20 tháng 7", truyCap: 8 },
+];
 
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("6months");
@@ -640,10 +653,10 @@ export default function Dashboard() {
           <span style={{
             color: 'white',
             marginRight: '3%'
-          }}>6000 Followers</span>
+          }}>6137 Followers</span>
           <span style={{
             color: 'white'
-          }}>1440 Likes</span>
+          }}>1580 Likes</span>
         </div>
       </div>
       <div className="stats-boxes">
@@ -721,7 +734,8 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {data1.total}
+              {/* {data1.total} */}
+              156
             </span>
             <span
               style={{
@@ -766,7 +780,8 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {data.totalOrders}
+              {/* {data.totalOrders} */}
+              5
             </span>
             <span
               style={{
@@ -811,10 +826,11 @@ export default function Dashboard() {
                 fontWeight: "600",
               }}
             >
-              {data.totalPrice?.toLocaleString("vi-VN", {
+              {/* {data.totalPrice?.toLocaleString("vi-VN", {
                 style: "currency",
                 currency: "VND",
-              })}
+              })} */}
+              4
             </span>
             <span
               style={{
@@ -833,8 +849,7 @@ export default function Dashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="main-content">
-        {/* Chart */}
+      {/* <div className="main-content">
         <div className="chart-box">
           <div
             style={{
@@ -845,31 +860,6 @@ export default function Dashboard() {
             }}
             className="chart-header"
           >
-            <span
-              style={{
-                fontSize: "16px",
-                color: "#6EB566",
-                padding: "5px 10px",
-                borderRadius: "10px",
-                background:
-                  "linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(227, 253, 224, 0.5) 12%, rgba(223, 252, 220, 0.6) 100%)",
-              }}
-            >
-              Phân tích doanh số
-            </span>
-            <select
-              style={{
-                outline: "none",
-                marginTop: "5%",
-              }}
-              value={timeRange}
-              onChange={handleChangeRange}
-              className="range-select"
-            >
-              <option value="6months">6 tháng</option>
-              <option value="12months">12 tháng</option>
-              <option value="2years">2 năm</option>
-            </select>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={allData[timeRange]}>
@@ -879,12 +869,6 @@ export default function Dashboard() {
                 stroke="#FF4C4C"
                 name="Lượt truy cập"
               />
-              <Line
-                type="monotone"
-                dataKey="doanhThu"
-                stroke="#00C49F"
-                name="Doanh thu"
-              />
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -893,7 +877,55 @@ export default function Dashboard() {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </div> */}
+        <div className="main-content">
+          <div className="chart-box">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "5%",
+              }}
+              className="chart-header"
+            >
+              <h3>Lượt truy cập theo ngày</h3>
+            </div>
+
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={datatiktok}>
+                <defs>
+                  <linearGradient id="colorTruyCap" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#1890FF" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#1890FF" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="truyCap"
+                  stroke="#1890FF"
+                  fill="url(#colorTruyCap)"
+                  name="Lượt truy cập"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="truyCap"
+                  stroke="#1890FF"
+                  strokeWidth={2}
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
+                  name="Lượt truy cập"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
     </div>
   );
 }
